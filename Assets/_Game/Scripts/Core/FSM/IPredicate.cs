@@ -1,13 +1,12 @@
+//Check Condition, Switch State
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+// using UnityEngine;
 
-namespace Game.Features.Core.FSM
-{
-public interface IPredicate
+// namespace Game.Core.FSM
+// {
+    public interface IPredicate
     {
         bool Evaluate();
     }
-
-}
