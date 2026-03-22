@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-namespace Game.Features.Core.FSM
-{
+// namespace Game.Core.FSM
+// {
     public class FuncPredicate : IPredicate
     {
         readonly Func<bool> _func;
@@ -19,4 +19,3 @@ namespace Game.Features.Core.FSM
             return _func.Invoke();
         }
     }
-}

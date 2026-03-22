@@ -1,15 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+// using UnityEngine;
 
-namespace Game.Features.Core.FSM
-{
-public interface IState
-{
-    void OnEnter() { }
-    void OnExit() { }
-    void Update() { }
-    void FixedUpdate() { }
-}
+// namespace Game.Core.FSM
+// {
+    public interface IState
+    {
+        void OnEnter() { }
+        void OnExit() { }
+        void Update() { }
+        void FixedUpdate() { }
+    }
 
-}

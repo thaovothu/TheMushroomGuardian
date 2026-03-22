@@ -1,7 +1,7 @@
 using UnityEngine;
 
-namespace Game.Features.Player.Domain
-{
+// namespace Game.Features.Player
+// {
     [System.Serializable]
     public class PlayerMovementMotor
     {
@@ -34,6 +34,7 @@ namespace Game.Features.Player.Domain
             right.y = 0f;
 
             move = forward * move.z + right * move.x;
+            Debug.Log($"Calculated Move Vector: {move}");
             _controller.Move(move * deltaTime * moveSpeed);
 
             if (move.sqrMagnitude > 0.0001f)
@@ -43,4 +44,3 @@ namespace Game.Features.Player.Domain
             }
         }
     }
-}

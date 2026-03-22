@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Unity.VisualScripting;
 using UnityEngine;
-
-namespace Game.Features.Core.FSM
-{
+// using Game.Features.Player;
+// namespace Game.Core.FSM
+// {
     public class StateMachine
     {
         StateNode current;
@@ -71,12 +71,10 @@ namespace Game.Features.Core.FSM
 
         void ChangeState(IState state)
         {
-            if (state == current.State)
-                return;
-
             var previousState = current.State;
             var nextState = nodes[state.GetType()].State;
 
+            // Allow state to exit and re-enter even if it's the same state (for animations like consecutive jumps)
             previousState?.OnExit();
             nextState?.OnEnter();
             current = nodes[state.GetType()];
@@ -100,4 +98,3 @@ namespace Game.Features.Core.FSM
             }
         }
     }
-}
