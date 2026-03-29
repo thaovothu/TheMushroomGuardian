@@ -4,14 +4,11 @@ using UnityEngine;
 using System;
 using Game.Features.Player;
 
-namespace Game.Core.FSM
-{
     public abstract class BaseState : IState
     {
         protected readonly PlayerController _playerController;
         protected readonly Animator _animator;
-        protected static readonly int IdleHash = Animator.StringToHash("Idle");
-        protected static readonly int RunHash = Animator.StringToHash("Run");
+        protected static readonly int LocomotionHash = Animator.StringToHash("Locomotion");
         protected static readonly int JumpHash = Animator.StringToHash("Jump");
         public static readonly int DashHash = Animator.StringToHash("Dash");
         public static readonly int dieHash = Animator.StringToHash("Die");
@@ -19,7 +16,7 @@ namespace Game.Core.FSM
         public static readonly int HitHash = Animator.StringToHash("Hit");
         public static readonly int DefendHash = Animator.StringToHash("Defend");
 
-        protected const float crossFadeDuration = 0.1f;    
+        protected const float crossFadeDuration = 0.01f;    
         protected BaseState (PlayerController player, Animator animator)
         {
             this._playerController = player;
@@ -68,4 +65,3 @@ namespace Game.Core.FSM
         public virtual void Update() { }
         public virtual void FixedUpdate() { }
     }
-}

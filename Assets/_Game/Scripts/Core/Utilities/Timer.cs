@@ -2,8 +2,6 @@ using System;
 using UnityEngine;
 using Unity.VisualScripting;
 
-// namespace Game.Core.Utilities
-// {
 public abstract class Timer
 {
     protected float initialTime;

@@ -4,16 +4,15 @@ using UnityEngine;
 using System;
 using Game.Features.Player;
 
-namespace Game.Core.FSM
-{
-    public class IdleState : BaseState
+    public class LocomotionState : BaseState
     {
-        public IdleState(PlayerController player, Animator animator) : base(player, animator)
+        public LocomotionState(PlayerController player, Animator animator) : base(player, animator)
         {
         }
         public override void OnEnter()
         {
-            SafeCrossFade(IdleHash);
+            Debug.Log("FSM: Locomotion State Entered");
+            _animator.CrossFade(LocomotionHash, crossFadeDuration);
         }
 
         public override void FixedUpdate()
@@ -21,4 +20,3 @@ namespace Game.Core.FSM
             _playerController.HandleMovement();
         }
     }
-}

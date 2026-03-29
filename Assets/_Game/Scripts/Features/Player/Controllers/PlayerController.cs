@@ -1,14 +1,16 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cinemachine;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 // using Utilities;
 
-    public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] CharacterController controller;
-        // [SerializeField] GroundChecker groundChecker;
+        [SerializeField] Rigidbody rb;
+        [SerializeField] GroundChecker groundChecker;
         [SerializeField] Animator animator;
         [SerializeField] CinemachineFreeLook freeLookVCam;
         [SerializeField] InputReader input;
@@ -19,7 +21,7 @@ using UnityEngine;
         [SerializeField] float smoothTime = 0.2f;
 
         [Header("Jump Settings")]
-        [SerializeField] float jumpForce = 10f;
+        [SerializeField] float jumpForce = 5f;
         [SerializeField] float jumpDuration = 0.5f;
         [SerializeField] float jumpCooldown = 0f;
         [SerializeField] float gravityMultiplier = 3f;
@@ -66,48 +68,59 @@ using UnityEngine;
             // Invoke event when observed transform is teleported, adjusting freeLookVCam's position accordingly
             freeLookVCam.OnTargetObjectWarped(transform, transform.position - freeLookVCam.transform.position - Vector3.forward);
 
+            rb.freezeRotation = true;    
+
             // controller.freezeRotation = true;
             // targetRotation = transform.rotation;
 
-            // SetupTimers();
-            // SetupStateMachine();
+            SetupTimers();
+            SetupStateMachine();
         }
+
+        void Start() => input.EnablePlayerActions();
 
         void Update()
         {
-            HandleMovement();
+            movement = new Vector3(input.Direction.x, 0f, input.Direction.y);
+            stateMachine.Update();
+            HandleTimers();
             UpdateAnimator();
+
+            Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}, DashTimer is running {dashTimer.IsRunning}, Grounded {groundChecker.IsGrounded}");
         }
 
-        void SetupStateMachine()
+    private void HandleTimers()
+    {
+        foreach (Timer timer in timers)
         {
-            // State Machine
-            // stateMachine = new StateMachine();
-
-            // Declare states
-            // var locomotionState = new LocomotionState(this, animator);
-            // var jumpState = new JumpState(this, animator);
-            // var dashState = new DashState(this, animator);
-            // var attackState = new AttackState(this, animator);
-
-            // Define transitions
-            // At(locomotionState, jumpState, new FuncPredicate(() => jumpTimer.IsRunning));
-            // At(locomotionState, dashState, new FuncPredicate(() => dashTimer.IsRunning));
-            // At(locomotionState, attackState, new FuncPredicate(() => attackTimer.IsRunning));
-            // At(attackState, locomotionState, new FuncPredicate(() => !attackTimer.IsRunning));
-            // Any(locomotionState, new FuncPredicate(ReturnToLocomotionState));
-
-            // Set initial state
-            // stateMachine.SetState(locomotionState);
+            timer.Tick(Time.deltaTime);
         }
+    }
 
-        // bool ReturnToLocomotionState()
-        // {
-        //     return groundChecker.IsGrounded
-        //            && !attackTimer.IsRunning
-        //            && !jumpTimer.IsRunning
-        //            && !dashTimer.IsRunning;
-        // }
+    void SetupStateMachine()
+    {
+        // State Machine
+        stateMachine = new StateMachine();
+
+        // Declare states
+        var locomotionState = new LocomotionState(this, animator);
+        var jumpState = new JumpState(this, animator);
+        var dashState = new DashState(this, animator);
+        // var dashState = new DashState(this, animator);
+        // var attackState = new AttackState(this, animator);
+
+        // Define transitions
+        At(locomotionState, jumpState, new FuncPredicate(() => jumpTimer.IsRunning));
+        At(locomotionState, dashState, new FuncPredicate(() => dashTimer.IsRunning));
+        Any(locomotionState, new FuncPredicate(() => !jumpTimer.IsRunning && groundChecker.IsGrounded));
+        // Any(locomotionState, new FuncPredicate(() => !dashTimer.IsRunning)); 
+        // At(locomotionState, attackState, new FuncPredicate(() => attackTimer.IsRunning));
+        // At(attackState, locomotionState, new FuncPredicate(() => !attackTimer.IsRunning));
+        // Any(locomotionState, new FuncPredicate(ReturnToLocomotionState));
+
+        // Set initial state
+        stateMachine.SetState(locomotionState);
+    }
 
         void SetupTimers()
         {
@@ -115,39 +128,39 @@ using UnityEngine;
             jumpTimer = new CountdownTimer(jumpDuration);
             jumpCooldownTimer = new CountdownTimer(jumpCooldown);
 
-            // jumpTimer.OnTimerStart += () => jumpVelocity = jumpForce;
-            // jumpTimer.OnTimerStop += () => jumpCooldownTimer.Start();
+            // attackTimer = new CountdownTimer(attackCooldown);
+
+            // timers = new(5) { jumpTimer, jumpCooldownTimer, dashTimer, dashCooldownTimer, attackTimer };
+            jumpTimer.OnTimerStarted += () => jumpVelocity = jumpForce;
+            jumpTimer.OnTimerStopped += () => jumpCooldownTimer.Start();
+        
 
             dashTimer = new CountdownTimer(dashDuration);
             dashCooldownTimer = new CountdownTimer(dashCooldown);
-
-            // dashTimer.OnTimerStart += () => dashVelocity = dashForce;
-            // dashTimer.OnTimerStop += () =>
+            dashTimer.OnTimerStarted += () => dashVelocity = dashForce;
+            dashTimer.OnTimerStopped += () =>
             {
                 dashVelocity = 1f;
                 dashCooldownTimer.Start();
             };
 
-            attackTimer = new CountdownTimer(attackCooldown);
-
-            timers = new(5) { jumpTimer, jumpCooldownTimer, dashTimer, dashCooldownTimer, attackTimer };
+            timers = new(4) {jumpTimer, jumpCooldownTimer, dashTimer , dashCooldownTimer};
         }
 
-        // void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);
-        // void Any(IState to, IPredicate condition) => stateMachine.AddAnyTransition(to, condition);
 
-        void Start() => input.EnablePlayerActions();
+        void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);
+        void Any(IState to, IPredicate condition) => stateMachine.AddAnyTransition(to, condition);
 
         void OnEnable()
         {
-            // input.Jump += OnJump;
+            input.Jump += OnJump;
             input.Dash += OnDash;
             input.Attack += OnAttack;
         }
 
         void OnDisable()
         {
-            // input.Jump -= OnJump;
+            input.Jump -= OnJump;
             input.Dash -= OnDash;
             input.Attack -= OnAttack;
         }
@@ -174,18 +187,17 @@ using UnityEngine;
                 }
             }
         }
-
-        // void OnJump(bool performed)
-        // {
-        //     if (performed && !jumpTimer.IsRunning && !jumpCooldownTimer.IsRunning && groundChecker.IsGrounded)
-        //     {
-        //         jumpTimer.Start();
-        //     }
-        //     else if (!performed && jumpTimer.IsRunning)
-        //     {
-        //         jumpTimer.Stop();
-        //     }
-        // }
+        void OnJump(bool performed)
+        {
+            if (performed && !jumpTimer.IsRunning && !jumpCooldownTimer.IsRunning && groundChecker.IsGrounded)
+            {
+                jumpTimer.Start();
+            }
+            else if (!performed && jumpTimer.IsRunning)
+            {
+                jumpTimer.Stop();
+            }
+        }
 
         void OnDash(bool performed)
         {
@@ -199,25 +211,15 @@ using UnityEngine;
             }
         }
 
-        // void Update()
-        // {
-        //     movement = new Vector3(input.Direction.x, 0f, input.Direction.y);
-        //     HandleMovement();
-        //     ApplyRotation();
-        //     // stateMachine.Update();
-
-        //     // HandleTimers();
-        //     UpdateAnimator();
-        // }
-
         void FixedUpdate()
         {
-            // stateMachine.FixedUpdate();
+            stateMachine.FixedUpdate();
         }
 
         void UpdateAnimator()
-        {
+        {   
             animator.SetFloat(Speed, currentSpeed);
+            Debug.Log($"[PlayerController] CurrentSpeed {currentSpeed}");
         }
 
         // void HandleTimers()
@@ -231,12 +233,13 @@ using UnityEngine;
         public void HandleJump()
         {
             // If not jumping and grounded, keep jump velocity at 0
-            // if (!jumpTimer.IsRunning && groundChecker.IsGrounded)
-            // {
-            //     jumpVelocity = ZeroF;
-            //     return;
-            // }
-
+            if (!jumpTimer.IsRunning && groundChecker.IsGrounded)
+            {
+                jumpVelocity = ZeroF;
+                // jumpTimer.Stop();
+                return;
+            }
+            
             if (!jumpTimer.IsRunning)
             {
                 // Gravity takes over
@@ -244,43 +247,42 @@ using UnityEngine;
             }
 
             // Apply velocity
-            // rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
+            rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
+        }
+
+        public void ResetSpeed()
+        {
+            currentSpeed = ZeroF;
+        }
+        public void HandleDash()
+        {
+            rb.velocity = transform.forward * dashVelocity;
         }
 
         public void HandleMovement()
         {
-            var movementDirection = new Vector3(input.Direction.x, 0f, input.Direction.y).normalized;
-            // Rotate movement direction to match camera rotation
-            var adjustedDirection = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * movementDirection;
+            var adjustedDirection = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * movement;
 
             if (adjustedDirection.magnitude > ZeroF)
             {
                 HandleRotation(adjustedDirection);
-                HandleCharacterController(adjustedDirection);
+                HandleHorizontalMovement(adjustedDirection);
                 SmoothSpeed(adjustedDirection.magnitude);
-            // HandleHorizontalMovement(adjustedDirection);
-            // SmoothSpeed(adjustedDirection.magnitude);
             }
             else
             {
                 SmoothSpeed(ZeroF);
                 // SmoothSpeed(ZeroF);
                 // Reset horizontal velocity for a snappy stop
-                // rb.velocity = new Vector3(ZeroF, rb.velocity.y, ZeroF);
+                rb.velocity = new Vector3(ZeroF, rb.velocity.y, ZeroF);
             }
-        }
-
-        void HandleCharacterController(Vector3 adjustedDirection)
-        {
-            var adjustedMovement = adjustedDirection * (moveSpeed * Time.deltaTime);
-            controller.Move(adjustedMovement);
         }
 
         void HandleHorizontalMovement(Vector3 adjustedDirection)
         {
             // Move the player
             Vector3 velocity = adjustedDirection * (moveSpeed * dashVelocity * Time.fixedDeltaTime);
-            // rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
+            rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
         }
 
         void HandleRotation(Vector3 adjustedDirection)
@@ -294,14 +296,9 @@ using UnityEngine;
 
             var targetRotation = Quaternion.LookRotation(adjustedDirection);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            transform.LookAt(transform.position + adjustedDirection);
-    }
-        
-        void ApplyRotation()
-        {
-            // Apply smooth rotation towards target
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            // transform.LookAt(transform.position + adjustedDirection);
         }
+        
 
         void SmoothSpeed(float value)
         {

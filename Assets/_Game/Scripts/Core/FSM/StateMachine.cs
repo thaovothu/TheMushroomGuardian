@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using Unity.VisualScripting;
 using UnityEngine;
-// using Game.Features.Player;
-// namespace Game.Core.FSM
-// {
     public class StateMachine
     {
         StateNode current;

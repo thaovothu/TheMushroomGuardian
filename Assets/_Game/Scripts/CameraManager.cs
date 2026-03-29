@@ -3,16 +3,15 @@ using Cinemachine;
 // using KBCore.Refs;
 using UnityEngine;
 
-namespace Platformer
-{
     public class CameraManager : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] InputReader input;
         [SerializeField] CinemachineFreeLook freeLookVCam;
+        
 
         [Header("Settings")]
-        [SerializeField, Range(0.5f, 3f)] float speedMultiplier = 1f;
+        [SerializeField, Range(0.5f, 5f)] float speedMultiplier = 1f;
 
         bool isRMBPressed;
         bool cameraMovementLock;
@@ -77,4 +76,3 @@ namespace Platformer
         }
 
     }
-}

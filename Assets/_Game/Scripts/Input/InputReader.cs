@@ -25,8 +25,6 @@ using static PlayerInputActions;
                 inputActions = new PlayerInputActions();
                 inputActions.Player.SetCallbacks(this);
             }
-            //add 29
-            inputActions.Enable();
         }
 
         public void EnablePlayerActions()
@@ -92,4 +90,17 @@ using static PlayerInputActions;
                     break;
             }
         }
+
+    public void OnDash(InputAction.CallbackContext context)
+    {
+        switch (context.phase)
+        {
+            case InputActionPhase.Started:
+                Dash.Invoke(true);
+                break;
+            case InputActionPhase.Canceled:
+                Dash.Invoke(false);
+                break;
+        }
     }
+}

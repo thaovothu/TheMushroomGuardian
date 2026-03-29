@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-// namespace Game.Core.FSM
-// {
     public class FuncPredicate : IPredicate
     {
         readonly Func<bool> _func;
