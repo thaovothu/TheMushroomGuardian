@@ -1,0 +1,42 @@
+name: Sync Main to All Feature Branches
+
+on:
+  push:
+    branches:
+      - main # Chạy mỗi khi main có code mới
+
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+    strategy:
+      # Matrix giúp bạn thêm bao nhiêu nhánh tùy thích ở đây
+      matrix:
+        target-branch: [
+          "feature/player-movement", 
+        ]
+      fail-fast: false # Nếu một nhánh bị conflict, các nhánh khác vẫn tiếp tục chạy
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true # Rất quan trọng cho project The Mushroom Guardian
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Merge Main into ${{ matrix.target-branch }}
+        run: |
+          # Lấy code mới nhất của nhánh đích
+          git checkout ${{ matrix.target-branch }}
+          git pull origin ${{ matrix.target-branch }}
+          
+          # Thực hiện merge từ main
+          echo "Merging main into ${{ matrix.target-branch }}..."
+          git merge origin/main --no-edit
+          
+          # Push kết quả lên GitHub
+          git push origin ${{ matrix.target-branch }}
