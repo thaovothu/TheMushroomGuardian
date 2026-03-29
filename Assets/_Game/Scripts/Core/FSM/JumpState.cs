@@ -21,7 +21,7 @@ namespace Game.Core.FSM
             }
             
             // Consume jump input to prevent re-jump on same press
-            _playerController.ConsumeJumpInput();
+            // _playerController.ConsumeJumpInput();
             _playerController.HandleJump();
         }
         public override void FixedUpdate()

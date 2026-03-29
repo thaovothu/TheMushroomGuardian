@@ -1,97 +1,317 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Cinemachine;
 using UnityEngine;
-using Game.Core.FSM;
-using System.Threading;
-using Unity.VisualScripting;
+// using Utilities;
 
-namespace Game.Features.Player
-{
-[RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour
     {
-        [SerializeField] private PlayerInputHandler inputHandler;
-        [SerializeField] private PlayerMovementMotor movementMotor = new PlayerMovementMotor();
-        [SerializeField] private PlayerGravityMotor gravityMotor;
-        [SerializeField] private StateMachine stateMachine;
-        [SerializeField] private Animator animator;
-        [SerializeField] private float jumpForce = 10f;
-        private CharacterController _controller;
-        private Transform _cameraTransform;
+        [Header("References")]
+        [SerializeField] CharacterController controller;
+        // [SerializeField] GroundChecker groundChecker;
+        [SerializeField] Animator animator;
+        [SerializeField] CinemachineFreeLook freeLookVCam;
+        [SerializeField] InputReader input;
 
-        private void Awake()
+        [Header("Movement Settings")]
+        [SerializeField] float moveSpeed = 6f;
+        [SerializeField] float rotationSpeed = 15f;
+        [SerializeField] float smoothTime = 0.2f;
+
+        [Header("Jump Settings")]
+        [SerializeField] float jumpForce = 10f;
+        [SerializeField] float jumpDuration = 0.5f;
+        [SerializeField] float jumpCooldown = 0f;
+        [SerializeField] float gravityMultiplier = 3f;
+
+        [Header("Dash Settings")]
+        [SerializeField] float dashForce = 10f;
+        [SerializeField] float dashDuration = 1f;
+        [SerializeField] float dashCooldown = 2f;
+
+        [Header("Attack Settings")]
+        [SerializeField] float attackCooldown = 0.5f;
+        [SerializeField] float attackDistance = 1f;
+        [SerializeField] int attackDamage = 10;
+
+        const float ZeroF = 0f;
+
+        Transform mainCam;
+
+        float currentSpeed;
+        float velocity;
+        float jumpVelocity;
+        float dashVelocity = 1f;
+
+        Vector3 movement;
+        Quaternion targetRotation;
+
+        List<Timer> timers;
+        CountdownTimer jumpTimer;
+        CountdownTimer jumpCooldownTimer;
+        CountdownTimer dashTimer;
+        CountdownTimer dashCooldownTimer;
+        CountdownTimer attackTimer;
+
+        StateMachine stateMachine;
+
+        // Animator parameters
+        static readonly int Speed = Animator.StringToHash("Speed");
+
+        void Awake()
         {
-            _controller = GetComponent<CharacterController>();
-            _cameraTransform = Camera.main != null ? Camera.main.transform : null;
+            mainCam = Camera.main.transform;
+            freeLookVCam.Follow = transform;
+            freeLookVCam.LookAt = transform;
+            // Invoke event when observed transform is teleported, adjusting freeLookVCam's position accordingly
+            freeLookVCam.OnTargetObjectWarped(transform, transform.position - freeLookVCam.transform.position - Vector3.forward);
 
-            if (inputHandler == null)
-            {
-                inputHandler = GetComponent<PlayerInputHandler>();
-            }
+            // controller.freezeRotation = true;
+            // targetRotation = transform.rotation;
 
-            movementMotor.Initialize(_controller, transform, _cameraTransform);
-
-            // Ensure gravity motor is a component (MonoBehaviour) — don't construct with 'new'
-            if (gravityMotor == null)
-            {
-                gravityMotor = gameObject.GetComponent<PlayerGravityMotor>() ?? gameObject.AddComponent<PlayerGravityMotor>();
-            }
-
-            gravityMotor.Initialize(_controller);
-            gravityMotor.SetupTimers();
-            SetUpStateMachine();
+            // SetupTimers();
+            // SetupStateMachine();
         }
 
-        void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);
-        void Any (IState to, IPredicate condition) => stateMachine.AddAnyTransition(to, condition);
-
-        private void Update()
+        void Update()
         {
-            stateMachine?.Update();
+            HandleMovement();
+            UpdateAnimator();
         }
 
-        private void FixedUpdate()
+        void SetupStateMachine()
         {
-            stateMachine?.FixedUpdate();
+            // State Machine
+            // stateMachine = new StateMachine();
+
+            // Declare states
+            // var locomotionState = new LocomotionState(this, animator);
+            // var jumpState = new JumpState(this, animator);
+            // var dashState = new DashState(this, animator);
+            // var attackState = new AttackState(this, animator);
+
+            // Define transitions
+            // At(locomotionState, jumpState, new FuncPredicate(() => jumpTimer.IsRunning));
+            // At(locomotionState, dashState, new FuncPredicate(() => dashTimer.IsRunning));
+            // At(locomotionState, attackState, new FuncPredicate(() => attackTimer.IsRunning));
+            // At(attackState, locomotionState, new FuncPredicate(() => !attackTimer.IsRunning));
+            // Any(locomotionState, new FuncPredicate(ReturnToLocomotionState));
+
+            // Set initial state
+            // stateMachine.SetState(locomotionState);
+        }
+
+        // bool ReturnToLocomotionState()
+        // {
+        //     return groundChecker.IsGrounded
+        //            && !attackTimer.IsRunning
+        //            && !jumpTimer.IsRunning
+        //            && !dashTimer.IsRunning;
+        // }
+
+        void SetupTimers()
+        {
+            // Setup timers
+            jumpTimer = new CountdownTimer(jumpDuration);
+            jumpCooldownTimer = new CountdownTimer(jumpCooldown);
+
+            // jumpTimer.OnTimerStart += () => jumpVelocity = jumpForce;
+            // jumpTimer.OnTimerStop += () => jumpCooldownTimer.Start();
+
+            dashTimer = new CountdownTimer(dashDuration);
+            dashCooldownTimer = new CountdownTimer(dashCooldown);
+
+            // dashTimer.OnTimerStart += () => dashVelocity = dashForce;
+            // dashTimer.OnTimerStop += () =>
+            {
+                dashVelocity = 1f;
+                dashCooldownTimer.Start();
+            };
+
+            attackTimer = new CountdownTimer(attackCooldown);
+
+            timers = new(5) { jumpTimer, jumpCooldownTimer, dashTimer, dashCooldownTimer, attackTimer };
+        }
+
+        // void At(IState from, IState to, IPredicate condition) => stateMachine.AddTransition(from, to, condition);
+        // void Any(IState to, IPredicate condition) => stateMachine.AddAnyTransition(to, condition);
+
+        void Start() => input.EnablePlayerActions();
+
+        void OnEnable()
+        {
+            // input.Jump += OnJump;
+            input.Dash += OnDash;
+            input.Attack += OnAttack;
+        }
+
+        void OnDisable()
+        {
+            // input.Jump -= OnJump;
+            input.Dash -= OnDash;
+            input.Attack -= OnAttack;
+        }
+
+        void OnAttack()
+        {
+            if (!attackTimer.IsRunning)
+            {
+                attackTimer.Start();
+            }
+        }
+
+        public void Attack()
+        {
+            Vector3 attackPos = transform.position + transform.forward;
+            Collider[] hitEnemies = Physics.OverlapSphere(attackPos, attackDistance);
+
+            foreach (var enemy in hitEnemies)
+            {
+                Debug.Log(enemy.name);
+                if (enemy.CompareTag("Enemy"))
+                {
+                    // enemy.GetComponent<Health>().TakeDamage(attackDamage);
+                }
+            }
+        }
+
+        // void OnJump(bool performed)
+        // {
+        //     if (performed && !jumpTimer.IsRunning && !jumpCooldownTimer.IsRunning && groundChecker.IsGrounded)
+        //     {
+        //         jumpTimer.Start();
+        //     }
+        //     else if (!performed && jumpTimer.IsRunning)
+        //     {
+        //         jumpTimer.Stop();
+        //     }
+        // }
+
+        void OnDash(bool performed)
+        {
+            if (performed && !dashTimer.IsRunning && !dashCooldownTimer.IsRunning)
+            {
+                dashTimer.Start();
+            }
+            else if (!performed && dashTimer.IsRunning)
+            {
+                dashTimer.Stop();
+            }
+        }
+
+        // void Update()
+        // {
+        //     movement = new Vector3(input.Direction.x, 0f, input.Direction.y);
+        //     HandleMovement();
+        //     ApplyRotation();
+        //     // stateMachine.Update();
+
+        //     // HandleTimers();
+        //     UpdateAnimator();
+        // }
+
+        void FixedUpdate()
+        {
+            // stateMachine.FixedUpdate();
+        }
+
+        void UpdateAnimator()
+        {
+            animator.SetFloat(Speed, currentSpeed);
+        }
+
+        // void HandleTimers()
+        // {
+        //     foreach (var timer in timers)
+        //     {
+        //         timer.Tick(Time.deltaTime);
+        //     }
+        // }
+
+        public void HandleJump()
+        {
+            // If not jumping and grounded, keep jump velocity at 0
+            // if (!jumpTimer.IsRunning && groundChecker.IsGrounded)
+            // {
+            //     jumpVelocity = ZeroF;
+            //     return;
+            // }
+
+            if (!jumpTimer.IsRunning)
+            {
+                // Gravity takes over
+                jumpVelocity += Physics.gravity.y * gravityMultiplier * Time.fixedDeltaTime;
+            }
+
+            // Apply velocity
+            // rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
         }
 
         public void HandleMovement()
         {
-            movementMotor.Tick(inputHandler.MoveInput, Time.fixedDeltaTime);
-            gravityMotor.Tick(Time.fixedDeltaTime);
+            var movementDirection = new Vector3(input.Direction.x, 0f, input.Direction.y).normalized;
+            // Rotate movement direction to match camera rotation
+            var adjustedDirection = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * movementDirection;
+
+            if (adjustedDirection.magnitude > ZeroF)
+            {
+                HandleRotation(adjustedDirection);
+                HandleCharacterController(adjustedDirection);
+                SmoothSpeed(adjustedDirection.magnitude);
+            // HandleHorizontalMovement(adjustedDirection);
+            // SmoothSpeed(adjustedDirection.magnitude);
+            }
+            else
+            {
+                SmoothSpeed(ZeroF);
+                // SmoothSpeed(ZeroF);
+                // Reset horizontal velocity for a snappy stop
+                // rb.velocity = new Vector3(ZeroF, rb.velocity.y, ZeroF);
+            }
         }
 
-        public void HandleJump()
+        void HandleCharacterController(Vector3 adjustedDirection)
         {
-            gravityMotor.ApplyJumpVelocity(jumpForce);
+            var adjustedMovement = adjustedDirection * (moveSpeed * Time.deltaTime);
+            controller.Move(adjustedMovement);
         }
 
-        public void ConsumeJumpInput()
+        void HandleHorizontalMovement(Vector3 adjustedDirection)
         {
-            inputHandler.ConsumeJump();
+            // Move the player
+            Vector3 velocity = adjustedDirection * (moveSpeed * dashVelocity * Time.fixedDeltaTime);
+            // rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
         }
 
-        private void SetUpStateMachine()
+        void HandleRotation(Vector3 adjustedDirection)
         {
-            stateMachine = new StateMachine();
-            var idleState = new IdleState(this, animator);
-            var jumpState = new JumpState(this, animator);
-            var runState = new RunState(this, animator);
-
-            // Movement transitions (idle <-> run)
-            At(idleState, runState, new FuncPredicate(() => inputHandler.MoveInput.sqrMagnitude > 0.01f));
-            At(runState, idleState, new FuncPredicate(() => inputHandler.MoveInput.sqrMagnitude <= 0.01f));
-
-            // Jump can be triggered from any state when space pressed and grounded
-            Any(jumpState, new FuncPredicate(() => inputHandler.JumpPressed && gravityMotor.IsGrounded));
-
-            // Exit jump: always go to idle first when grounded, then check movement
-            // Jump → Idle when grounded and not moving
-            At(jumpState, idleState, new FuncPredicate(() => gravityMotor.IsGrounded && inputHandler.MoveInput.sqrMagnitude <= 0.01f));
+            // // Only rotate if direction is significant enough to avoid unstable behavior
+            // if (adjustedDirection.magnitude < 0.01f)
+            //     return;
             
-            // Jump → Run when grounded and moving
-            At(jumpState, runState, new FuncPredicate(() => gravityMotor.IsGrounded && inputHandler.MoveInput.sqrMagnitude > 0.01f));
+            // // Calculate target rotation only when there's valid input
+            // targetRotation = Quaternion.LookRotation(adjustedDirection);
 
-            // Set initial state
-            stateMachine.SetState(idleState);
+            var targetRotation = Quaternion.LookRotation(adjustedDirection);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            transform.LookAt(transform.position + adjustedDirection);
+    }
+        
+        void ApplyRotation()
+        {
+            // Apply smooth rotation towards target
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
+
+        void SmoothSpeed(float value)
+        {
+            // currentSpeed = Mathf.SmoothDamp(currentSpeed, value, ref velocity, smoothTime);
+            
+            // // Clamp to zero if very small to avoid floating point precision issues
+            // if (Mathf.Abs(currentSpeed) < 0.001f)
+            // {
+            //     currentSpeed = 0f;
+            // }
+            currentSpeed = Mathf.SmoothDamp(currentSpeed, value, ref velocity, smoothTime);
         }
     }
-}

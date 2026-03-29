@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Game.Core.Utilities;
-using KBCore.Refs;
+// using KBCore.Refs;
 
 namespace Game.Features.Player
 {
@@ -10,7 +10,7 @@ namespace Game.Features.Player
     {
         [SerializeField] private float gravityValue = -9.81f;
         [Header("References")]
-        [SerializeField, Self] Rigidbody rb;
+        [SerializeField] Rigidbody rb;
 
         [Header("Jump Settings")]
         [SerializeField] float jumpForce = 10f;
