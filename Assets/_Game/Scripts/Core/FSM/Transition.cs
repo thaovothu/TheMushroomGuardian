@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// namespace Game.Core.FSM
-// {
     public class Transition : ITransition
     {
         public IState To { get; private set; }
