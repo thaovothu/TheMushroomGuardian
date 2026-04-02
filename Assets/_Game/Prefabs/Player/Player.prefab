@@ -53,20 +53,13 @@ MonoBehaviour:
   animator: {fileID: 7283971351278425884}
   freeLookVCam: {fileID: 0}
   input: {fileID: 11400000, guid: 8970661730d214e88806413605e0599e, type: 2}
-  moveSpeed: 300
-  rotationSpeed: 30
+  moveSpeed: 6
+  rotationSpeed: 15
   smoothTime: 0.2
-  jumpForce: 10
-  jumpDuration: 0.5
+  jumpForce: 4
+  jumpDuration: 0.3
   jumpCooldown: 0
-  jumpMaxHeight: 2
-  gravityMultiplier: 3
-  dashForce: 10
-  dashDuration: 1
-  dashCooldown: 2
-  attackCooldown: 0.5
-  attackDistance: 1
-  attackDamage: 10
+  gravityMultiplier: 4
 --- !u!114 &2344544117716131075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,7 +72,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65bf756badeff44039d472576177e062, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  groundDistance: 1
+  groundDistance: 0.55
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -92,7 +85,7 @@ Rigidbody:
   m_GameObject: {fileID: 6884184332377935561}
   serializedVersion: 4
   m_Mass: 1
-  m_Drag: 0
+  m_Drag: 10
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -129,10 +122,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.015
-  m_Height: 0.09
+  m_Radius: 0.2
+  m_Height: 1.5
   m_Direction: 1
-  m_Center: {x: 0, y: 0.04, z: 0}
+  m_Center: {x: 0, y: 0.7, z: 0}
 --- !u!1001 &1969424198739821029
 PrefabInstance:
   m_ObjectHideFlags: 0

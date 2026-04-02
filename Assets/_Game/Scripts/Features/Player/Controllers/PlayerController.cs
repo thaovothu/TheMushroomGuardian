@@ -4,8 +4,6 @@ using System.Threading.Tasks;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
-// using Utilities;
-
 public class PlayerController : MonoBehaviour
     {
         [Header("References")]
@@ -16,26 +14,22 @@ public class PlayerController : MonoBehaviour
         [SerializeField] InputReader input;
 
         [Header("Movement Settings")]
-        [SerializeField] float moveSpeed = 6f;
-        [SerializeField] float rotationSpeed = 15f;
-        [SerializeField] float smoothTime = 0.2f;
+        [SerializeField] float moveSpeed = 300f;
+        [SerializeField] float dashSpeed = 200f;
+        [SerializeField] float rotationSpeed = 180f;
+        [SerializeField] float smoothTime = 0.1f;
 
         [Header("Jump Settings")]
-        [SerializeField] float jumpForce = 5f;
-        [SerializeField] float jumpDuration = 0.5f;
+        [SerializeField] float jumpForce = 4f;
+        [SerializeField] float jumpDuration = 0.3f;
         [SerializeField] float jumpCooldown = 0f;
-        [SerializeField] float gravityMultiplier = 3f;
+        [SerializeField] float gravityMultiplier = 4f;
+
 
         [Header("Dash Settings")]
-        [SerializeField] float dashForce = 10f;
-        [SerializeField] float dashDuration = 1f;
-        [SerializeField] float dashCooldown = 2f;
-
-        [Header("Attack Settings")]
-        [SerializeField] float attackCooldown = 0.5f;
-        [SerializeField] float attackDistance = 1f;
-        [SerializeField] int attackDamage = 10;
-
+        [SerializeField] float dashForce = 8f;
+        [SerializeField] float dashDuration = 0.3f;
+        [SerializeField] float dashCooldown = 0f;
         const float ZeroF = 0f;
 
         Transform mainCam;
@@ -46,14 +40,12 @@ public class PlayerController : MonoBehaviour
         float dashVelocity = 1f;
 
         Vector3 movement;
-        Quaternion targetRotation;
 
         List<Timer> timers;
         CountdownTimer jumpTimer;
         CountdownTimer jumpCooldownTimer;
         CountdownTimer dashTimer;
         CountdownTimer dashCooldownTimer;
-        CountdownTimer attackTimer;
 
         StateMachine stateMachine;
 
@@ -70,9 +62,6 @@ public class PlayerController : MonoBehaviour
 
             rb.freezeRotation = true;    
 
-            // controller.freezeRotation = true;
-            // targetRotation = transform.rotation;
-
             SetupTimers();
             SetupStateMachine();
         }
@@ -86,7 +75,7 @@ public class PlayerController : MonoBehaviour
             HandleTimers();
             UpdateAnimator();
 
-            Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}, DashTimer is running {dashTimer.IsRunning}, Grounded {groundChecker.IsGrounded}");
+            // Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}, DashTimer is running {dashTimer.IsRunning}, Grounded {groundChecker.IsGrounded}");
         }
 
     private void HandleTimers()
@@ -106,18 +95,16 @@ public class PlayerController : MonoBehaviour
         var locomotionState = new LocomotionState(this, animator);
         var jumpState = new JumpState(this, animator);
         var dashState = new DashState(this, animator);
-        // var dashState = new DashState(this, animator);
-        // var attackState = new AttackState(this, animator);
 
         // Define transitions
         At(locomotionState, jumpState, new FuncPredicate(() => jumpTimer.IsRunning));
+        Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}");
         At(locomotionState, dashState, new FuncPredicate(() => dashTimer.IsRunning));
-        Any(locomotionState, new FuncPredicate(() => !jumpTimer.IsRunning && groundChecker.IsGrounded));
-        // Any(locomotionState, new FuncPredicate(() => !dashTimer.IsRunning)); 
-        // At(locomotionState, attackState, new FuncPredicate(() => attackTimer.IsRunning));
-        // At(attackState, locomotionState, new FuncPredicate(() => !attackTimer.IsRunning));
-        // Any(locomotionState, new FuncPredicate(ReturnToLocomotionState));
-
+        Debug.Log($"[PlayerController] DashTimer is running {dashTimer.IsRunning}");
+        Any(locomotionState, new FuncPredicate(() => !jumpTimer.IsRunning && groundChecker.IsGrounded && !dashTimer.IsRunning)); 
+  
+        Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}, Grounded {groundChecker.IsGrounded}");
+        
         // Set initial state
         stateMachine.SetState(locomotionState);
     }
@@ -127,24 +114,21 @@ public class PlayerController : MonoBehaviour
             // Setup timers
             jumpTimer = new CountdownTimer(jumpDuration);
             jumpCooldownTimer = new CountdownTimer(jumpCooldown);
-
-            // attackTimer = new CountdownTimer(attackCooldown);
-
-            // timers = new(5) { jumpTimer, jumpCooldownTimer, dashTimer, dashCooldownTimer, attackTimer };
-            jumpTimer.OnTimerStarted += () => jumpVelocity = jumpForce;
-            jumpTimer.OnTimerStopped += () => jumpCooldownTimer.Start();
-        
-
             dashTimer = new CountdownTimer(dashDuration);
             dashCooldownTimer = new CountdownTimer(dashCooldown);
+
+            jumpTimer.OnTimerStarted += () => jumpVelocity = jumpForce;
+            jumpTimer.OnTimerStopped += () => jumpCooldownTimer.Start();
             dashTimer.OnTimerStarted += () => dashVelocity = dashForce;
             dashTimer.OnTimerStopped += () =>
             {
                 dashVelocity = 1f;
                 dashCooldownTimer.Start();
+                    // Giảm velocity sau dash để không trượt quá xa
+                rb.velocity = new Vector3(rb.velocity.x * 0.3f, rb.velocity.y, rb.velocity.z * 0.3f);
             };
 
-            timers = new(4) {jumpTimer, jumpCooldownTimer, dashTimer , dashCooldownTimer};
+        timers = new List<Timer> {jumpTimer, jumpCooldownTimer, dashTimer, dashCooldownTimer};
         }
 
 
@@ -155,48 +139,25 @@ public class PlayerController : MonoBehaviour
         {
             input.Jump += OnJump;
             input.Dash += OnDash;
-            input.Attack += OnAttack;
         }
 
         void OnDisable()
         {
             input.Jump -= OnJump;
             input.Dash -= OnDash;
-            input.Attack -= OnAttack;
         }
 
-        void OnAttack()
-        {
-            if (!attackTimer.IsRunning)
-            {
-                attackTimer.Start();
-            }
-        }
-
-        public void Attack()
-        {
-            Vector3 attackPos = transform.position + transform.forward;
-            Collider[] hitEnemies = Physics.OverlapSphere(attackPos, attackDistance);
-
-            foreach (var enemy in hitEnemies)
-            {
-                Debug.Log(enemy.name);
-                if (enemy.CompareTag("Enemy"))
-                {
-                    // enemy.GetComponent<Health>().TakeDamage(attackDamage);
-                }
-            }
-        }
         void OnJump(bool performed)
         {
             if (performed && !jumpTimer.IsRunning && !jumpCooldownTimer.IsRunning && groundChecker.IsGrounded)
             {
                 jumpTimer.Start();
             }
-            else if (!performed && jumpTimer.IsRunning)
-            {
-                jumpTimer.Stop();
-            }
+            // else if (!performed && jumpTimer.IsRunning)
+            // {
+            //     jumpTimer.Stop();
+            // }
+            
         }
 
         void OnDash(bool performed)
@@ -205,11 +166,12 @@ public class PlayerController : MonoBehaviour
             {
                 dashTimer.Start();
             }
-            else if (!performed && dashTimer.IsRunning)
-            {
-                dashTimer.Stop();
-            }
+            // else if (!performed && dashTimer.IsRunning)
+            // {
+            //     dashTimer.Stop();
+            // }
         }
+
 
         void FixedUpdate()
         {
@@ -219,96 +181,76 @@ public class PlayerController : MonoBehaviour
         void UpdateAnimator()
         {   
             animator.SetFloat(Speed, currentSpeed);
-            Debug.Log($"[PlayerController] CurrentSpeed {currentSpeed}");
-        }
-
-        // void HandleTimers()
-        // {
-        //     foreach (var timer in timers)
-        //     {
-        //         timer.Tick(Time.deltaTime);
-        //     }
-        // }
-
-        public void HandleJump()
-        {
-            // If not jumping and grounded, keep jump velocity at 0
-            if (!jumpTimer.IsRunning && groundChecker.IsGrounded)
-            {
-                jumpVelocity = ZeroF;
-                // jumpTimer.Stop();
-                return;
-            }
             
-            if (!jumpTimer.IsRunning)
-            {
-                // Gravity takes over
-                jumpVelocity += Physics.gravity.y * gravityMultiplier * Time.fixedDeltaTime;
-            }
-
-            // Apply velocity
-            rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
+        }
+    public void HandleJump()
+    {
+        if (!jumpTimer.IsRunning && groundChecker.IsGrounded)
+        {
+            jumpVelocity = ZeroF;
+            return;
         }
 
-        public void ResetSpeed()
+        if (!jumpTimer.IsRunning)
         {
-            currentSpeed = ZeroF;
-        }
-        public void HandleDash()
-        {
-            rb.velocity = transform.forward * dashVelocity;
+            jumpVelocity += Physics.gravity.y * gravityMultiplier * Time.fixedDeltaTime;
         }
 
-        public void HandleMovement()
-        {
-            var adjustedDirection = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * movement;
+        rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
+    }
 
-            if (adjustedDirection.magnitude > ZeroF)
-            {
-                HandleRotation(adjustedDirection);
-                HandleHorizontalMovement(adjustedDirection);
-                SmoothSpeed(adjustedDirection.magnitude);
-            }
-            else
-            {
-                SmoothSpeed(ZeroF);
-                // SmoothSpeed(ZeroF);
-                // Reset horizontal velocity for a snappy stop
-                rb.velocity = new Vector3(ZeroF, rb.velocity.y, ZeroF);
-            }
+    public void HandleMovement()
+    {
+        var adjustedDirection = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * movement;
+
+        if (adjustedDirection.magnitude > ZeroF)
+        {
+            // Xoay player snap theo hướng di chuyển
+            HandleRotation(adjustedDirection);
+            SmoothSpeed(adjustedDirection.magnitude);
+
+            // Di chuyển theo hướng player đang nhìn, không theo camera
+            HandleHorizontalMovement(transform.forward);
         }
-
-        void HandleHorizontalMovement(Vector3 adjustedDirection)
+        else
         {
-            // Move the player
-            Vector3 velocity = adjustedDirection * (moveSpeed * dashVelocity * Time.fixedDeltaTime);
+            SmoothSpeed(ZeroF);
+            rb.velocity = new Vector3(ZeroF, rb.velocity.y, ZeroF);
+        }
+    }
+
+    void HandleHorizontalMovement(Vector3 adjustedDirection)
+        {
+            Vector3 velocity = adjustedDirection * (moveSpeed  * Time.fixedDeltaTime);
             rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
         }
 
-        void HandleRotation(Vector3 adjustedDirection)
+    void HandleRotation(Vector3 adjustedDirection)
+    {
+        if (adjustedDirection.magnitude > 0.1f)
         {
-            // // Only rotate if direction is significant enough to avoid unstable behavior
-            // if (adjustedDirection.magnitude < 0.01f)
-            //     return;
-            
-            // // Calculate target rotation only when there's valid input
-            // targetRotation = Quaternion.LookRotation(adjustedDirection);
-
-            var targetRotation = Quaternion.LookRotation(adjustedDirection);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            // transform.LookAt(transform.position + adjustedDirection);
-        }
-        
-
-        void SmoothSpeed(float value)
-        {
-            // currentSpeed = Mathf.SmoothDamp(currentSpeed, value, ref velocity, smoothTime);
-            
-            // // Clamp to zero if very small to avoid floating point precision issues
-            // if (Mathf.Abs(currentSpeed) < 0.001f)
-            // {
-            //     currentSpeed = 0f;
-            // }
-            currentSpeed = Mathf.SmoothDamp(currentSpeed, value, ref velocity, smoothTime);
+            transform.rotation = Quaternion.LookRotation(adjustedDirection);
         }
     }
+
+
+    void SmoothSpeed(float value)
+        {
+            currentSpeed = Mathf.SmoothDamp(currentSpeed, value, ref velocity, smoothTime);
+        }
+
+    public void HandleDash()
+    {
+        if (!dashTimer.IsRunning) return;
+
+        // Chỉ apply force ở frame đầu tiên của dash
+        if (dashTimer.progress >= 0.95f) // gần 1f = vừa mới start
+        {
+            rb.AddForce(transform.forward * dashForce, ForceMode.Impulse);
+        }
+    }
+
+
+}
+
+    

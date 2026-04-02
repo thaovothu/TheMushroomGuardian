@@ -11,7 +11,7 @@ using Game.Features.Player;
         protected static readonly int LocomotionHash = Animator.StringToHash("Locomotion");
         protected static readonly int JumpHash = Animator.StringToHash("Jump");
         public static readonly int DashHash = Animator.StringToHash("Dash");
-        public static readonly int dieHash = Animator.StringToHash("Die");
+        public static readonly int DieHash = Animator.StringToHash("Die");
         public static readonly int AttackHash = Animator.StringToHash("AttackNormal");
         public static readonly int HitHash = Animator.StringToHash("Hit");
         public static readonly int DefendHash = Animator.StringToHash("Defend");
