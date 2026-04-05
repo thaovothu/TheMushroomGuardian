@@ -53,16 +53,16 @@ MonoBehaviour:
   animator: {fileID: 7283971351278425884}
   freeLookVCam: {fileID: 0}
   input: {fileID: 11400000, guid: 8970661730d214e88806413605e0599e, type: 2}
-  moveSpeed: 6
-  dashSpeed: 200
-  rotationSpeed: 15
+  moveSpeed: 300
+  dashSpeed: 400
+  rotationSpeed: 10
   smoothTime: 0.2
   jumpForce: 4
   jumpDuration: 0.3
   jumpCooldown: 0
   gravityMultiplier: 4
-  dashForce: 8
-  dashDuration: 0.3
+  dashForce: 20
+  dashDuration: 0.5
   dashCooldown: 0
   attackCooldown: 0.3
   attackDistance: 1

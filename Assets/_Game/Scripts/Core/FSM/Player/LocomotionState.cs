@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using Game.Features.Player;
-
     public class LocomotionState : BaseState
     {
         public LocomotionState(PlayerController player, Animator animator) : base(player, animator)
