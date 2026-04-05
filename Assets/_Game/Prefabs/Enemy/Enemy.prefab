@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 8087536248390042246}
   - component: {fileID: 5181093077991299163}
   - component: {fileID: 6247106051374813129}
-  - component: {fileID: 8778727516113554544}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -95,7 +94,7 @@ MonoBehaviour:
   agent: {fileID: 2249430972308761786}
   animator: {fileID: 5977066465732136570}
   wanderRadius: 10
-  playerDetector: {fileID: 0}
+  playerDetector: {fileID: 6247106051374813129}
 --- !u!114 &6247106051374813129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,23 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   detectionAngle: 60
-  detectionRadius: 10
-  innerDetectionRadius: 5
-  detectionCooldown: 1
---- !u!114 &8778727516113554544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8615208637618527240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfb561c7e5eee417281109acb08d04f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detectionAngle: 60
-  detectionRadius: 10
+  detectionRadius: 8
   innerDetectionRadius: 5
   detectionCooldown: 1
 --- !u!1001 &461827782027652819

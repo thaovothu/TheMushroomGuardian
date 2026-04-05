@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using KBCore.Refs;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,18 +12,24 @@ public class EnemyController : MonoBehaviour
     [SerializeField] Animator animator;
     [SerializeField] float wanderRadius = 10f;
     [SerializeField] PlayerDetector playerDetector;
+    [SerializeField] float timeBetweenAttacks = 1f;
     StateMachine stateMachine;
+    CountdownTimer attackTimer;
 
     void OnValidate() => this.ValidateRefs();
 
     void Start()
     {
+        attackTimer = new CountdownTimer(timeBetweenAttacks);
         stateMachine = new StateMachine();
         var WalkState = new EnemyWanderState(this, animator, agent, wanderRadius);
         var ChaseState = new EnemyChaseState(this, animator, agent, playerDetector.Player);
-        
+        var AttackState = new EnemyAttackState(this, animator,agent, playerDetector.Player);
+
         At(WalkState, ChaseState, new FuncPredicate(() => playerDetector.CanDetectPlayer()));
         At(ChaseState, WalkState, new FuncPredicate(() => !playerDetector.CanDetectPlayer()));
+        At(ChaseState, AttackState, new FuncPredicate(() => playerDetector.CanAttackPlayer()));
+        At(AttackState, ChaseState, new FuncPredicate(() => !playerDetector.CanAttackPlayer()));
         stateMachine.SetState(WalkState);
     }
 
@@ -32,10 +39,18 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         stateMachine.Update();
+        attackTimer.Tick(Time.deltaTime);
     }
     void FixedUpdate()
     {
         stateMachine.FixedUpdate();
+    }
+    public void Attack()
+    {
+        if (attackTimer.IsRunning) return;
+
+        attackTimer.Start();
+        Debug.Log("Enemy Attack");
     }
 
 }
