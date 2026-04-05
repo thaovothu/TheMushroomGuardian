@@ -54,12 +54,19 @@ MonoBehaviour:
   freeLookVCam: {fileID: 0}
   input: {fileID: 11400000, guid: 8970661730d214e88806413605e0599e, type: 2}
   moveSpeed: 6
+  dashSpeed: 200
   rotationSpeed: 15
   smoothTime: 0.2
   jumpForce: 4
   jumpDuration: 0.3
   jumpCooldown: 0
   gravityMultiplier: 4
+  dashForce: 8
+  dashDuration: 0.3
+  dashCooldown: 0
+  attackCooldown: 0.3
+  attackDistance: 1
+  attackDamage: 10
 --- !u!114 &2344544117716131075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -629,7 +636,7 @@ Animator:
   m_GameObject: {fileID: 1699445914856275124}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 89f8d66f5591e45cbbdae6af105acfbe, type: 2}
+  m_Controller: {fileID: 9100000, guid: de26237ff78d446ec9cf3ca36996a6c6, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
