@@ -15,8 +15,7 @@ using Game.Features.Player;
         public override void OnEnter()
         {
             _animator.CrossFade(AttackHash, 0f);
-            //animator.CrossFade(AttackHash, 0f); //Set crossFadeDuaration = 0 to play fullfill attack animation
-            // player.Attack();
+            _playerController.Attack();
         }
 
         public override void FixedUpdate()

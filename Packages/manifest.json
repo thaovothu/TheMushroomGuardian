@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.kylewbanks.scenerefattribute": "https://github.com/KyleBanks/scene-ref-attribute.git",
+    "com.unity.ai.navigation": "1.1.7",
     "com.unity.cinemachine": "2.10.5",
     "com.unity.collab-proxy": "2.11.3",
     "com.unity.feature.mobile": "1.0.0",

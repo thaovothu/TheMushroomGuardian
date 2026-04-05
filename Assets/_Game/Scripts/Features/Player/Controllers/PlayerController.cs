@@ -30,6 +30,12 @@ public class PlayerController : MonoBehaviour
         [SerializeField] float dashForce = 8f;
         [SerializeField] float dashDuration = 0.3f;
         [SerializeField] float dashCooldown = 0f;
+
+        [Header("Attack Settings")]
+        [SerializeField] float attackCooldown = 0.3f;
+        [SerializeField] float attackDistance = 1f;
+        [SerializeField] int attackDamage = 10;
+
         const float ZeroF = 0f;
 
         Transform mainCam;
@@ -46,6 +52,7 @@ public class PlayerController : MonoBehaviour
         CountdownTimer jumpCooldownTimer;
         CountdownTimer dashTimer;
         CountdownTimer dashCooldownTimer;
+        CountdownTimer attackCooldownTimer;
 
         StateMachine stateMachine;
 
@@ -95,21 +102,30 @@ public class PlayerController : MonoBehaviour
         var locomotionState = new LocomotionState(this, animator);
         var jumpState = new JumpState(this, animator);
         var dashState = new DashState(this, animator);
+        var attackState = new AttackState(this, animator);
 
         // Define transitions
         At(locomotionState, jumpState, new FuncPredicate(() => jumpTimer.IsRunning));
         Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}");
         At(locomotionState, dashState, new FuncPredicate(() => dashTimer.IsRunning));
         Debug.Log($"[PlayerController] DashTimer is running {dashTimer.IsRunning}");
-        Any(locomotionState, new FuncPredicate(() => !jumpTimer.IsRunning && groundChecker.IsGrounded && !dashTimer.IsRunning)); 
-  
+        At(locomotionState, attackState, new FuncPredicate(() => attackCooldownTimer.IsRunning));
+        Any(locomotionState, new FuncPredicate(ReturnToLocomotion));
         Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}, Grounded {groundChecker.IsGrounded}");
-        
+
         // Set initial state
         stateMachine.SetState(locomotionState);
     }
 
-        void SetupTimers()
+    bool ReturnToLocomotion()
+    {
+        return !jumpTimer.IsRunning 
+        && groundChecker.IsGrounded 
+        && !dashTimer.IsRunning 
+        && !attackCooldownTimer.IsRunning;
+    }
+
+    void SetupTimers()
         {
             // Setup timers
             jumpTimer = new CountdownTimer(jumpDuration);
@@ -127,8 +143,9 @@ public class PlayerController : MonoBehaviour
                     // Giảm velocity sau dash để không trượt quá xa
                 rb.velocity = new Vector3(rb.velocity.x * 0.3f, rb.velocity.y, rb.velocity.z * 0.3f);
             };
+            attackCooldownTimer = new CountdownTimer(attackCooldown);
 
-        timers = new List<Timer> {jumpTimer, jumpCooldownTimer, dashTimer, dashCooldownTimer};
+            timers = new List<Timer> {jumpTimer, jumpCooldownTimer, dashTimer, dashCooldownTimer, attackCooldownTimer};
         }
 
 
@@ -139,12 +156,14 @@ public class PlayerController : MonoBehaviour
         {
             input.Jump += OnJump;
             input.Dash += OnDash;
+            input.Attack += OnAttack;
         }
 
         void OnDisable()
         {
             input.Jump -= OnJump;
             input.Dash -= OnDash;
+            input.Attack -= OnAttack;
         }
 
         void OnJump(bool performed)
@@ -172,6 +191,13 @@ public class PlayerController : MonoBehaviour
             // }
         }
 
+        void OnAttack()
+        {
+            if (!attackCooldownTimer.IsRunning)
+            {
+                attackCooldownTimer.Start();
+            }
+        }
 
         void FixedUpdate()
         {
@@ -250,6 +276,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Attack()
+    {
+        Vector3 attackPos = transform.position + transform.forward;
+        Collider[] hitEnemies = Physics.OverlapSphere(attackPos, attackDistance);
+        foreach (var enemy in hitEnemies)
+        {
+            Debug.Log($"Hit {enemy.name}");
+            if (enemy.CompareTag("Enemy"))
+            {
+                Debug.Log($"Hit enemy {enemy.name}");
+                
+            }
+        }
+    }
 
 }
 
