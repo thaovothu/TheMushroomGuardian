@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.AI;
 
     [RequireComponent(typeof(NavMeshAgent))]
-    public class EnemyController : MonoBehaviour
+    [RequireComponent(typeof(PlayerDetector))]
+public class EnemyController : MonoBehaviour
 {
     [SerializeField] NavMeshAgent agent;
     [SerializeField] Animator animator;
-
+    [SerializeField] float wanderRadius = 10f;
+    [SerializeField] PlayerDetector playerDetector;
     StateMachine stateMachine;
 
     void OnValidate() => this.ValidateRefs();
@@ -16,8 +18,11 @@ using UnityEngine.AI;
     void Start()
     {
         stateMachine = new StateMachine();
-        var WalkState = new EnemyWanderState(this, animator, agent, 5f);
-        Any(WalkState, new FuncPredicate(() => true));
+        var WalkState = new EnemyWanderState(this, animator, agent, wanderRadius);
+        var ChaseState = new EnemyChaseState(this, animator, agent, playerDetector.Player);
+        
+        At(WalkState, ChaseState, new FuncPredicate(() => playerDetector.CanDetectPlayer()));
+        At(ChaseState, WalkState, new FuncPredicate(() => !playerDetector.CanDetectPlayer()));
         stateMachine.SetState(WalkState);
     }
 
