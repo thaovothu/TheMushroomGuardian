@@ -13,6 +13,9 @@ jobs:
       matrix:
         target-branch: [
           "feature/player-movement", 
+          "feature/enemy-movement",
+          "art/materials",
+
         ]
       fail-fast: false # Nếu một nhánh bị conflict, các nhánh khác vẫn tiếp tục chạy
 
