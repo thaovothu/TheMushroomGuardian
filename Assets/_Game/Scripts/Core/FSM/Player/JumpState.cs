@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Game.Features.Player;
-
     public class JumpState : BaseState
     {
         public JumpState(PlayerController player, Animator animator) : base(player, animator)
