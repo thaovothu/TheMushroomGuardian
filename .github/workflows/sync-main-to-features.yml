@@ -15,6 +15,7 @@ jobs:
           "feature/player-movement", 
           "feature/enemy-movement",
           "art/materials",
+          "feature/config-system",
 
         ]
       fail-fast: false # Nếu một nhánh bị conflict, các nhánh khác vẫn tiếp tục chạy
