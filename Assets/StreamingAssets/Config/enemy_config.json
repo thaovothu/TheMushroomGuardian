@@ -1,0 +1,23 @@
+{
+  "attacker": [
+    { "level": 1, "hp": 80, "damage": 20, "regen": 0 },
+    { "level": 2, "hp": 110, "damage": 28, "regen": 1 },
+    { "level": 3, "hp": 140, "damage": 36, "regen": 2 },
+    { "level": 4, "hp": 180, "damage": 45, "regen": 3 },
+    { "level": 5, "hp": 220, "damage": 60, "regen": 5 }
+  ],
+  "defender": [
+    { "level": 1, "hp": 150, "damage": 10, "regen": 2 },
+    { "level": 2, "hp": 200, "damage": 15, "regen": 3 },
+    { "level": 3, "hp": 260, "damage": 20, "regen": 4 },
+    { "level": 4, "hp": 320, "damage": 25, "regen": 6 },
+    { "level": 5, "hp": 400, "damage": 30, "regen": 8 }
+  ],
+  "exploder": [
+    { "level": 1, "hp": 90, "damage": 25 },
+    { "level": 2, "hp": 120, "damage": 35 },
+    { "level": 3, "hp": 150, "damage": 50 },
+    { "level": 4, "hp": 180, "damage": 65 },
+    { "level": 5, "hp": 220, "damage": 80 }
+  ]
+}

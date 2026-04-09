@@ -1,0 +1,9 @@
+{
+  "elements": [
+    { "attacker": "dat", "defender": "khi", "multiplier": 1.5 },
+    { "attacker": "khi", "defender": "nuoc", "multiplier": 1.5 },
+    { "attacker": "nuoc", "defender": "lua", "multiplier": 1.5 },
+    { "attacker": "lua", "defender": "dat", "multiplier": 1.5 }
+  ],
+  "reverseMultiplier": 0.7
+}

@@ -1,0 +1,6 @@
+{
+  "weapons": [
+    { "name": "quyen", "damagePercent": 20, "attackSpeed": 1 },
+    { "name": "cung", "damagePercent": 10, "attackSpeed": 3 }
+  ]
+}

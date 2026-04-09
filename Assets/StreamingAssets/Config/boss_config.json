@@ -1,0 +1,9 @@
+{
+  "boss": [
+    { "level": 1, "hp": 400, "damage": 10, "regen": 1, "behavior": "basic" },
+    { "level": 2, "hp": 550, "damage": 15, "regen": 2, "behavior": "basic" },
+    { "level": 3, "hp": 750, "damage": 22, "regen": 3, "behavior": "basic" },
+    { "level": 4, "hp": 1000, "damage": 30, "regen": 4, "behavior": "switch_2_elements" },
+    { "level": 5, "hp": 1800, "damage": 40, "regen": 5, "behavior": "switch_4_elements" }
+  ]
+}

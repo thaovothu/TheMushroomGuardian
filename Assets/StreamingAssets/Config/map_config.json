@@ -1,0 +1,39 @@
+{
+  "maps": [
+    {
+      "mapId": 1,
+      "attacker": [1, 1, 1],
+      "defender": [1, 2],
+      "exploder": [1],
+      "bossLevel": 1
+    },
+    {
+      "mapId": 2,
+      "attacker": [1, 2, 2, 2],
+      "defender": [2, 2, 2],
+      "exploder": [2, 2],
+      "bossLevel": 2
+    },
+    {
+      "mapId": 3,
+      "attacker": [2, 2, 2, 3, 3],
+      "defender": [3, 3, 4],
+      "exploder": [2, 3, 3],
+      "bossLevel": 3
+    },
+    {
+      "mapId": 4,
+      "attacker": [3, 3, 4, 4, 4, 4],
+      "defender": [3, 4],
+      "exploder": [4, 5],
+      "bossLevel": 4
+    },
+    {
+      "mapId": 5,
+      "attacker": [4, 4, 4, 4, 4],
+      "defender": [4, 4],
+      "exploder": [4, 4],
+      "bossLevel": 5
+    }
+  ]
+}

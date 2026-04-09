@@ -1,0 +1,10 @@
+{
+  "mana": 150,
+  "levels": [
+    { "level": 1, "hp": 100, "damage": 10, "exp": 50 },
+    { "level": 2, "hp": 140, "damage": 15, "exp": 100 },
+    { "level": 3, "hp": 180, "damage": 22, "exp": 150 },
+    { "level": 4, "hp": 230, "damage": 30, "exp": 200 },
+    { "level": 5, "hp": 300, "damage": 40, "exp": 300 }
+  ]
+}

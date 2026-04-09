@@ -1,0 +1,59 @@
+{
+  "quests": [
+    {
+      "id": 1,
+      "name": "MainQuest1_Tutorial",
+      "map": 0,
+      "type": "tutorial",
+      "objectives": [
+        { "type": "move", "description": "Di chuyển nhân vật" },
+        { "type": "camera", "description": "Xoay camera" },
+        { "type": "jump", "description": "Nhảy" },
+        { "type": "attack", "description": "Đánh thường" },
+        { "type": "dash", "description": "Lướt" },
+        { "type": "reach", "target": "gate1", "description": "Đi đến cổng 1" }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "MainQuest2",
+      "map": 1,
+      "type": "combat",
+      "objectives": [
+        { "type": "kill", "enemyType": "any", "count": 10 },
+        { "type": "rescue", "target": "spirit" },
+        { "type": "collect", "item": "crystal", "count": 1 }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "MainQuest3",
+      "map": 2,
+      "type": "combat",
+      "objectives": [
+        { "type": "kill", "enemyType": "any", "count": 12 },
+        { "type": "collect", "item": "crystal", "count": 1 }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "MainQuest4",
+      "map": 3,
+      "type": "combat",
+      "objectives": [
+        { "type": "kill", "enemyType": "any", "count": 15 },
+        { "type": "collect", "item": "crystal", "count": 1 }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "MainQuest5_Final",
+      "map": 4,
+      "type": "boss",
+      "objectives": [
+        { "type": "kill", "enemyType": "boss", "count": 1 },
+        { "type": "complete", "description": "Giải cứu Cây Nấm Mẹ" }
+      ]
+    }
+  ]
+}

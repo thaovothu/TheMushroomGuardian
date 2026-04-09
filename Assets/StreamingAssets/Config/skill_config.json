@@ -1,0 +1,18 @@
+{
+  "dat": {
+    "skill1": { "name": "shield_dat", "damage": 0, "defense": 120, "mana": 30, "range": "near" },
+    "skill2": { "name": "quake_punch", "damage": 75, "defense": 40, "mana": 25, "range": "near" }
+  },
+  "khi": {
+    "skill1": { "name": "shield_khi", "damage": 0, "defense": 60, "mana": 20, "range": "near" },
+    "skill2": { "name": "wind_slash", "damage": 50, "defense": 30, "mana": 20, "range": "far" }
+  },
+  "nuoc": {
+    "skill1": { "name": "shield_nuoc", "damage": 0, "defense": 90, "mana": 30, "range": "near" },
+    "skill2": { "name": "tsunami", "damage": 55, "defense": 35, "mana": 25, "range": "far" }
+  },
+  "lua": {
+    "skill1": { "name": "shield_lua", "damage": 10, "defense": 70, "mana": 35, "range": "near" },
+    "skill2": { "name": "lava_blast", "damage": 85, "defense": 30, "mana": 30, "range": "far" }
+  }
+}

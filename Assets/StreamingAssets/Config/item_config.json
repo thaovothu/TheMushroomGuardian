@@ -1,0 +1,12 @@
+{
+  "items": [
+    { "id": 1, "type": "heal", "value": 30 },
+    { "id": 2, "type": "mana", "value": 40 },
+    { "id": 3, "type": "buff_damage", "value": 30, "duration": 10 },
+    { "id": 4, "type": "buff_defense", "value": 30, "duration": 10 },
+    { "id": 5, "type": "weapon_quyen", "value": 20 },
+    { "id": 6, "type": "weapon_cung", "value": 10 },
+    { "id": 7, "type": "exp", "min": 10, "max": 100 },
+    { "id": 8, "type": "crystal", "elements": ["dat", "khi", "nuoc", "lua"] }
+  ]
+}
