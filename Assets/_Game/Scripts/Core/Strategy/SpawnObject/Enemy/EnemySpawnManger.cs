@@ -1,20 +1,19 @@
+using System.Linq;
 using UnityEngine;
-public class CollectibleSpawnManager : EntitySpawnManager
+
+public class EnemySpawnManger : EntitySpawnManager
 {
-    [SerializeField] CollectibleData[] collectibleData;
-    [SerializeField] float spawnInterval = 1f;
+    [SerializeField] BaseEnemySO[] enemyList;
+    [SerializeField] float spawnInterval = 2f;
 
-    EntitySpawner<Collectible> spawner;
-
+    EntitySpawner<Enemy> spawner;
     CountdownTimer spawnTimer;
     int counter;
-
     protected override void Awake()
     {
         base.Awake();
-        spawner = new EntitySpawner<Collectible>(new EntityFactory<Collectible>(collectibleData),
+        spawner = new EntitySpawner<Enemy>(new EntityFactory<Enemy, BaseEnemySO>(enemyList),
             spawnPointStrategy);
-
         spawnTimer = new CountdownTimer(spawnInterval);
         spawnTimer.OnTimerStopped += () =>
         {

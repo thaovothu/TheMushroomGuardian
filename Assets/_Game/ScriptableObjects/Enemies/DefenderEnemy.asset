@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acb73ab328eb14c1eabd0f96688f7a24, type: 3}
+  m_Name: DefenderEnemy
+  m_EditorClassIdentifier: 
+  enemyVariants: []
+  enemyDataList:
+  - levelEnemy: 1
+    moveSpeed: 2.5
+    hp: 150
+    damage: 10
+    recover: 2
+  - levelEnemy: 2
+    moveSpeed: 2.7
+    hp: 200
+    damage: 15
+    recover: 3
+  - levelEnemy: 3
+    moveSpeed: 3
+    hp: 260
+    damage: 20
+    recover: 4
+  - levelEnemy: 4
+    moveSpeed: 3.2
+    hp: 320
+    damage: 25
+    recover: 6
+  - levelEnemy: 5
+    moveSpeed: 3.5
+    hp: 400
+    damage: 30
+    recover: 8
