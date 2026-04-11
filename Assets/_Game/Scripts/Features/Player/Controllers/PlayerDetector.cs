@@ -15,7 +15,7 @@ public class PlayerDetector : MonoBehaviour
 
     IDetectionStrategy detectionStrategy;
 
-    void Start()
+    void Awake()
     {
         detectionTimer = new CountdownTimer(detectionCooldown);
         Player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -25,6 +25,7 @@ public class PlayerDetector : MonoBehaviour
     void Update()
     {
         detectionTimer.Tick(Time.deltaTime);
+        Debug.Log("hih"+Player.name);   
     }
     public bool CanDetectPlayer()
     {

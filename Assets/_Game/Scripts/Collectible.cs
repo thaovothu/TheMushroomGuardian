@@ -15,4 +15,18 @@ public class Collectible : Entity
     {
         
     }
+
+    // Call this to return the collectible to the pool instead of destroying it.
+    public void ReturnToPool()
+    {
+        var poolable = GetComponent<Poolable>();
+        if (poolable != null)
+        {
+            poolable.ReturnToPool();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 }
