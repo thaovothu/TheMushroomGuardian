@@ -12,13 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acb73ab328eb14c1eabd0f96688f7a24, type: 3}
   m_Name: AttackerEnemy
   m_EditorClassIdentifier: 
-  prefab: {fileID: 8615208637618527240, guid: bd7b87c481ac34150ad34a5132313464, type: 3}
   enemyVariants:
   - enemyName: EnemyAttack1
-    enemyPrefab: {fileID: 8615208637618527240, guid: bd7b87c481ac34150ad34a5132313464,
+    enemyPrefab: {fileID: 8615208637618527240, guid: 6196f3aa35c0e4613ad20419cfb8ac79,
       type: 3}
   - enemyName: EnemyAttack2
-    enemyPrefab: {fileID: 8615208637618527240, guid: bd7b87c481ac34150ad34a5132313464,
+    enemyPrefab: {fileID: 8615208637618527240, guid: 6196f3aa35c0e4613ad20419cfb8ac79,
+      type: 3}
+  - enemyName: EnemyAttack3
+    enemyPrefab: {fileID: 8615208637618527240, guid: 2930ca38ec86e4e4cbf3b058a1656bc7,
+      type: 3}
+  - enemyName: EnemyAttack4
+    enemyPrefab: {fileID: 8615208637618527240, guid: c3b2997bf642a44908d7eca89cebfb57,
+      type: 3}
+  - enemyName: EnemyAttack5
+    enemyPrefab: {fileID: 8615208637618527240, guid: aebd35455f5a540e28cf16fe429d681a,
       type: 3}
   enemyData:
   - levelEnemy: 1

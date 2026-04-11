@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 535702951195797787}
   - component: {fileID: 5876949206263575393}
   m_Layer: 0
-  m_Name: MushroomAngryPBR
+  m_Name: EnemyAttackerModel2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
