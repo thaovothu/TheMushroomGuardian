@@ -12,29 +12,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acb73ab328eb14c1eabd0f96688f7a24, type: 3}
   m_Name: ExploderEnemy
   m_EditorClassIdentifier: 
-  enemyVariants: []
-  enemyDataList:
-  - levelEnemy: 0
+  enemyVariants:
+  - enemyName: EnemyExploder1
+    enemyPrefab: {fileID: 8615208637618527240, guid: bd7b87c481ac34150ad34a5132313464,
+      type: 3}
+  - enemyName: EnemyExploder2
+    enemyPrefab: {fileID: 8615208637618527240, guid: 6196f3aa35c0e4613ad20419cfb8ac79,
+      type: 3}
+  - enemyName: EnemyExploder3
+    enemyPrefab: {fileID: 8615208637618527240, guid: 2930ca38ec86e4e4cbf3b058a1656bc7,
+      type: 3}
+  enemyData:
+  - levelEnemy: 1
     moveSpeed: 4.5
     hp: 90
     damage: 25
     recover: 0
-  - levelEnemy: 0
+  - levelEnemy: 2
     moveSpeed: 4.8
     hp: 120
     damage: 35
     recover: 0
   - levelEnemy: 0
+    moveSpeed: 0
+    hp: 0
+    damage: 0
+    recover: 0
+  - levelEnemy: 3
     moveSpeed: 5.2
     hp: 150
     damage: 50
     recover: 0
-  - levelEnemy: 0
-    moveSpeed: 5.6
-    hp: 180
-    damage: 65
-    recover: 0
-  - levelEnemy: 0
+  - levelEnemy: 5
     moveSpeed: 6
     hp: 220
     damage: 80

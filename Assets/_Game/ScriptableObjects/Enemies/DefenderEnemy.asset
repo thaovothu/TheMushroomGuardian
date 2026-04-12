@@ -12,8 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acb73ab328eb14c1eabd0f96688f7a24, type: 3}
   m_Name: DefenderEnemy
   m_EditorClassIdentifier: 
-  enemyVariants: []
-  enemyDataList:
+  enemyVariants:
+  - enemyName: EnemyDefend1
+    enemyPrefab: {fileID: 8615208637618527240, guid: bd7b87c481ac34150ad34a5132313464,
+      type: 3}
+  - enemyName: EnemyDefend
+    enemyPrefab: {fileID: 8615208637618527240, guid: bd7b87c481ac34150ad34a5132313464,
+      type: 3}
+  - enemyName: EnemyDefend
+    enemyPrefab: {fileID: 8615208637618527240, guid: bd7b87c481ac34150ad34a5132313464,
+      type: 3}
+  - enemyName: EnemyDefend
+    enemyPrefab: {fileID: 8615208637618527240, guid: bd7b87c481ac34150ad34a5132313464,
+      type: 3}
+  enemyData:
   - levelEnemy: 1
     moveSpeed: 2.5
     hp: 150
