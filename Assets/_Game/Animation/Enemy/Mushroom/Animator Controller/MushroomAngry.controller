@@ -410,7 +410,7 @@ AnimatorStateMachine:
     m_Position: {x: 890, y: 450, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8056150702058732440}
-    m_Position: {x: 1210, y: 350, z: 0}
+    m_Position: {x: 20, y: 440, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -2140581142041582740}
     m_Position: {x: 1210, y: 430, z: 0}
@@ -621,7 +621,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mushroom_GetHitAngry
+  m_Name: Hit
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []

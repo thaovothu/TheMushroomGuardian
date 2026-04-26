@@ -169,7 +169,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Cactus_GetHit
+  m_Name: Hit
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -444,7 +444,7 @@ AnimatorStateMachine:
     m_Position: {x: 200, y: 170, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6426579264433560804}
-    m_Position: {x: 480, y: 170, z: 0}
+    m_Position: {x: 80, y: 420, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3294049035850038410}
     m_Position: {x: 200, y: -40, z: 0}
@@ -456,7 +456,7 @@ AnimatorStateMachine:
     m_Position: {x: 480, y: 250, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 385160802644305663}
-    m_Position: {x: 480, y: 380, z: 0}
+    m_Position: {x: 80, y: 320, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5216594718692824874}
     m_Position: {x: 480, y: 450, z: 0}
@@ -468,7 +468,7 @@ AnimatorStateMachine:
     m_Position: {x: 480, y: 600, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -5501600826603657768}
-    m_Position: {x: 480, y: 670, z: 0}
+    m_Position: {x: 80, y: 370, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -712750264504991223}
     m_Position: {x: 810, y: 670, z: 0}
@@ -483,13 +483,13 @@ AnimatorStateMachine:
     m_Position: {x: 810, y: 390, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4451525808264394557}
-    m_Position: {x: 1130, y: 290, z: 0}
+    m_Position: {x: 80, y: 470, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -9188783226061403085}
     m_Position: {x: 1130, y: 370, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 9054988256709439777}
-    m_Position: {x: 1130, y: 450, z: 0}
+    m_Position: {x: 80, y: 520, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -561,7 +561,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Cactus_Die
+  m_Name: Die
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -574,8 +574,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 1827226128182048838, guid: 85954cadc1314eb7ba106f3d72458d2e,
-    type: 3}
+  m_Motion: {fileID: 7400000, guid: bd8cbe664944a49f18ed9ba57fc0e4d8, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

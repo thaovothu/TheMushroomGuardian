@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 8087536248390042246}
   - component: {fileID: 5181093077991299163}
   - component: {fileID: 6247106051374813129}
-  m_Layer: 0
+  - component: {fileID: 7439398471394844302}
+  m_Layer: 7
   m_Name: EnemyAttacker1
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -96,6 +97,8 @@ MonoBehaviour:
   wanderRadius: 10
   playerDetector: {fileID: 6247106051374813129}
   timeBetweenAttacks: 1
+  heathSystem: {fileID: 7439398471394844302}
+  hitDuration: 2
 --- !u!114 &6247106051374813129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,6 +116,20 @@ MonoBehaviour:
   innerDetectionRadius: 5
   detectionCooldown: 1
   attackRange: 2
+--- !u!114 &7439398471394844302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8615208637618527240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ded77d6442874d7b8fd3cbb56781523, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 200
+  currentHealth: 0
 --- !u!1001 &461827782027652819
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -175,6 +192,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EnemyAttackerModel1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1006438018938304421, guid: a48631e259d0486fa83621f7d8f36e72,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3161471076739395176, guid: a48631e259d0486fa83621f7d8f36e72,
+        type: 3}
+      propertyPath: targetHealth
+      value: 
+      objectReference: {fileID: 7439398471394844302}
+    - target: {fileID: 8852119081875939081, guid: a48631e259d0486fa83621f7d8f36e72,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852119081875939081, guid: a48631e259d0486fa83621f7d8f36e72,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8877864000643567519, guid: a48631e259d0486fa83621f7d8f36e72,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

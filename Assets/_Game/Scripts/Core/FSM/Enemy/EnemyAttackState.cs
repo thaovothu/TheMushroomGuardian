@@ -18,7 +18,9 @@ public class EnemyAttackState : EnemyBaseState
         _animator.CrossFade(AttackHash, crossFadeDuration);
     }
     public override void OnExit()
-    {}
+    {
+        
+    }
     public override void Update()
     {
         agent.SetDestination(player.position);

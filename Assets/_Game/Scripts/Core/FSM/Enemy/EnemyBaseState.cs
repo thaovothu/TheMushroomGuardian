@@ -14,6 +14,7 @@ public abstract class EnemyBaseState : IState
     protected static readonly int RunHash = Animator.StringToHash("RunFWD");
     protected static readonly int AttackHash = Animator.StringToHash("Attack01");
     protected static readonly int DieHash = Animator.StringToHash("Die");
+    protected static readonly int HitHash = Animator.StringToHash("Hit");
 
     protected const float crossFadeDuration = 0.01f;
     protected EnemyBaseState(EnemyController enemyController, Animator animator)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,8 @@ public class PoolSpawnManager : MonoBehaviour
     [SerializeField] int initialSize = 5;
     [SerializeField] float spawnInterval = 1f;
     [SerializeField] public int spawnPerTick = 1;
-    [SerializeField] int mapLevelToLoad = 1; // levelMap value to load at Start
+    [SerializeField] int mapLevelToLoad = 1; 
+    public static Action<GameObject> OnRelease;
 
     public enum StrategyType { Linear, Random }
     public StrategyType strategy = StrategyType.Linear;
@@ -25,6 +27,9 @@ public class PoolSpawnManager : MonoBehaviour
 
     void Awake()
     {
+        OnRelease -= ReleaseToPool;
+        OnRelease += ReleaseToPool;
+        
         foreach (BaseEnemySO p in enemySO)
         {
             if (p == null || p.enemyVariants[0].enemyPrefab == null) continue;
@@ -170,7 +175,7 @@ public class PoolSpawnManager : MonoBehaviour
                 return t;
             case StrategyType.Random:
                 if (randomPool == null || randomPool.Count == 0) ResetRandomPool();
-                var idx = Random.Range(0, randomPool.Count);
+                var idx = UnityEngine.Random.Range(0, randomPool.Count);
                 var r = randomPool[idx];
                 randomPool.RemoveAt(idx);
                 return r;
@@ -187,6 +192,7 @@ public class PoolSpawnManager : MonoBehaviour
     // release helper, can be called by pooled objects when collected
     public void ReleaseToPool(GameObject go)
     {
+        Debug.Log($"[PoolSpawnManager] ReleaseToPool called for {go.name}");
         var poolable = go.GetComponent<SimplePoolable>();
         if (poolable != null) poolable.ReturnToPool();
         else Destroy(go);

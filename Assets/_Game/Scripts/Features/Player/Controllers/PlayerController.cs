@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cinemachine;
@@ -9,6 +10,8 @@ public class PlayerController : MonoBehaviour
         [Header("References")]
         [SerializeField] Rigidbody rb;
         [SerializeField] GroundChecker groundChecker;
+        [SerializeField] EquipmentSystem equipmentSystem;
+        [SerializeField]public HeathSystem heathSystem;
         [SerializeField] Animator animator;
         [SerializeField] CinemachineFreeLook freeLookVCam;
         [SerializeField] InputReader input;
@@ -36,6 +39,10 @@ public class PlayerController : MonoBehaviour
         [SerializeField] float attackDistance = 1f;
         [SerializeField] int attackDamage = 10;
 
+        [Header("Hit Settings")]
+        [SerializeField] float hitForce = 0;
+        [SerializeField] float hitDuration = 2f;
+
         const float ZeroF = 0f;
 
         Transform mainCam;
@@ -53,6 +60,8 @@ public class PlayerController : MonoBehaviour
         CountdownTimer dashTimer;
         CountdownTimer dashCooldownTimer;
         CountdownTimer attackCooldownTimer;
+        CountdownTimer hitTimer;
+        CountdownTimer hitCooldownTimer;
 
         StateMachine stateMachine;
 
@@ -81,7 +90,6 @@ public class PlayerController : MonoBehaviour
             stateMachine.Update();
             HandleTimers();
             UpdateAnimator();
-
             // Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}, DashTimer is running {dashTimer.IsRunning}, Grounded {groundChecker.IsGrounded}");
         }
 
@@ -103,13 +111,18 @@ public class PlayerController : MonoBehaviour
         var jumpState = new JumpState(this, animator);
         var dashState = new DashState(this, animator);
         var attackState = new AttackState(this, animator);
+        var combatState = new CombatState(this, animator);
+        var hitState = new HitState(this, animator);
+        // var dieState = new DieState(this, animator);
 
         // Define transitions
         At(locomotionState, jumpState, new FuncPredicate(() => jumpTimer.IsRunning));
         Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}");
         At(locomotionState, dashState, new FuncPredicate(() => dashTimer.IsRunning));
         Debug.Log($"[PlayerController] DashTimer is running {dashTimer.IsRunning}");
-        At(locomotionState, attackState, new FuncPredicate(() => attackCooldownTimer.IsRunning));
+        At(locomotionState, attackState, new FuncPredicate(() => attackCooldownTimer.IsRunning && equipmentSystem.IsAttackNormal()));
+        At(locomotionState, combatState, new FuncPredicate(() => attackCooldownTimer.IsRunning && !equipmentSystem.IsAttackNormal()));
+        Any(hitState, new FuncPredicate(() => heathSystem.IsHitPlayer()));
         Any(locomotionState, new FuncPredicate(ReturnToLocomotion));
         Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}, Grounded {groundChecker.IsGrounded}");
 
@@ -122,7 +135,8 @@ public class PlayerController : MonoBehaviour
         return !jumpTimer.IsRunning 
         && groundChecker.IsGrounded 
         && !dashTimer.IsRunning 
-        && !attackCooldownTimer.IsRunning;
+        && !attackCooldownTimer.IsRunning
+        && !heathSystem.IsHitPlayer();
     }
 
     void SetupTimers()
@@ -145,7 +159,8 @@ public class PlayerController : MonoBehaviour
             };
             attackCooldownTimer = new CountdownTimer(attackCooldown);
 
-            timers = new List<Timer> {jumpTimer, jumpCooldownTimer, dashTimer, dashCooldownTimer, attackCooldownTimer};
+            hitTimer = new CountdownTimer(hitDuration);    
+            timers = new List<Timer> {jumpTimer, jumpCooldownTimer, dashTimer, dashCooldownTimer, attackCooldownTimer, hitTimer };
         }
 
 
@@ -172,10 +187,6 @@ public class PlayerController : MonoBehaviour
             {
                 jumpTimer.Start();
             }
-            // else if (!performed && jumpTimer.IsRunning)
-            // {
-            //     jumpTimer.Stop();
-            // }
             
         }
 
@@ -192,14 +203,19 @@ public class PlayerController : MonoBehaviour
         }
 
         void OnAttack()
-        {
+        {   
             if (!attackCooldownTimer.IsRunning)
             {
                 attackCooldownTimer.Start();
             }
         }
 
-        void FixedUpdate()
+        public void StartHitTimer()
+        {
+            hitTimer.Start();
+        }
+
+    void FixedUpdate()
         {
             stateMachine.FixedUpdate();
         }
@@ -223,10 +239,12 @@ public class PlayerController : MonoBehaviour
         }
 
         rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
+        Debug.Log($"[PlayerController] JumpVelocity {jumpVelocity}, Grounded {groundChecker.IsGrounded}");
     }
 
     public void HandleMovement()
     {
+        // if (dashTimer.IsRunning) return;
         var adjustedDirection = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * movement;
 
         if (adjustedDirection.magnitude > ZeroF)
@@ -286,9 +304,28 @@ public class PlayerController : MonoBehaviour
             if (enemy.CompareTag("Enemy"))
             {
                 Debug.Log($"Hit enemy {enemy.name}");
+                enemy.GetComponent<HeathSystem>()?.TakeDamage(attackDamage);
                 
             }
         }
+    }
+
+
+    // public void CombatAttack()
+    // {
+    //     equipmentSystem.StartDealDamage();
+    // }
+
+    public void CombatAttack()
+    {
+        StartCoroutine(DoCombatAttackWindow(0.15f)); // chỉnh 0.15s phù hợp animation
+    }
+
+    IEnumerator DoCombatAttackWindow(float window)
+    {
+        equipmentSystem.StartDealDamage();
+        yield return new WaitForSeconds(window);
+        equipmentSystem.EndDealDamage();
     }
 
 }

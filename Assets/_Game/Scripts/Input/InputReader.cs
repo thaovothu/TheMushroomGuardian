@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 using static PlayerInputActions;
 
     [CreateAssetMenu(fileName = "InputReader", menuName = "Input/InputReader")]
@@ -44,15 +45,26 @@ using static PlayerInputActions;
 
         bool IsDeviceMouse(InputAction.CallbackContext context) => context.control.device.name == "Mouse";
 
-        public void OnFire(InputAction.CallbackContext context)
+    // public void OnFire(InputAction.CallbackContext context)
+    // {
+    //     if (context.phase == InputActionPhase.Started)
+    //     {
+    //         Attack.Invoke();
+    //     }
+    // }
+    public void OnFire(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started)
         {
-            if (context.phase == InputActionPhase.Started)
-            {
-                Attack.Invoke();
-            }
-        }
+            // Nếu đang click vào UI → bỏ qua
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+                return;
 
-        public void OnMouseControlCamera(InputAction.CallbackContext context)
+            Attack?.Invoke();
+        }
+    }
+
+    public void OnMouseControlCamera(InputAction.CallbackContext context)
         {
             switch (context.phase)
             {
