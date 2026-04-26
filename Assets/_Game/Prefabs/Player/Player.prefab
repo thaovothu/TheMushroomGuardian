@@ -27,7 +27,7 @@ Transform:
   m_LocalRotation: {x: 0.50068265, y: -0.86229, z: 0.04112363, w: -0.06388836}
   m_LocalPosition: {x: -0.002, y: -0.0176, z: -0.0068}
   m_LocalScale: {x: 0.039835494, y: 0.039835494, z: 0.03983551}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3399074779406847671}
   - {fileID: 4432233264093232843}
@@ -46,6 +46,8 @@ GameObject:
   - component: {fileID: 2344544117716131075}
   - component: {fileID: 4784903554988055207}
   - component: {fileID: 7782412570375716345}
+  - component: {fileID: 4597631145767251850}
+  - component: {fileID: 5371692734678377173}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -83,6 +85,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 4784903554988055207}
   groundChecker: {fileID: 2344544117716131075}
+  equipmentSystem: {fileID: 4597631145767251850}
+  heathSystem: {fileID: 5371692734678377173}
   animator: {fileID: 7283971351278425884}
   freeLookVCam: {fileID: 0}
   input: {fileID: 11400000, guid: 8970661730d214e88806413605e0599e, type: 2}
@@ -100,6 +104,8 @@ MonoBehaviour:
   attackCooldown: 0.3
   attackDistance: 1
   attackDamage: 10
+  hitForce: 0
+  hitDuration: 2
 --- !u!114 &2344544117716131075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,6 +172,45 @@ CapsuleCollider:
   m_Height: 1.5
   m_Direction: 1
   m_Center: {x: 0, y: 0.7, z: 0}
+--- !u!114 &4597631145767251850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6884184332377935561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0e4f4296d6644329b2ea756969db703, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponHolder: {fileID: 7113913222101526408}
+  weaponSheath: {fileID: 4818346365699451050}
+  currentWeaponType: 0
+  weaponList:
+  - {fileID: 3974729404590891400, guid: 2b33ff2a932dd41c699c96c7c681b55e, type: 3}
+  - {fileID: 7565231334304266331, guid: 44d0db5b9cba24584b201d563d126f9b, type: 3}
+  - {fileID: 5656417020975345133, guid: 3ac26237c568a4842a48a4626375b0fb, type: 3}
+  weaponNone: {fileID: 0}
+  weaponBow: {fileID: 0}
+  weaponSword: {fileID: 0}
+  animator: {fileID: 7283971351278425884}
+  PlayerController: {fileID: 9100000, guid: de26237ff78d446ec9cf3ca36996a6c6, type: 2}
+  Sword_Override: {fileID: 22100000, guid: 5e6c2d5e361d147c7a711c9f0e00f69d, type: 2}
+  Bow_Override: {fileID: 22100000, guid: b4bf2acb386e1456585c2eb14bcf8867, type: 2}
+--- !u!114 &5371692734678377173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6884184332377935561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ded77d6442874d7b8fd3cbb56781523, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 200
 --- !u!1 &7113913222101526408
 GameObject:
   m_ObjectHideFlags: 0
@@ -752,6 +797,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: 'BowBase '
       objectReference: {fileID: 0}
+    - target: {fileID: 7565231334304266331, guid: 44d0db5b9cba24584b201d563d126f9b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8609513086510257999, guid: 44d0db5b9cba24584b201d563d126f9b,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -844,7 +894,7 @@ PrefabInstance:
     - target: {fileID: 7565231334304266331, guid: 44d0db5b9cba24584b201d563d126f9b,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8609513086510257999, guid: 44d0db5b9cba24584b201d563d126f9b,
         type: 3}

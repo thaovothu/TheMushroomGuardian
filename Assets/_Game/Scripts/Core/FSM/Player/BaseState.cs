@@ -13,7 +13,10 @@ using System;
         public static readonly int DashHash = Animator.StringToHash("Dash");
         public static readonly int DieHash = Animator.StringToHash("Die");
         public static readonly int AttackHash = Animator.StringToHash("AttackNormal");
-        public static readonly int HitHash = Animator.StringToHash("Hit");
+        public static readonly int AttackWeaponHash = Animator.StringToHash("AttackWeapon");
+        public static readonly int DrawHash = Animator.StringToHash("AttackDraw");
+        public static readonly int SheathHash = Animator.StringToHash("AttackSheath");
+        public static readonly int HitHash = Animator.StringToHash("Hit1");
         public static readonly int DefendHash = Animator.StringToHash("Defend");
 
         protected const float crossFadeDuration = 0.01f;    

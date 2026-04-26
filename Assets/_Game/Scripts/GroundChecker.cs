@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GroundChecker : MonoBehaviour
 {
-    [SerializeField] float groundDistance = 1f;
+    [SerializeField] float groundDistance = 0.5f;
     [SerializeField] LayerMask groundLayer;
 
     public bool IsGrounded { get; private set; }
