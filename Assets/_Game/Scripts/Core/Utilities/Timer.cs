@@ -10,8 +10,8 @@ public abstract class Timer
 
     public float progress => initialTime > 0 ? Time / initialTime : 0f; // 0f if initialTime is 0 to avoid division by zero
 
-    public Action OnTimerStarted = delegate { };
-    public Action OnTimerStopped = delegate { };
+    public System.Action OnTimerStarted = delegate { };
+    public System.Action OnTimerStopped = delegate { };
 
     protected Timer(float value)
     {
