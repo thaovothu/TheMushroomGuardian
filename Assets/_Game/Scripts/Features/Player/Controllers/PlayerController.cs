@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cinemachine;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 public class PlayerController : MonoBehaviour
     {
         [Header("References")]
@@ -298,14 +297,24 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 attackPos = transform.position + transform.forward;
         Collider[] hitEnemies = Physics.OverlapSphere(attackPos, attackDistance);
+        Debug.Log($"[Player.Attack] Sphere at {attackPos}, radius {attackDistance}, found {hitEnemies.Length} colliders");
+        
         foreach (var enemy in hitEnemies)
         {
-            Debug.Log($"Hit {enemy.name}");
-            if (enemy.CompareTag("Enemy"))
+            Debug.Log($"[Player.Attack] Hit {enemy.name}, tag: {enemy.tag}");
+            if (enemy.CompareTag("Enemy") || enemy.CompareTag("Boss"))
             {
-                Debug.Log($"Hit enemy {enemy.name}");
-                enemy.GetComponent<HealthSystem>()?.TakeDamage(attackDamage);
-                
+                Debug.Log($"[Player.Attack] ✓ Hit ENEMY/BOSS {enemy.name}");
+                var health = enemy.GetComponent<HealthSystem>();
+                if (health != null)
+                {
+                    health.TakeDamage(attackDamage);
+                    Debug.Log($"[Player.Attack] ✓✓ Damage applied: {attackDamage}, new health: {health.CurrentHealth}");
+                }
+                else
+                {
+                    Debug.LogError($"[Player.Attack] ✗ {enemy.name} has no HealthSystem!");
+                }
             }
         }
     }

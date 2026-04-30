@@ -380,16 +380,32 @@ public class PoolSpawnManager : MonoBehaviour
         var go = _poolMap[variant.enemyPrefab].Get(spawnPoint);
         var data = enemySOData.GetEnemyData(level);
 
-        if (go.TryGetComponent<EnemyController>(out var controller))
+        // Try EnemyController first
+        if (go.TryGetComponent<EnemyController>(out var enemyController))
         {
-            controller.OnSpawn(data);
-        }
-        else
-        {
-            Debug.LogWarning($"[PoolSpawnManager] {go.name} thiếu EnemyController.");
+            enemyController.OnSpawn(data);
+            Debug.Log($"[PoolSpawnManager] ✓ Spawned ENEMY: {go.name} with level {level}");
+            return true;
         }
 
-        return true;
+        // Try BossBlackboard (new approach - no separate BossController needed)
+        if (go.TryGetComponent<BossBlackboard>(out var blackboard))
+        {
+            // Convert BaseEnemyData to BossData
+            // var bossData = new BossData
+            // {
+            //     hp = (int)data.hp,
+            //     damage = (int)data.damage,
+            //     moveSpeed = data.moveSpeed,
+            //     element = data.element  // Get element from BaseEnemyData
+            // };
+            blackboard.OnSpawn(data);
+            // Debug.Log($"[PoolSpawnManager] ✓ Spawned BOSS: {go.name} with level {level}, hp={bossData.hp}, dmg={bossData.damage}, elem={bossData.element}");
+            return true;
+        }
+
+        Debug.LogWarning($"[PoolSpawnManager] ✗ {go.name} thiếu EnemyController hoặc BossBlackboard!");
+        return false;
     }
 
     // ── Private: spawn point ───────────────────────

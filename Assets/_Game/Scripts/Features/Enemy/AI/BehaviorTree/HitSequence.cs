@@ -16,13 +16,21 @@ public class HitSequence : Sequence
 
     public override float GetUtility()
     {
+        if (bb == null)
+        {
+            Debug.LogError("[HitSequence] BossBlackboard is NULL!");
+            return 0f;
+        }
+
         // Nếu không bị hit, hit sequence không khả thi → utility = 0
-        if (bb != null && !bb.isHit)
+        if (!bb.isHit)
         {
             return 0f;
         }
 
         // Nếu bị hit, có utility cao (20) để interrupt hành động khác
-        return base.GetUtility() + 20f;  // DefaultUtility = 20
+        float utility = 20f;
+        Debug.Log($"[HitSequence] ✓ isHit detected! Returning utility: {utility}");
+        return utility;
     }
 }
