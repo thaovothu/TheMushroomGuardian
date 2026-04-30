@@ -43,17 +43,21 @@ public class BehaviorTree : MonoBehaviour
             AwakenRootTask();
 
             hasAwaken = true;
+            Debug.Log("[BehaviorTree] Root task awakened!");
         }
         if (Root == null)
         {
+            Debug.LogWarning("[BehaviorTree] Root is NULL!");
             return;
         }
+        
 
         if (Root != null && Root.Status == TaskStatus.Inactive)
         {
             return;
         }
         TaskStatus status = Task.Update(Root);
+        Debug.Log($"[BehaviorTree] Root status: {status}");
         if (status == TaskStatus.Success || status == TaskStatus.Failure)
         {
             if(RestartWhenDone)
@@ -73,6 +77,7 @@ public class BehaviorTree : MonoBehaviour
         {
             Root = externalBehaviorTree.CreateBehaviorTree();
             externalBehaviorTree.CreateData(Data);
+            Debug.Log($"[BehaviorTree] Created root from {externalBehaviorTree.GetType().Name}");
         }
 
         if(Root == null)
@@ -81,6 +86,7 @@ public class BehaviorTree : MonoBehaviour
             return;
         }
 
+        Debug.Log($"[BehaviorTree] Root type: {Root.GetType().Name}");
         Root.SetOwner(gameObject);
         Task.Awaken(Root);
         Task.Start(Root);

@@ -1,0 +1,147 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0232023dd515649cbbc4968c7825dbc4, type: 3}
+  m_Name: ItemSO
+  m_EditorClassIdentifier: 
+  items:
+  - itemId: 1
+    itemName: "H\u1ED3i m\xE1u"
+    itemType: 1
+    description: "H\u1ED3i 30% m\xE1u"
+    healAmount: 30
+    isPercentage: 1
+    buffValue: 0
+    buffDuration: 0
+    damageBonus: 0
+    expMin: 0
+    expMax: 0
+    element: 0
+  - itemId: 2
+    itemName: "H\u1ED3i mana"
+    itemType: 2
+    description: "H\u1ED3i 40% mana"
+    healAmount: 40
+    isPercentage: 1
+    buffValue: 0
+    buffDuration: 0
+    damageBonus: 0
+    expMin: 0
+    expMax: 0
+    element: 0
+  - itemId: 3
+    itemName: "T\u0103ng l\u1EF1c"
+    itemType: 3
+    description: "T\u0103ng 30% damage trong 10 gi\xE2y"
+    healAmount: 0
+    isPercentage: 0
+    buffValue: 30
+    buffDuration: 10
+    damageBonus: 0
+    expMin: 0
+    expMax: 0
+    element: 0
+  - itemId: 4
+    itemName: "B\xECnh ph\xF2ng th\u1EE7"
+    itemType: 4
+    description: "Gi\u1EA3m 30% damage nh\u1EADn trong 10 gi\xE2y"
+    healAmount: 0
+    isPercentage: 0
+    buffValue: 30
+    buffDuration: 10
+    damageBonus: 0
+    expMin: 0
+    expMax: 0
+    element: 0
+  - itemId: 5
+    itemName: "Ki\u1EBFm"
+    itemType: 5
+    description: "T\u0103ng 20% damage"
+    healAmount: 0
+    isPercentage: 0
+    buffValue: 0
+    buffDuration: 0
+    damageBonus: 20
+    expMin: 0
+    expMax: 0
+    element: 0
+  - itemId: 6
+    itemName: Cung
+    itemType: 6
+    description: "T\u0103ng 10% damage"
+    healAmount: 0
+    isPercentage: 0
+    buffValue: 0
+    buffDuration: 0
+    damageBonus: 10
+    expMin: 0
+    expMax: 0
+    element: 0
+  - itemId: 7
+    itemName: "Tinh th\u1EC3 EXP"
+    itemType: 7
+    description: "Nh\u1EADn 10-100 EXP"
+    healAmount: 0
+    isPercentage: 0
+    buffValue: 0
+    buffDuration: 0
+    damageBonus: 0
+    expMin: 10
+    expMax: 100
+    element: 0
+  - itemId: 8
+    itemName: "Tinh th\u1EC3 \u0110\u1EA5t"
+    itemType: 8
+    description: "Tinh th\u1EC3 nguy\xEAn t\u1ED1 \u0110\u1EA5t"
+    healAmount: 0
+    isPercentage: 0
+    buffValue: 0
+    buffDuration: 0
+    damageBonus: 0
+    expMin: 0
+    expMax: 0
+    element: 1
+  - itemId: 9
+    itemName: "Tinh th\u1EC3 Kh\xED"
+    itemType: 8
+    description: "Tinh th\u1EC3 nguy\xEAn t\u1ED1 Kh\xED"
+    healAmount: 0
+    isPercentage: 0
+    buffValue: 0
+    buffDuration: 0
+    damageBonus: 0
+    expMin: 0
+    expMax: 0
+    element: 2
+  - itemId: 10
+    itemName: "Tinh th\u1EC3 N\u01B0\u1EDBc"
+    itemType: 8
+    description: "Tinh th\u1EC3 nguy\xEAn t\u1ED1 N\u01B0\u1EDBc"
+    healAmount: 0
+    isPercentage: 0
+    buffValue: 0
+    buffDuration: 0
+    damageBonus: 0
+    expMin: 0
+    expMax: 0
+    element: 3
+  - itemId: 11
+    itemName: "Tinh th\u1EC3 L\u1EEDa"
+    itemType: 8
+    description: "Tinh th\u1EC3 nguy\xEAn t\u1ED1 L\u1EEDa"
+    healAmount: 0
+    isPercentage: 0
+    buffValue: 0
+    buffDuration: 0
+    damageBonus: 0
+    expMin: 0
+    expMax: 0
+    element: 4
