@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BehaviorTreeData
 {
-//    public SharedVariableList<NPC> NPCList = new();
+    // public SharedVariableList<NPC> NPCList = new();
     public SharedVariableList<float> FloatList = new();
     public SharedVariableList<bool> BoolList = new();
     public SharedVariableList<int> IntList = new();

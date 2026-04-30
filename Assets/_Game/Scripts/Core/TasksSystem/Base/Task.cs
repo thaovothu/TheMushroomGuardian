@@ -108,13 +108,19 @@ public abstract class Task
             return;
         }
 
-        if (task.hasAwaken == false)
+        // if (task.hasAwaken == false)
+        // {
+        //     Debug.LogWarning("Task has not been awaken yet.");
+        // }
+        // if (task.CompareStatus(TaskStatus.Running))
+        // {
+        //     Debug.LogWarning("Task " + task.FullName + " is already running.");
+        //     return;
+        // }
+
+        if (!task.Active)
         {
-            Debug.LogWarning("Task has not been awaken yet.");
-        }
-        if (task.CompareStatus(TaskStatus.Running))
-        {
-            Debug.LogWarning("Task " + task.FullName + " is already running.");
+            Debug.LogWarning("Task " + task.FullName + " is not running. Cannot stop.");
             return;
         }
 
@@ -159,7 +165,7 @@ public abstract class Task
 
     #region Name and BehaviorTree Viewer Parameters
     public virtual string Name {get; set;} = "";
-    public string FullName
+    public virtual string FullName
     {
         get
         {

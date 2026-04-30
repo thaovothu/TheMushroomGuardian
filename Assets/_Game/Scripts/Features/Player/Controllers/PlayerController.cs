@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
         [SerializeField] Rigidbody rb;
         [SerializeField] GroundChecker groundChecker;
         [SerializeField] EquipmentSystem equipmentSystem;
-        [SerializeField]public HeathSystem heathSystem;
+        [SerializeField]public HealthSystem healthSystem;
         [SerializeField] Animator animator;
         [SerializeField] CinemachineFreeLook freeLookVCam;
         [SerializeField] InputReader input;
@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log($"[PlayerController] DashTimer is running {dashTimer.IsRunning}");
         At(locomotionState, attackState, new FuncPredicate(() => attackCooldownTimer.IsRunning && equipmentSystem.IsAttackNormal()));
         At(locomotionState, combatState, new FuncPredicate(() => attackCooldownTimer.IsRunning && !equipmentSystem.IsAttackNormal()));
-        Any(hitState, new FuncPredicate(() => heathSystem.IsHitPlayer()));
+        Any(hitState, new FuncPredicate(() => healthSystem.IsHit));
         Any(locomotionState, new FuncPredicate(ReturnToLocomotion));
         Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}, Grounded {groundChecker.IsGrounded}");
 
@@ -136,7 +136,7 @@ public class PlayerController : MonoBehaviour
         && groundChecker.IsGrounded 
         && !dashTimer.IsRunning 
         && !attackCooldownTimer.IsRunning
-        && !heathSystem.IsHitPlayer();
+        && !healthSystem.IsHit;
     }
 
     void SetupTimers()
@@ -304,7 +304,7 @@ public class PlayerController : MonoBehaviour
             if (enemy.CompareTag("Enemy"))
             {
                 Debug.Log($"Hit enemy {enemy.name}");
-                enemy.GetComponent<HeathSystem>()?.TakeDamage(attackDamage);
+                enemy.GetComponent<HealthSystem>()?.TakeDamage(attackDamage);
                 
             }
         }

@@ -40,8 +40,10 @@ public class Sequence : Composite
     protected override void OnEntry()
     {
         currentTaskIndex = 0;
+        UnityEngine.Debug.Log($"[Sequence] OnEntry - Starting with {tasks.Count} tasks");
         if (IsCurrentTaskIndexValid())
         {
+            UnityEngine.Debug.Log($"[Sequence] OnEntry - Starting first task: {currentTask.GetType().Name}");
             Task.Start(currentTask);
         }
     }
@@ -52,17 +54,22 @@ public class Sequence : Composite
             return TaskStatus.Failure;
         }
 
+        UnityEngine.Debug.Log($"[Sequence] Updating task {currentTaskIndex}: {currentTask.GetType().Name}");
         TaskStatus status = Task.Update(currentTask);
+        UnityEngine.Debug.Log($"[Sequence] Task {currentTaskIndex} returned: {status}");
+        
         if (status == TaskStatus.Success)
         {
             Task.Stop(currentTask);
             currentTaskIndex++;
             if (currentTaskIndex >= tasks.Count)
             {
+                UnityEngine.Debug.Log($"[Sequence] All tasks completed! Sequence Success");
                 return TaskStatus.Success;
             }
             else
             {
+                UnityEngine.Debug.Log($"[Sequence] Moving to next task: {currentTaskIndex}");
                 Task.Start(currentTask);
                 
             }
@@ -70,6 +77,7 @@ public class Sequence : Composite
         else if (status == TaskStatus.Failure)
         {
             Task.Stop(currentTask);
+            UnityEngine.Debug.Log($"[Sequence] Task failed at index {currentTaskIndex}! Sequence Failed");
             return TaskStatus.Failure;
         }
         

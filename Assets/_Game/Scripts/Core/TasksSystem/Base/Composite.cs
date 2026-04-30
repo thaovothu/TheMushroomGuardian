@@ -13,6 +13,7 @@ public abstract class Composite : Task
     public void AddTask(Task task)
     {
         tasks.Add(task);
+        UnityEngine.Debug.Log($"[Composite] Added task: {task.GetType().Name}, Total: {tasks.Count}");
     }
     public void CreateTasks(params Task[] tasks)
     {
@@ -21,6 +22,7 @@ public abstract class Composite : Task
         {
             AddTask(task);
         }
+        UnityEngine.Debug.Log($"[Composite] CreateTasks: Created {this.tasks.Count} tasks");
     }
 
     public override void SetOwner(GameObject owner)
