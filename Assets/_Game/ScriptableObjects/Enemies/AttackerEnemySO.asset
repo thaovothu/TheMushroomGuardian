@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acb73ab328eb14c1eabd0f96688f7a24, type: 3}
+  m_Name: AttackerEnemySO
+  m_EditorClassIdentifier: 
+  enemyVariants:
+  - enemyName: EnemyAttack1
+    enemyPrefab: {fileID: 8615208637618527240, guid: 6196f3aa35c0e4613ad20419cfb8ac79,
+      type: 3}
+  - enemyName: EnemyAttack2
+    enemyPrefab: {fileID: 8615208637618527240, guid: 6196f3aa35c0e4613ad20419cfb8ac79,
+      type: 3}
+  - enemyName: EnemyAttack3
+    enemyPrefab: {fileID: 8615208637618527240, guid: 2930ca38ec86e4e4cbf3b058a1656bc7,
+      type: 3}
+  - enemyName: EnemyAttack4
+    enemyPrefab: {fileID: 8615208637618527240, guid: c3b2997bf642a44908d7eca89cebfb57,
+      type: 3}
+  - enemyName: EnemyAttack5
+    enemyPrefab: {fileID: 8615208637618527240, guid: aebd35455f5a540e28cf16fe429d681a,
+      type: 3}
+  enemyData:
+  - levelEnemy: 1
+    moveSpeed: 3.5
+    hp: 80
+    damage: 20
+    recover: 0
+  - levelEnemy: 2
+    moveSpeed: 3.8
+    hp: 110
+    damage: 28
+    recover: 1
+  - levelEnemy: 3
+    moveSpeed: 4.2
+    hp: 140
+    damage: 36
+    recover: 2
+  - levelEnemy: 4
+    moveSpeed: 4.6
+    hp: 180
+    damage: 45
+    recover: 3
+  - levelEnemy: 5
+    moveSpeed: 5
+    hp: 220
+    damage: 60
+    recover: 5

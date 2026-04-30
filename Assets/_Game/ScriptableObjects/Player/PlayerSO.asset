@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a17ebf2f1304402cb42c33175060694, type: 3}
+  m_Name: PlayerSO
+  m_EditorClassIdentifier: 
+  maxLevel: 5
+  baseMana: 150
+  levelData:
+  - level: 1
+    hp: 100
+    damage: 10
+    exp: 50
+  - level: 2
+    hp: 140
+    damage: 15
+    exp: 100
+  - level: 3
+    hp: 180
+    damage: 22
+    exp: 150
+  - level: 4
+    hp: 230
+    damage: 30
+    exp: 200
+  - level: 5
+    hp: 300
+    damage: 40
+    exp: 300

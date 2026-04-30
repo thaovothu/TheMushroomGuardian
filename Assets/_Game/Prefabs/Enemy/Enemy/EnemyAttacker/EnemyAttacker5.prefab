@@ -92,12 +92,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ab66637bca24442ab35e038c1349210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyRepository: {fileID: 11400000, guid: 327156cc3b5fe4569a410d5367c6f1f5, type: 2}
+  enemyLevel: 1
+  enemyName: EnemyAttack5
   agent: {fileID: 2249430972308761786}
   animator: {fileID: 5977066465732136570}
-  wanderRadius: 10
   playerDetector: {fileID: 6247106051374813129}
+  healthSystem: {fileID: 8565879024954584872}
+  wanderRadius: 10
   timeBetweenAttacks: 1
-  heathSystem: {fileID: 8565879024954584872}
   hitDuration: 2
 --- !u!114 &6247106051374813129
 MonoBehaviour:
