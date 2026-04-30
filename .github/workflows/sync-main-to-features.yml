@@ -17,6 +17,7 @@ jobs:
           "art/materials",
           "feature/config-system",
           "feature/combat-system",
+          "feature/boss-behaviour-tree",          
         ]
       fail-fast: false # Nếu một nhánh bị conflict, các nhánh khác vẫn tiếp tục chạy
 
