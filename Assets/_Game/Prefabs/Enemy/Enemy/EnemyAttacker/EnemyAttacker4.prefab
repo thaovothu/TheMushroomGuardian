@@ -92,9 +92,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ab66637bca24442ab35e038c1349210, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyRepository: {fileID: 11400000, guid: 327156cc3b5fe4569a410d5367c6f1f5, type: 2}
-  enemyLevel: 1
-  enemyName: EnemyAttack4
   agent: {fileID: 2249430972308761786}
   animator: {fileID: 5977066465732136570}
   playerDetector: {fileID: 6247106051374813129}
@@ -132,6 +129,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 200
+  baseDamage: 10
+  _currentHealth: 0
 --- !u!1001 &461827782027652819
 PrefabInstance:
   m_ObjectHideFlags: 0

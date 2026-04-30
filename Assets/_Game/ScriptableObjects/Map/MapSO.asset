@@ -25,6 +25,9 @@ MonoBehaviour:
     - baseEnemySO: {fileID: 11400000, guid: f70e1ce2dee0b4ee2961e55024cddb62, type: 2}
       count: 1
       level: 01000000
+    - baseEnemySO: {fileID: 11400000, guid: 654cb2947f495496abf228b173a287c4, type: 2}
+      count: 1
+      level: 01000000
   - levelMap: 2
     enemyConfigs:
     - baseEnemySO: {fileID: 11400000, guid: 327156cc3b5fe4569a410d5367c6f1f5, type: 2}
@@ -36,6 +39,9 @@ MonoBehaviour:
     - baseEnemySO: {fileID: 11400000, guid: f70e1ce2dee0b4ee2961e55024cddb62, type: 2}
       count: 2
       level: 0200000002000000
+    - baseEnemySO: {fileID: 11400000, guid: 654cb2947f495496abf228b173a287c4, type: 2}
+      count: 1
+      level: 02000000
   - levelMap: 3
     enemyConfigs:
     - baseEnemySO: {fileID: 11400000, guid: 327156cc3b5fe4569a410d5367c6f1f5, type: 2}
@@ -47,6 +53,9 @@ MonoBehaviour:
     - baseEnemySO: {fileID: 11400000, guid: f70e1ce2dee0b4ee2961e55024cddb62, type: 2}
       count: 3
       level: 020000000200000003000000
+    - baseEnemySO: {fileID: 11400000, guid: 654cb2947f495496abf228b173a287c4, type: 2}
+      count: 1
+      level: 03000000
   - levelMap: 4
     enemyConfigs:
     - baseEnemySO: {fileID: 11400000, guid: 327156cc3b5fe4569a410d5367c6f1f5, type: 2}
@@ -58,6 +67,9 @@ MonoBehaviour:
     - baseEnemySO: {fileID: 11400000, guid: f70e1ce2dee0b4ee2961e55024cddb62, type: 2}
       count: 2
       level: 030000000400000005000000
+    - baseEnemySO: {fileID: 11400000, guid: 654cb2947f495496abf228b173a287c4, type: 2}
+      count: 1
+      level: 04000000
   - levelMap: 5
     enemyConfigs:
     - baseEnemySO: {fileID: 11400000, guid: 327156cc3b5fe4569a410d5367c6f1f5, type: 2}
@@ -69,3 +81,6 @@ MonoBehaviour:
     - baseEnemySO: {fileID: 11400000, guid: f70e1ce2dee0b4ee2961e55024cddb62, type: 2}
       count: 3
       level: 030000000500000005000000
+    - baseEnemySO: {fileID: 11400000, guid: 654cb2947f495496abf228b173a287c4, type: 2}
+      count: 1
+      level: 05000000

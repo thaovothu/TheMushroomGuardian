@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acb73ab328eb14c1eabd0f96688f7a24, type: 3}
+  m_Name: BossSO
+  m_EditorClassIdentifier: 
+  enemyVariants:
+  - enemyName: Boss1
+    enemyPrefab: {fileID: 8035749023930785709, guid: b05c5fcfacd4e458baa66e86d6902d81,
+      type: 3}
+  - enemyName: Boss2
+    enemyPrefab: {fileID: 8035749023930785709, guid: b05c5fcfacd4e458baa66e86d6902d81,
+      type: 3}
+  - enemyName: Boss3
+    enemyPrefab: {fileID: 8035749023930785709, guid: b05c5fcfacd4e458baa66e86d6902d81,
+      type: 3}
+  - enemyName: Boss3
+    enemyPrefab: {fileID: 8035749023930785709, guid: b05c5fcfacd4e458baa66e86d6902d81,
+      type: 3}
+  - enemyName: Boss3
+    enemyPrefab: {fileID: 8035749023930785709, guid: b05c5fcfacd4e458baa66e86d6902d81,
+      type: 3}
+  enemyData:
+  - levelEnemy: 1
+    moveSpeed: 15
+    hp: 450
+    damage: 20
+    recover: 1
+  - levelEnemy: 2
+    moveSpeed: 18
+    hp: 550
+    damage: 25
+    recover: 2
+  - levelEnemy: 3
+    moveSpeed: 20
+    hp: 750
+    damage: 35
+    recover: 3
+  - levelEnemy: 4
+    moveSpeed: 23
+    hp: 1000
+    damage: 40
+    recover: 4
+  - levelEnemy: 5
+    moveSpeed: 30
+    hp: 1800
+    damage: 50
+    recover: 5
