@@ -27,7 +27,7 @@ public class DamageDealer : MonoBehaviour
         {
             if (hit.collider.CompareTag("Enemy"))
             {
-                Debug.Log($"Hit enemy {hit.collider.name}");
+                //Debug.Log($"Hit enemy {hit.collider.name}");
                 hit.collider.GetComponent<HealthSystem>()?.TakeDamage(weaponDamage);
 
                 canDealDamage = false; 

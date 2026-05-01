@@ -52,33 +52,33 @@
 //         var mapData = FindMapData(levelMap);
 //         if (mapData == null)
 //         {
-//             Debug.LogWarning("Map data not found for level " + levelMap);
+//             //Debug.LogWarning("Map data not found for level " + levelMap);
 //             return;
 //         }
 
 //         // Calculate planned total and print details for debugging
 //         plannedSpawnTotal = 0;
 //         actualSpawned = 0;
-//         Debug.Log($"[PoolSpawnManager] Loading map {levelMap} with {mapData.enemyConfigs.Count} enemy config(s)");
+//         //Debug.Log($"[PoolSpawnManager] Loading map {levelMap} with {mapData.enemyConfigs.Count} enemy config(s)");
 //         foreach (var cfg in mapData.enemyConfigs)
 //         {
 //             if (cfg == null)
 //             {
-//                 Debug.LogWarning("[PoolSpawnManager] Found null MapEnemyConfig, skipping.");
+//                 //Debug.LogWarning("[PoolSpawnManager] Found null MapEnemyConfig, skipping.");
 //                 continue;
 //             }
 //             if (cfg.baseEnemySO == null)
 //             {
-//                 Debug.LogWarning($"[PoolSpawnManager] MapEnemyConfig has null baseEnemySO, skipping one config (count={cfg.count}).");
+//                 //Debug.LogWarning($"[PoolSpawnManager] MapEnemyConfig has null baseEnemySO, skipping one config (count={cfg.count}).");
 //                 continue;
 //             }
 //             plannedSpawnTotal += cfg.count;
 //             string levels = cfg.level == null ? "(no levels)" : string.Join(",", System.Array.ConvertAll(cfg.level, x => x.ToString()));
-//             Debug.Log($"[PoolSpawnManager] Config: base={cfg.baseEnemySO.name} count={cfg.count} levels={levels}");
+//             //Debug.Log($"[PoolSpawnManager] Config: base={cfg.baseEnemySO.name} count={cfg.count} levels={levels}");
 //             SpawnFromConfig(cfg);
 //         }
-//         Debug.Log($"[PoolSpawnManager] Planned total spawns: {plannedSpawnTotal}");
-//         Debug.Log($"[PoolSpawnManager] Actual spawned after load: {actualSpawned}");
+//         //Debug.Log($"[PoolSpawnManager] Planned total spawns: {plannedSpawnTotal}");
+//         //Debug.Log($"[PoolSpawnManager] Actual spawned after load: {actualSpawned}");
 //     }
 
 //     // Spawn according to a single MapEnemyConfig: uses cfg.count and cfg.level[] per spawn
@@ -86,12 +86,12 @@
 //     {
 //         if (cfg == null)
 //         {
-//             Debug.LogWarning("[PoolSpawnManager] SpawnFromConfig called with null cfg");
+//             //Debug.LogWarning("[PoolSpawnManager] SpawnFromConfig called with null cfg");
 //             return;
 //         }
 //         if (cfg.baseEnemySO == null)
 //         {
-//             Debug.LogWarning("[PoolSpawnManager] SpawnFromConfig cfg.baseEnemySO is null");
+//             //Debug.LogWarning("[PoolSpawnManager] SpawnFromConfig cfg.baseEnemySO is null");
 //             return;
 //         }
 
@@ -101,7 +101,7 @@
 //             if (cfg.level != null && cfg.level.Length > 0)
 //                 level = cfg.level[i % cfg.level.Length];
 
-//             Debug.Log($"[PoolSpawnManager] Spawning {cfg.baseEnemySO.name} instance #{i} level={level}");
+//             //Debug.Log($"[PoolSpawnManager] Spawning {cfg.baseEnemySO.name} instance #{i} level={level}");
 //             SpawnOne(cfg.baseEnemySO, level);
 //         }
 //     }
@@ -128,30 +128,30 @@
 //     //     var variant = enemySOData.GetRandomEnemyVariant();
 //     //     if (variant == null)
 //     //     {
-//     //         Debug.LogWarning($"[PoolSpawnManager] No variants found in BaseEnemySO {enemySOData.name}");
+//     //         //Debug.LogWarning($"[PoolSpawnManager] No variants found in BaseEnemySO {enemySOData.name}");
 //     //         return;
 //     //     }
 //     //     if (variant.enemyPrefab == null)
 //     //     {
-//     //         Debug.LogWarning($"[PoolSpawnManager] Variant {variant.enemyName} in {enemySOData.name} has null prefab");
+//     //         //Debug.LogWarning($"[PoolSpawnManager] Variant {variant.enemyName} in {enemySOData.name} has null prefab");
 //     //         return;
 //     //     }
 
 //     //     // ensure pool exists for this prefab
 //     //     if (!poolMap.ContainsKey(variant.enemyPrefab)) poolMap[variant.enemyPrefab] = new SimpleObjectPool(variant.enemyPrefab, initialSize, this.transform);
 
-//     //     Debug.Log($"[PoolSpawnManager] GetNextSpawnPoint: linearIndex={linearIndex} spawnPointCount={spawnPointList?.Count ?? 0}");
+//     //     //Debug.Log($"[PoolSpawnManager] GetNextSpawnPoint: linearIndex={linearIndex} spawnPointCount={spawnPointList?.Count ?? 0}");
 //     //     Transform spawnPoint = GetNextSpawnPoint();
 //     //     if (spawnPoint == null)
 //     //     {
-//     //         Debug.LogWarning($"[PoolSpawnManager] GetNextSpawnPoint returned null (linearIndex={linearIndex}) - skipping spawn of {variant.enemyPrefab.name}");
+//     //         //Debug.LogWarning($"[PoolSpawnManager] GetNextSpawnPoint returned null (linearIndex={linearIndex}) - skipping spawn of {variant.enemyPrefab.name}");
 //     //         return;
 //     //     }
 
 //     //     var pool = poolMap[variant.enemyPrefab];
 //     //     var go = pool.Get(spawnPoint);
 //     //     actualSpawned++;
-//     //     Debug.Log($"[PoolSpawnManager] Spawned #{actualSpawned}: prefab={variant.enemyPrefab.name} at {spawnPoint.name} level={level}");
+//     //     //Debug.Log($"[PoolSpawnManager] Spawned #{actualSpawned}: prefab={variant.enemyPrefab.name} at {spawnPoint.name} level={level}");
 
 //     //     // initialize enemy with level data if has EnemyBase
 //     //     var data = enemySOData.GetEnemyData(level);
@@ -171,7 +171,7 @@
 //         var variant = enemySOData.GetRandomEnemyVariant();
 //         if (variant?.enemyPrefab == null)
 //         {
-//             Debug.LogWarning($"[PoolSpawnManager] No valid prefab in {enemySOData.name}");
+//             //Debug.LogWarning($"[PoolSpawnManager] No valid prefab in {enemySOData.name}");
 //             return;
 //         }
 
@@ -181,7 +181,7 @@
 //         Transform spawnPoint = GetNextSpawnPoint();
 //         if (spawnPoint == null)
 //         {
-//             Debug.LogWarning("[PoolSpawnManager] No spawn point available.");
+//             //Debug.LogWarning("[PoolSpawnManager] No spawn point available.");
 //             return;
 //         }
 
@@ -197,7 +197,7 @@
 //         }
 //         else
 //         {
-//             Debug.LogWarning($"[PoolSpawnManager] {go.name} không có EnemyController.");
+//             //Debug.LogWarning($"[PoolSpawnManager] {go.name} không có EnemyController.");
 //         }
 //     }
 
@@ -229,7 +229,7 @@
 //     // release helper, can be called by pooled objects when collected
 //     public void ReleaseToPool(GameObject go)
 //     {
-//         Debug.Log($"[PoolSpawnManager] ReleaseToPool called for {go.name}");
+//         //Debug.Log($"[PoolSpawnManager] ReleaseToPool called for {go.name}");
 //         var poolable = go.GetComponent<SimplePoolable>();
 //         if (poolable != null) poolable.ReturnToPool();
 //         else Destroy(go);
@@ -245,7 +245,10 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-
+public interface IPoolSpawned
+{
+    void OnSpawned();
+}
 public class PoolSpawnManager : MonoBehaviour
 {
     [Header("Config")]
@@ -294,7 +297,7 @@ public class PoolSpawnManager : MonoBehaviour
         var mapData = FindMapData(levelMap);
         if (mapData == null)
         {
-            Debug.LogWarning($"[PoolSpawnManager] Không tìm thấy map level {levelMap}.");
+            //Debug.LogWarning($"[PoolSpawnManager] Không tìm thấy map level {levelMap}.");
             return;
         }
 
@@ -310,7 +313,7 @@ public class PoolSpawnManager : MonoBehaviour
             actual += SpawnFromConfig(cfg);
         }
 
-        Debug.Log($"[PoolSpawnManager] Map {levelMap} — planned:{planned} actual:{actual}");
+        //Debug.Log($"[PoolSpawnManager] Map {levelMap} — planned:{planned} actual:{actual}");
     }
 
     // ── Private: map loading ───────────────────────
@@ -341,7 +344,7 @@ public class PoolSpawnManager : MonoBehaviour
                     _poolMap[variant.enemyPrefab] =
                         new SimpleObjectPool(variant.enemyPrefab, initialSize, transform);
 
-                    Debug.Log($"[PoolSpawnManager] Pool created: {variant.enemyPrefab.name} x{initialSize}");
+                    //Debug.Log($"[PoolSpawnManager] Pool created: {variant.enemyPrefab.name} x{initialSize}");
                 }
             }
         }
@@ -366,14 +369,14 @@ public class PoolSpawnManager : MonoBehaviour
         var variant = enemySOData.GetRandomEnemyVariant();
         if (variant?.enemyPrefab == null)
         {
-            Debug.LogWarning($"[PoolSpawnManager] Không có prefab hợp lệ trong {enemySOData.name}");
+            //Debug.LogWarning($"[PoolSpawnManager] Không có prefab hợp lệ trong {enemySOData.name}");
             return false;
         }
 
         var spawnPoint = GetNextSpawnPoint();
         if (spawnPoint == null)
         {
-            Debug.LogWarning("[PoolSpawnManager] Không có spawn point.");
+            //Debug.LogWarning("[PoolSpawnManager] Không có spawn point.");
             return false;
         }
 
@@ -384,7 +387,7 @@ public class PoolSpawnManager : MonoBehaviour
         if (go.TryGetComponent<EnemyController>(out var enemyController))
         {
             enemyController.OnSpawn(data);
-            Debug.Log($"[PoolSpawnManager] ✓ Spawned ENEMY: {go.name} with level {level}");
+            //Debug.Log($"[PoolSpawnManager] ✓ Spawned ENEMY: {go.name} with level {level}");
             return true;
         }
 
@@ -400,11 +403,11 @@ public class PoolSpawnManager : MonoBehaviour
             //     element = data.element  // Get element from BaseEnemyData
             // };
             blackboard.OnSpawn(data);
-            // Debug.Log($"[PoolSpawnManager] ✓ Spawned BOSS: {go.name} with level {level}, hp={bossData.hp}, dmg={bossData.damage}, elem={bossData.element}");
+            // //Debug.Log($"[PoolSpawnManager] ✓ Spawned BOSS: {go.name} with level {level}, hp={bossData.hp}, dmg={bossData.damage}, elem={bossData.element}");
             return true;
         }
 
-        Debug.LogWarning($"[PoolSpawnManager] ✗ {go.name} thiếu EnemyController hoặc BossBlackboard!");
+        //Debug.LogWarning($"[PoolSpawnManager] ✗ {go.name} thiếu EnemyController hoặc BossBlackboard!");
         return false;
     }
 
@@ -442,14 +445,16 @@ public class PoolSpawnManager : MonoBehaviour
     // ── Private: validation ────────────────────────
     static bool ValidateConfig(MapEnemyConfig cfg)
     {
-        if (cfg == null) { Debug.LogWarning("[PoolSpawnManager] Null config."); return false; }
-        if (cfg.baseEnemySO == null) { Debug.LogWarning("[PoolSpawnManager] baseEnemySO null."); return false; }
-        if (cfg.count <= 0) { Debug.LogWarning($"[PoolSpawnManager] count={cfg.count} không hợp lệ."); return false; }
+        if (cfg == null) { 
+            //Debug.LogWarning("[PoolSpawnManager] Null config."); return false; 
+            }
+        if (cfg.baseEnemySO == null) { 
+            //Debug.LogWarning("[PoolSpawnManager] baseEnemySO null."); return false; 
+            }
+        if (cfg.count <= 0) { 
+            //Debug.LogWarning($"[PoolSpawnManager] count={cfg.count} không hợp lệ."); return false;
+             }
         return true;
     }
-}
 
-public interface IPoolSpawned
-{
-    void OnSpawned();
 }

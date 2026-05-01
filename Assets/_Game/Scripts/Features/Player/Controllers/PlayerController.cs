@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour
             stateMachine.Update();
             HandleTimers();
             UpdateAnimator();
-            // Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}, DashTimer is running {dashTimer.IsRunning}, Grounded {groundChecker.IsGrounded}");
+            // //Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}, DashTimer is running {dashTimer.IsRunning}, Grounded {groundChecker.IsGrounded}");
         }
 
     private void HandleTimers()
@@ -116,14 +116,14 @@ public class PlayerController : MonoBehaviour
 
         // Define transitions
         At(locomotionState, jumpState, new FuncPredicate(() => jumpTimer.IsRunning));
-        Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}");
+        //Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}");
         At(locomotionState, dashState, new FuncPredicate(() => dashTimer.IsRunning));
-        Debug.Log($"[PlayerController] DashTimer is running {dashTimer.IsRunning}");
+        //Debug.Log($"[PlayerController] DashTimer is running {dashTimer.IsRunning}");
         At(locomotionState, attackState, new FuncPredicate(() => attackCooldownTimer.IsRunning && equipmentSystem.IsAttackNormal()));
         At(locomotionState, combatState, new FuncPredicate(() => attackCooldownTimer.IsRunning && !equipmentSystem.IsAttackNormal()));
         Any(hitState, new FuncPredicate(() => healthSystem.IsHit));
         Any(locomotionState, new FuncPredicate(ReturnToLocomotion));
-        Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}, Grounded {groundChecker.IsGrounded}");
+        //Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}, Grounded {groundChecker.IsGrounded}");
 
         // Set initial state
         stateMachine.SetState(locomotionState);
@@ -238,7 +238,7 @@ public class PlayerController : MonoBehaviour
         }
 
         rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
-        Debug.Log($"[PlayerController] JumpVelocity {jumpVelocity}, Grounded {groundChecker.IsGrounded}");
+        //Debug.Log($"[PlayerController] JumpVelocity {jumpVelocity}, Grounded {groundChecker.IsGrounded}");
     }
 
     public void HandleMovement()
@@ -297,23 +297,23 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 attackPos = transform.position + transform.forward;
         Collider[] hitEnemies = Physics.OverlapSphere(attackPos, attackDistance);
-        Debug.Log($"[Player.Attack] Sphere at {attackPos}, radius {attackDistance}, found {hitEnemies.Length} colliders");
+        //Debug.Log($"[Player.Attack] Sphere at {attackPos}, radius {attackDistance}, found {hitEnemies.Length} colliders");
         
         foreach (var enemy in hitEnemies)
         {
-            Debug.Log($"[Player.Attack] Hit {enemy.name}, tag: {enemy.tag}");
+            //Debug.Log($"[Player.Attack] Hit {enemy.name}, tag: {enemy.tag}");
             if (enemy.CompareTag("Enemy") || enemy.CompareTag("Boss"))
             {
-                Debug.Log($"[Player.Attack] ✓ Hit ENEMY/BOSS {enemy.name}");
+                //Debug.Log($"[Player.Attack] ✓ Hit ENEMY/BOSS {enemy.name}");
                 var health = enemy.GetComponent<HealthSystem>();
                 if (health != null)
                 {
                     health.TakeDamage(attackDamage);
-                    Debug.Log($"[Player.Attack] ✓✓ Damage applied: {attackDamage}, new health: {health.CurrentHealth}");
+                    //Debug.Log($"[Player.Attack] ✓✓ Damage applied: {attackDamage}, new health: {health.CurrentHealth}");
                 }
                 else
                 {
-                    Debug.LogError($"[Player.Attack] ✗ {enemy.name} has no HealthSystem!");
+                    //Debug.LogError($"[Player.Attack] ✗ {enemy.name} has no HealthSystem!");
                 }
             }
         }

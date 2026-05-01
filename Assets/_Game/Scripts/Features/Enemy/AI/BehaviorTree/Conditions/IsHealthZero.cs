@@ -12,7 +12,7 @@ public class IsHealthZero : Task
     protected override TaskStatus OnUpdate()
     {
         var result = bb.healthSystem.IsDead ? TaskStatus.Success : TaskStatus.Failure;
-        Debug.Log($"[IsHealthZero] CurrentHealth: {bb.healthSystem.CurrentHealth}, IsDead: {bb.healthSystem.IsDead}, Result: {result}");
+        //Debug.Log($"[IsHealthZero] CurrentHealth: {bb.healthSystem.CurrentHealth}, IsDead: {bb.healthSystem.IsDead}, Result: {result}");
         return result;
     }
 }

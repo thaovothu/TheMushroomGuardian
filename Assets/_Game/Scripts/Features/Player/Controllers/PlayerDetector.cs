@@ -25,7 +25,7 @@ public class PlayerDetector : MonoBehaviour
     void Update()
     {
         detectionTimer.Tick(Time.deltaTime);
-        // Debug.Log("hih"+Player.name);   
+        // //Debug.Log("hih"+Player.name);   
     }
     public bool CanDetectPlayer()
     {

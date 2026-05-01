@@ -13,7 +13,7 @@
 
 //     public override void OnEnter()
 //     {
-//         Debug.Log("Die State Entered");
+//         //Debug.Log("Die State Entered");
 //         _animator.CrossFade(dieHash, crossFadeDuration);
 //     }
 // }

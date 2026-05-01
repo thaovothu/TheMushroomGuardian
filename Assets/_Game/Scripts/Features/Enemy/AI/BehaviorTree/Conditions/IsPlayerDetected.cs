@@ -12,7 +12,7 @@ public class IsPlayerDetected : Task
     protected override TaskStatus OnUpdate()
     {
         var result = bb.CanDetectPlayer() ? TaskStatus.Success : TaskStatus.Failure;
-        Debug.Log($"[IsPlayerDetected] Distance: {bb.distanceToPlayer:F1}m, DetectRange: {bb.detectRange}m, Can Detect: {bb.CanDetectPlayer()}, Result: {result}");
+        //Debug.Log($"[IsPlayerDetected] Distance: {bb.distanceToPlayer:F1}m, DetectRange: {bb.detectRange}m, Can Detect: {bb.CanDetectPlayer()}, Result: {result}");
         return result;
     }
 }

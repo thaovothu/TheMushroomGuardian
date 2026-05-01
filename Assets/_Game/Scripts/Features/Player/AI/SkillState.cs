@@ -19,7 +19,7 @@
 //         if (player.mana.HasEnoughMana(skill.ManaCost) && skill.CanCast(player))
 //         {
 //             player.mana.UseMana(skill.ManaCost);
-//             Debug.Log("Player use " + skill.Name + " skill, mana cost: " + skill.ManaCost);
+//             //Debug.Log("Player use " + skill.Name + " skill, mana cost: " + skill.ManaCost);
 //             animator.CrossFade(skill.AnimationHash, crossFadeDuration);
 //             skill.Activate(player);
 //         }

@@ -15,7 +15,7 @@ public class IsHPBelow : Task
     {
         float hpPercent = bb.healthSystem.GetHPPercent();
         var result = hpPercent < threshold ? TaskStatus.Success : TaskStatus.Failure;
-        UnityEngine.Debug.Log($"[IsHPBelow] HPPercent: {hpPercent:F2}, Threshold: {threshold}, Result: {result}");
+        // UnityEngine.//Debug.Log($"[IsHPBelow] HPPercent: {hpPercent:F2}, Threshold: {threshold}, Result: {result}");
         return result;
     }
 }

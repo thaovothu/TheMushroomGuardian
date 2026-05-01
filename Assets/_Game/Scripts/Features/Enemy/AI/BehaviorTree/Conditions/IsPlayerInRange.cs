@@ -15,7 +15,7 @@ public class IsPlayerInRange : Task
     protected override TaskStatus OnUpdate()
     {
         var result = bb.distanceToPlayer <= range ? TaskStatus.Success : TaskStatus.Failure;
-        Debug.Log($"[IsPlayerInRange] Distance: {bb.distanceToPlayer}, Range: {range}, Result: {result}");
+        //Debug.Log($"[IsPlayerInRange] Distance: {bb.distanceToPlayer}, Range: {range}, Result: {result}");
         return result;
     }
 }

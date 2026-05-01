@@ -10,7 +10,7 @@ public class EnemyDieState : EnemyBaseState
 
     public override void OnEnter()
     {
-        Debug.Log("Enemy Die");
+        //Debug.Log("Enemy Die");
         _animator.CrossFade(DieHash, 0f);
     }
 

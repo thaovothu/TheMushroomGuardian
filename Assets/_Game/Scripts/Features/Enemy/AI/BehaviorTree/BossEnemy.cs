@@ -20,7 +20,7 @@ public class BossEnemy : MonoBehaviour
     {
         if (hs != _health) return;
         // drop crystal, trigger quest event, v.v.
-        Debug.Log($"[Boss] Dead — drop {bossElement} crystal");
+        //Debug.Log($"[Boss] Dead — drop {bossElement} crystal");
     }
 
     public ElementType GetElement() => bossElement;

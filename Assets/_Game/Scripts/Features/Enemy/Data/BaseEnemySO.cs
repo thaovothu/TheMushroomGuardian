@@ -19,17 +19,17 @@
 //         {
 //             if (enemy == null)
 //             {
-//                 Debug.LogWarning("BaseEnemySO: null EnemyVariant found, skipping.");
+//                 //Debug.LogWarning("BaseEnemySO: null EnemyVariant found, skipping.");
 //                 continue;
 //             }
 //             if (string.IsNullOrEmpty(enemy.enemyName))
 //             {
-//                 Debug.LogWarning($"BaseEnemySO {name}: EnemyVariant with empty name, skipping prefab {enemy.enemyPrefab?.name}");
+//                 //Debug.LogWarning($"BaseEnemySO {name}: EnemyVariant with empty name, skipping prefab {enemy.enemyPrefab?.name}");
 //                 continue;
 //             }
 //             if (enemyVariantLookup.ContainsKey(enemy.enemyName))
 //             {
-//                 Debug.LogWarning($"BaseEnemySO {name}: Duplicate EnemyVariant name '{enemy.enemyName}', skipping duplicate.");
+//                 //Debug.LogWarning($"BaseEnemySO {name}: Duplicate EnemyVariant name '{enemy.enemyName}', skipping duplicate.");
 //                 continue;
 //             }
 //             enemyVariantLookup.Add(enemy.enemyName, enemy);
@@ -39,12 +39,12 @@
 //         {
 //             if (enemy == null)
 //             {
-//                 Debug.LogWarning("BaseEnemySO: null BaseEnemyData found, skipping.");
+//                 //Debug.LogWarning("BaseEnemySO: null BaseEnemyData found, skipping.");
 //                 continue;
 //             }
 //             if (enemyDataLookup.ContainsKey(enemy.levelEnemy))
 //             {
-//                 Debug.LogWarning($"BaseEnemySO {name}: Duplicate BaseEnemyData level '{enemy.levelEnemy}', skipping duplicate.");
+//                 //Debug.LogWarning($"BaseEnemySO {name}: Duplicate BaseEnemyData level '{enemy.levelEnemy}', skipping duplicate.");
 //                 continue;
 //             }
 //             enemyDataLookup.Add(enemy.levelEnemy, enemy);
@@ -73,7 +73,7 @@
 //             return data;
 //         }
 
-//         Debug.Log("DataEnemy Empty");
+//         //Debug.Log("DataEnemy Empty");
 //         return default;
 //     }
 
@@ -117,16 +117,16 @@ public class BaseEnemySO : ScriptableObject, IEnemyRepository
         foreach (var e in enemyVariants)
         {
             if (e == null || string.IsNullOrEmpty(e.enemyName)) continue;
-            if (!_variantLookup.TryAdd(e.enemyName, e))
-                Debug.LogWarning($"[BaseEnemySO] Duplicate variant '{e.enemyName}'");
+            if (!_variantLookup.TryAdd(e.enemyName, e));
+                //Debug.LogWarning($"[BaseEnemySO] Duplicate variant '{e.enemyName}'");
         }
 
         _dataLookup = new();
         foreach (var d in enemyData)
         {
             if (d == null) continue;
-            if (!_dataLookup.TryAdd(d.levelEnemy, d))
-                Debug.LogWarning($"[BaseEnemySO] Duplicate level '{d.levelEnemy}'");
+            if (!_dataLookup.TryAdd(d.levelEnemy, d));
+                //Debug.LogWarning($"[BaseEnemySO] Duplicate level '{d.levelEnemy}'");
         }
     }
 

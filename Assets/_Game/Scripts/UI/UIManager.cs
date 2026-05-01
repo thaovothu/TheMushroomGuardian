@@ -43,15 +43,15 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void ShowUI(string panelName)
     {
-        Debug.Log("hihi" + panelName);
+        //Debug.Log("hihi" + panelName);
         if (uiDictionary.ContainsKey(panelName))
         {
             uiDictionary[panelName].SetActive(true);
-            Debug.Log($"[UIManager] Showing UI: {panelName}");
+            //Debug.Log($"[UIManager] Showing UI: {panelName}");
         }
         else
         {
-            Debug.LogWarning($"[UIManager] UI panel '{panelName}' not found!");
+            //Debug.LogWarning($"[UIManager] UI panel '{panelName}' not found!");
         }
     }
 
@@ -63,11 +63,11 @@ public class UIManager : MonoBehaviour
         if (uiDictionary.ContainsKey(panelName))
         {
             uiDictionary[panelName].SetActive(false);
-            Debug.Log($"[UIManager] Hiding UI: {panelName}");
+            //Debug.Log($"[UIManager] Hiding UI: {panelName}");
         }
         else
         {
-            Debug.LogWarning($"[UIManager] UI panel '{panelName}' not found!");
+            //Debug.LogWarning($"[UIManager] UI panel '{panelName}' not found!");
         }
     }
 
@@ -79,11 +79,11 @@ public class UIManager : MonoBehaviour
         if (uiDictionary.ContainsKey(panelName))
         {
             uiDictionary[panelName].SetActive(!uiDictionary[panelName].activeSelf);
-            Debug.Log($"[UIManager] Toggling UI: {panelName}");
+            //Debug.Log($"[UIManager] Toggling UI: {panelName}");
         }
         else
         {
-            Debug.LogWarning($"[UIManager] UI panel '{panelName}' not found!");
+            //Debug.LogWarning($"[UIManager] UI panel '{panelName}' not found!");
         }
     }
 
@@ -96,7 +96,7 @@ public class UIManager : MonoBehaviour
         {
             panel.SetActive(false);
         }
-        Debug.Log("[UIManager] Hiding all UI panels");
+        //Debug.Log("[UIManager] Hiding all UI panels");
     }
 
     /// <summary>

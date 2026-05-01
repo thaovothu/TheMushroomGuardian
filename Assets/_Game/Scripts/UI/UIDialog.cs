@@ -47,7 +47,7 @@ public class UIDialog : MonoBehaviour
     {
         if (dialogSO == null)
         {
-            Debug.LogWarning("[UIDialog] DialogSO is null!");
+            //Debug.LogWarning("[UIDialog] DialogSO is null!");
             return;
         }
 
@@ -176,7 +176,7 @@ public class UIDialog : MonoBehaviour
             gameObject.SetActive(false);
         }
 
-        Debug.Log("[UIDialog] Dialog ended");
+        //Debug.Log("[UIDialog] Dialog ended");
     }
 
     IEnumerator FadeOut()

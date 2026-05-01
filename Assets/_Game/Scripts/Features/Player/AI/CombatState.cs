@@ -13,7 +13,7 @@ using System;
 
         public override void OnEnter()
         {
-            Debug.Log("Enter Combat State");
+            //Debug.Log("Enter Combat State");
             _animator.CrossFade(AttackWeaponHash, 0f);
             _playerController.CombatAttack();
         }

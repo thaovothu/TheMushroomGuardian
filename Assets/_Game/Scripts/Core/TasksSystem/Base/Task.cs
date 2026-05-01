@@ -65,13 +65,13 @@ public abstract class Task
     {
         if(task == null)
         {
-            Debug.LogWarning("Cannot awaken a null task." );
+            // //Debug.LogWarning("Cannot awaken a null task." );
             return;
         }
 
         if (task.hasAwaken)
         {
-            Debug.LogWarning("Task " + task.FullName + " has already been awaken.");
+            // //Debug.LogWarning("Task " + task.FullName + " has already been awaken.");
             return;
         }
         task.OnAwake();
@@ -82,17 +82,17 @@ public abstract class Task
     {
         if (task == null)
         {
-            Debug.LogWarning("Cannot start a null task.");
+            // //Debug.LogWarning("Cannot start a null task.");
             return;
         }
 
         if (task.hasAwaken == false)
         {
-            Debug.LogWarning("Task has not been awaken yet.");
+            // //Debug.LogWarning("Task has not been awaken yet.");
         }
         if (task.CompareStatus(TaskStatus.Running))
         {
-            Debug.LogWarning("Task " + task.FullName + " is already running.");
+            // //Debug.LogWarning("Task " + task.FullName + " is already running.");
             return;
         }
 
@@ -104,23 +104,23 @@ public abstract class Task
     {
         if (task == null)
         {
-            Debug.LogWarning("Cannot stop a null task.");
+            // //Debug.LogWarning("Cannot stop a null task.");
             return;
         }
 
         // if (task.hasAwaken == false)
         // {
-        //     Debug.LogWarning("Task has not been awaken yet.");
+        //     //Debug.LogWarning("Task has not been awaken yet.");
         // }
         // if (task.CompareStatus(TaskStatus.Running))
         // {
-        //     Debug.LogWarning("Task " + task.FullName + " is already running.");
+        //     //Debug.LogWarning("Task " + task.FullName + " is already running.");
         //     return;
         // }
 
         if (!task.Active)
         {
-            Debug.LogWarning("Task " + task.FullName + " is not running. Cannot stop.");
+            // //Debug.LogWarning("Task " + task.FullName + " is not running. Cannot stop.");
             return;
         }
 
@@ -145,13 +145,13 @@ public abstract class Task
     {
         if(task == null)
         {
-            Debug.LogWarning("Cannot update a null task.");
+            // //Debug.LogWarning("Cannot update a null task.");
             return TaskStatus.Failure;
         }
 
         if (task.Status == TaskStatus.Success || task.Status == TaskStatus.Failure)
         {
-            Debug.LogWarning("Task " + task.FullName + " is not running. Cannot update.");
+            // //Debug.LogWarning("Task " + task.FullName + " is not running. Cannot update.");
             return TaskStatus.Inactive;  
         }
         TaskStatus status = task.OnUpdate();

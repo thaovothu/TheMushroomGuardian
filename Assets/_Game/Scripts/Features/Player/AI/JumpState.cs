@@ -7,7 +7,7 @@ using UnityEngine;
         { }
         public override void OnEnter()
         {
-            Debug.Log("FSM:Jump State Entered");
+            //Debug.Log("FSM:Jump State Entered");
             _animator.CrossFade(JumpHash, crossFadeDuration);
             
         }
@@ -18,7 +18,7 @@ using UnityEngine;
         }
         public override void OnExit()
         {
-            Debug.Log("Exit Jump State");
+            //Debug.Log("Exit Jump State");
             // _playerController.ResetSpeed();
         }
     }

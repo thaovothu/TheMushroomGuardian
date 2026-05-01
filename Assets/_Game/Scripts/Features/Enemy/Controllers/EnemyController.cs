@@ -47,7 +47,7 @@
 //     {
 //         stateMachine.Update();
 //         attackTimer.Tick(Time.deltaTime);
-//         // Debug.Log("heathSystem.IsDiePlayer()"+ heathSystem.IsDiePlayer());
+//         // //Debug.Log("heathSystem.IsDiePlayer()"+ heathSystem.IsDiePlayer());
 //     }
 //     void FixedUpdate()
 //     {
@@ -77,7 +77,7 @@
 //         if (attackTimer.IsRunning) return;
 
 //         attackTimer.Start();
-//         Debug.Log("Enemy Attack");
+//         //Debug.Log("Enemy Attack");
 
 //         if (playerDetector != null && playerDetector.Player != null)
 //         {
@@ -89,12 +89,12 @@
 //             }
 //             else
 //             {
-//                 Debug.LogWarning("Player has no HeathSystem component");
+//                 //Debug.LogWarning("Player has no HeathSystem component");
 //             }
 //         }
 //         else
 //         {
-//             Debug.LogWarning("playerDetector or player is null");
+//             //Debug.LogWarning("playerDetector or player is null");
 //         }
 //     }
 //     public void DieEnemy()
@@ -174,7 +174,7 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
         // Reset FSM
         SetUpStateMachine();
 
-        Debug.Log($"[EnemyController] {name} — hp:{_data.hp} dmg:{_data.damage} spd:{_data.moveSpeed}");
+        //Debug.Log($"[EnemyController] {name} — hp:{_data.hp} dmg:{_data.damage} spd:{_data.moveSpeed}");
     }
 
     // ── FSM ────────────────────────────────────────
@@ -213,7 +213,7 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
         var health = playerDetector.Player?.GetComponent<HealthSystem>();
         if (health == null)
         {
-            Debug.LogWarning($"[EnemyController] {name}: Player không có HealthSystem.");
+            //Debug.LogWarning($"[EnemyController] {name}: Player không có HealthSystem.");
             return;
         }
 

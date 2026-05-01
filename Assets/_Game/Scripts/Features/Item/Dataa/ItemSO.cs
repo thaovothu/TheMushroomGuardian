@@ -86,7 +86,7 @@ public class ItemSO : ScriptableObject
 
         if (items == null || items.Count == 0)
         {
-            Debug.LogWarning($"ItemSO '{name}': No item data configured!");
+            //Debug.LogWarning($"ItemSO '{name}': No item data configured!");
             return;
         }
 
@@ -94,21 +94,21 @@ public class ItemSO : ScriptableObject
         {
             if (item == null)
             {
-                Debug.LogWarning($"ItemSO '{name}': Null item data found, skipping.");
+                //Debug.LogWarning($"ItemSO '{name}': Null item data found, skipping.");
                 continue;
             }
 
             // Kiểm tra duplicate ID
             if (itemLookup.ContainsKey(item.itemId))
             {
-                Debug.LogWarning($"ItemSO '{name}': Duplicate item ID '{item.itemId}', skipping.");
+                //Debug.LogWarning($"ItemSO '{name}': Duplicate item ID '{item.itemId}', skipping.");
                 continue;
             }
 
             // Kiểm tra duplicate name
             if (!string.IsNullOrEmpty(item.itemName) && itemNameLookup.ContainsKey(item.itemName))
             {
-                Debug.LogWarning($"ItemSO '{name}': Duplicate item name '{item.itemName}', skipping.");
+                //Debug.LogWarning($"ItemSO '{name}': Duplicate item name '{item.itemName}', skipping.");
                 continue;
             }
 
@@ -141,7 +141,7 @@ public class ItemSO : ScriptableObject
             return item;
         }
 
-        Debug.LogWarning($"ItemSO '{name}': Item ID {itemId} not found!");
+        //Debug.LogWarning($"ItemSO '{name}': Item ID {itemId} not found!");
         return null;
     }
 
@@ -157,7 +157,7 @@ public class ItemSO : ScriptableObject
             return item;
         }
 
-        Debug.LogWarning($"ItemSO '{name}': Item '{itemName}' not found!");
+        //Debug.LogWarning($"ItemSO '{name}': Item '{itemName}' not found!");
         return null;
     }
 

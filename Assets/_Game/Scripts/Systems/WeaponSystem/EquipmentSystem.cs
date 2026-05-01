@@ -53,29 +53,29 @@ public class EquipmentSystem : MonoBehaviour
     }
 
     public bool IsAttackNormal(){
-        Debug.Log("Current weapon type:asdasda " + currentWeaponType);
+        //Debug.Log("Current weapon type:asdasda " + currentWeaponType);
         if (currentWeaponType == WeaponType.None) return true;
         return false;
     }
     public void SetWeaponInHand()
     {
-        Debug.Log("currentWeaponType"+ currentWeaponType);
+        //Debug.Log("currentWeaponType"+ currentWeaponType);
         SetWeaponAnim(currentWeaponType);
     }
     public void ChangeWeapon(WeaponType type)
     {
-        Debug.Log("Change weapon to " + type);
+        //Debug.Log("Change weapon to " + type);
         if (currentWeaponType == type) return;
         Destroy(currentWeaponInHand);
         currentWeaponType = type;
-        Debug.Log("currentWeaponTypeHIHIHI"+ currentWeaponType);
+        //Debug.Log("currentWeaponTypeHIHIHI"+ currentWeaponType);
         DrawWeapon();
         SetWeaponAnim(type);
     }
 
     void SetWeaponAnim(WeaponType type)
     {
-        Debug.Log("Set weapon animation for " + type);
+        //Debug.Log("Set weapon animation for " + type);
         switch (type)
         {
             case WeaponType.None:
@@ -95,7 +95,7 @@ public class EquipmentSystem : MonoBehaviour
     public void DrawWeapon()
     {
         currentWeaponInHand = Instantiate(weaponList[(int)currentWeaponType], weaponHolder.transform);
-        Debug.Log("Current weapon in hand: " + (int)currentWeaponType);
+        //Debug.Log("Current weapon in hand: " + (int)currentWeaponType);
     }
 
     public void SheathWeapon()
@@ -108,15 +108,15 @@ public class EquipmentSystem : MonoBehaviour
         switch (button)
         {
             case WeaponButton.BowButton:
-                Debug.Log("Bow button clicked");
+                //Debug.Log("Bow button clicked");
                 ChangeWeapon(WeaponType.Bow);
                 break;
             case WeaponButton.SwordButton:
-                Debug.Log("Sword button clicked");
+                //Debug.Log("Sword button clicked");
                 ChangeWeapon(WeaponType.Sword);
                 break;
             case WeaponButton.NoneButton:
-                Debug.Log("None button clicked");
+                //Debug.Log("None button clicked");
                 ChangeWeapon(WeaponType.None);
                 break;
         }

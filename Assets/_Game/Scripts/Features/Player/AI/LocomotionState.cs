@@ -9,7 +9,7 @@ using System;
         }
         public override void OnEnter()
         {
-            // Debug.Log("FSM: Locomotion State Entered");
+            // //Debug.Log("FSM: Locomotion State Entered");
             _animator.CrossFade(LocomotionHash, crossFadeDuration);
         }
 

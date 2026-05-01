@@ -77,7 +77,7 @@ public class SkillSO : ScriptableObject
 
         if (skills == null || skills.Count == 0)
         {
-            Debug.LogWarning($"SkillSO '{name}': No skill data configured!");
+            //Debug.LogWarning($"SkillSO '{name}': No skill data configured!");
             return;
         }
 
@@ -85,21 +85,21 @@ public class SkillSO : ScriptableObject
         {
             if (skill == null)
             {
-                Debug.LogWarning($"SkillSO '{name}': Null skill data found, skipping.");
+                //Debug.LogWarning($"SkillSO '{name}': Null skill data found, skipping.");
                 continue;
             }
 
             // Kiểm tra duplicate ID
             if (skillLookup.ContainsKey(skill.skillId))
             {
-                Debug.LogWarning($"SkillSO '{name}': Duplicate skill ID '{skill.skillId}', skipping.");
+                //Debug.LogWarning($"SkillSO '{name}': Duplicate skill ID '{skill.skillId}', skipping.");
                 continue;
             }
 
             // Kiểm tra duplicate name
             if (!string.IsNullOrEmpty(skill.skillName) && skillNameLookup.ContainsKey(skill.skillName))
             {
-                Debug.LogWarning($"SkillSO '{name}': Duplicate skill name '{skill.skillName}', skipping.");
+                //Debug.LogWarning($"SkillSO '{name}': Duplicate skill name '{skill.skillName}', skipping.");
                 continue;
             }
 
@@ -132,7 +132,7 @@ public class SkillSO : ScriptableObject
             return skill;
         }
 
-        Debug.LogWarning($"SkillSO '{name}': Skill ID {skillId} not found!");
+        //Debug.LogWarning($"SkillSO '{name}': Skill ID {skillId} not found!");
         return null;
     }
 
@@ -148,7 +148,7 @@ public class SkillSO : ScriptableObject
             return skill;
         }
 
-        Debug.LogWarning($"SkillSO '{name}': Skill '{skillName}' not found!");
+        //Debug.LogWarning($"SkillSO '{name}': Skill '{skillName}' not found!");
         return null;
     }
 
@@ -179,7 +179,7 @@ public class SkillSO : ScriptableObject
             return elementSkills[index];
         }
 
-        Debug.LogWarning($"SkillSO '{name}': Skill index {index} not found for element {element}!");
+        //Debug.LogWarning($"SkillSO '{name}': Skill index {index} not found for element {element}!");
         return null;
     }
 
