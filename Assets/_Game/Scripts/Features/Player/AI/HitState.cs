@@ -9,7 +9,7 @@ using System;
     }
     public override void OnEnter()
     {
-        Debug.Log("Hit State Entered");
+        //Debug.Log("Hit State Entered");
         _animator.CrossFade(HitHash, 0f);
         _playerController.StartHitTimer();
     }
@@ -27,6 +27,6 @@ using System;
     public override void OnExit()
     {
         _playerController.healthSystem.ClearHit();
-        Debug.Log("Exit Hit State");
+        //Debug.Log("Exit Hit State");
     }
 }

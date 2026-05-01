@@ -14,7 +14,7 @@ using System;
         }
         public override void OnEnter()
         {
-            Debug.Log("Dash State Entered");
+            //Debug.Log("Dash State Entered");
 
             //Play dash particle effect
             //dashParticle?.Play();
@@ -30,7 +30,7 @@ using System;
         }
         public override void OnExit()
         {
-            Debug.Log("Exit Dash State");
+            //Debug.Log("Exit Dash State");
         }
     }
 

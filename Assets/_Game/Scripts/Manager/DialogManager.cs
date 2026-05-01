@@ -29,7 +29,7 @@ public class DialogManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[DialogManager] UIDialog is not assigned!");
+            //Debug.LogWarning("[DialogManager] UIDialog is not assigned!");
         }
     }
 

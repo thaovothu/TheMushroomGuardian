@@ -24,7 +24,7 @@ public class EnemyWanderState : EnemyBaseState
 
     public override void OnExit ()
     {
-        Debug.Log("Enemy exit Walk");
+        //Debug.Log("Enemy exit Walk");
     }
 
     public override void Update ()

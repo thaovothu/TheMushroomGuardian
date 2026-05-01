@@ -54,7 +54,7 @@ namespace CartoonFX
 
 			if (!valid)
 			{
-				Debug.LogError(string.Format("Invalid ParticleTextFontAsset: '{0}'\n", this.name), this);
+				//Debug.LogError(string.Format("Invalid ParticleTextFontAsset: '{0}'\n", this.name), this);
 			}
 
 			return valid;

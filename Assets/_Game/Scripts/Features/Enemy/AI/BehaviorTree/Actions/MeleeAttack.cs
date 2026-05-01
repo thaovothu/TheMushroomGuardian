@@ -22,13 +22,13 @@ public class MeleeAttack : Action
         bb.PlayAnimation(BossAnimState.Attack);
         bb.lastAttackTime = Time.time;
         
-        Debug.Log($"[MeleeAttack] ✓✓✓ TRIGGERED! Playing attack animation, applying damage in 0.8s");
+        //Debug.Log($"[MeleeAttack] ✓✓✓ TRIGGERED! Playing attack animation, applying damage in 0.8s");
     }
 
     protected override TaskStatus OnUpdate()
     {
         timer += Time.deltaTime;
-        Debug.Log($"[MeleeAttack] Timer: {timer:F2}/0.8s");
+        //Debug.Log($"[MeleeAttack] Timer: {timer:F2}/0.8s");
         
         if (timer >= 0.8f)
         {
@@ -36,7 +36,7 @@ public class MeleeAttack : Action
             if (playerHealth != null)
             {
                 playerHealth.TakeDamage(bb.damageBoss, bb.currentElement);
-                Debug.Log($"[MeleeAttack] ✓ Damage applied! Returning SUCCESS");
+                //Debug.Log($"[MeleeAttack] ✓ Damage applied! Returning SUCCESS");
             }
             return TaskStatus.Success;
         }

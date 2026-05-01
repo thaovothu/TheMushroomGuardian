@@ -158,7 +158,25 @@ public class HealthSystem : MonoBehaviour
 
         _currentHealth = Mathf.Max(0f, _currentHealth - finalDamage);
         _isHit = true;
-
+        
+        // Hiển thị damage text — detect ai nhận damage dựa vào tag
+        bool isPlayerTakingDamage = gameObject.CompareTag("Player");
+        if (UIDameGenerator.current != null)
+        {
+            UIDameGenerator.current.ShowDamageText(transform.position, finalDamage, isPlayerTakingDamage);
+            Debug.Log($"[HealthSystem] ✓ Damage text shown: {finalDamage} (Player taking: {isPlayerTakingDamage})");
+        }
+        else
+        {
+            // Nếu current null, tìm lại
+            UIDameGenerator damageGen = FindObjectOfType<UIDameGenerator>();
+            if (damageGen != null)
+            {
+                damageGen.ShowDamageText(transform.position, finalDamage, isPlayerTakingDamage);
+                Debug.Log($"[HealthSystem] ✓ Damage text shown (found): {finalDamage} (Player taking: {isPlayerTakingDamage})");
+            }
+        }
+        
         OnHealthChanged?.Invoke(this, _currentHealth, maxHealth);
 
         if (_currentHealth <= 0f)

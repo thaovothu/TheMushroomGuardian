@@ -20,7 +20,7 @@ public class IsAttackReady : Task
         var result = elapsed >= cooldown ? TaskStatus.Success : TaskStatus.Failure;
         
         string attackType = useSkillCooldown ? "SKILL" : "MELEE";
-        Debug.Log($"[IsAttackReady] Type: {attackType}, Elapsed: {elapsed:F2}s, Cooldown: {cooldown}s, LastTime: {lastTime:F2}, Ready: {elapsed >= cooldown}, Result: {result}");
+        //Debug.Log($"[IsAttackReady] Type: {attackType}, Elapsed: {elapsed:F2}s, Cooldown: {cooldown}s, LastTime: {lastTime:F2}, Ready: {elapsed >= cooldown}, Result: {result}");
         
         return result;
     }

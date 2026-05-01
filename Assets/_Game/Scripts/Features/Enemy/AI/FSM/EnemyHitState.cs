@@ -10,7 +10,7 @@ public class EnemyHitState : EnemyBaseState
     }
     public override void OnEnter()
     {
-        Debug.Log("Enemy Hit");
+        //Debug.Log("Enemy Hit");
         _animator.CrossFade(HitHash, 0f);
         _enemyController.StartHitTimer();
     }

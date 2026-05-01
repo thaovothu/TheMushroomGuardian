@@ -12,7 +12,7 @@ public class IsPlayerInAttackRange : Task
     protected override TaskStatus OnUpdate()
     {
         var result = bb.CanAttackPlayer() ? TaskStatus.Success : TaskStatus.Failure;
-        Debug.Log($"[IsPlayerInAttackRange] Distance: {bb.distanceToPlayer:F1}m, AttackRange: {bb.attackRange}, Result: {result}");
+        //Debug.Log($"[IsPlayerInAttackRange] Distance: {bb.distanceToPlayer:F1}m, AttackRange: {bb.attackRange}, Result: {result}");
         return result;
     }
 }

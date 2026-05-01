@@ -12,7 +12,7 @@ public class IsHit : Task
     protected override TaskStatus OnUpdate()
     {
         var result = bb.isHit ? TaskStatus.Success : TaskStatus.Failure;
-        Debug.Log($"[IsHit] isHit: {bb.isHit}, Result: {result}");
+        //Debug.Log($"[IsHit] isHit: {bb.isHit}, Result: {result}");
         return result;
     }
 }

@@ -11,7 +11,7 @@ using System.Collections;
         }
         protected override TaskStatus OnUpdate()
         {
-            Debug.Log(Text);
+            // //Debug.Log(Text);
             return TaskStatus.Success;
         }
     }

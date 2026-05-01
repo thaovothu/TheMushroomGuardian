@@ -43,11 +43,11 @@ public class BehaviorTree : MonoBehaviour
             AwakenRootTask();
 
             hasAwaken = true;
-            Debug.Log("[BehaviorTree] Root task awakened!");
+            // //Debug.Log("[BehaviorTree] Root task awakened!");
         }
         if (Root == null)
         {
-            Debug.LogWarning("[BehaviorTree] Root is NULL!");
+            // //Debug.LogWarning("[BehaviorTree] Root is NULL!");
             return;
         }
         
@@ -57,7 +57,7 @@ public class BehaviorTree : MonoBehaviour
             return;
         }
         TaskStatus status = Task.Update(Root);
-        Debug.Log($"[BehaviorTree] Root status: {status}");
+        // //Debug.Log($"[BehaviorTree] Root status: {status}");
         if (status == TaskStatus.Success || status == TaskStatus.Failure)
         {
             if(RestartWhenDone)
@@ -77,16 +77,16 @@ public class BehaviorTree : MonoBehaviour
         {
             Root = externalBehaviorTree.CreateBehaviorTree();
             externalBehaviorTree.CreateData(Data);
-            Debug.Log($"[BehaviorTree] Created root from {externalBehaviorTree.GetType().Name}");
+            // //Debug.Log($"[BehaviorTree] Created root from {externalBehaviorTree.GetType().Name}");
         }
 
         if(Root == null)
         {
-            Debug.LogError("BehaviorTree has no root task assigned.");
+            // //Debug.LogError("BehaviorTree has no root task assigned.");
             return;
         }
 
-        Debug.Log($"[BehaviorTree] Root type: {Root.GetType().Name}");
+        // //Debug.Log($"[BehaviorTree] Root type: {Root.GetType().Name}");
         Root.SetOwner(gameObject);
         Task.Awaken(Root);
         Task.Start(Root);

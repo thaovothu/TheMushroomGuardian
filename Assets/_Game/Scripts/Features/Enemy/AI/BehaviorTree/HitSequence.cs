@@ -18,7 +18,7 @@ public class HitSequence : Sequence
     {
         if (bb == null)
         {
-            Debug.LogError("[HitSequence] BossBlackboard is NULL!");
+            //Debug.LogError("[HitSequence] BossBlackboard is NULL!");
             return 0f;
         }
 
@@ -30,7 +30,7 @@ public class HitSequence : Sequence
 
         // Nếu bị hit, có utility cao (20) để interrupt hành động khác
         float utility = 20f;
-        Debug.Log($"[HitSequence] ✓ isHit detected! Returning utility: {utility}");
+        //Debug.Log($"[HitSequence] ✓ isHit detected! Returning utility: {utility}");
         return utility;
     }
 }

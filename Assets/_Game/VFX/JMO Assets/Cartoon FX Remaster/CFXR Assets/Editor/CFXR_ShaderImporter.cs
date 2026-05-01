@@ -212,11 +212,11 @@ namespace CartoonFX
                             string.Format("Shader Error in '{0}' (line {2} in file '{3}')\nError: {1}\nLine: {4}\n", shaderName, error.message, error.line, error.file, shaderSourceLines[error.line-1]);
                         if (error.severity == ShaderCompilerMessageSeverity.Warning)
                         {
-                            Debug.LogWarning(message);
+                            //Debug.LogWarning(message);
                         }
                         else
                         {
-                            Debug.LogError(message);
+                            //Debug.LogError(message);
                         }
                     }
                 }

@@ -36,7 +36,7 @@ public class WeaponSO : ScriptableObject
 
         if (weapons == null || weapons.Count == 0)
         {
-            Debug.LogWarning($"WeaponSO '{name}': No weapon data configured!");
+            //Debug.LogWarning($"WeaponSO '{name}': No weapon data configured!");
             return;
         }
 
@@ -44,21 +44,21 @@ public class WeaponSO : ScriptableObject
         {
             if (weapon == null)
             {
-                Debug.LogWarning($"WeaponSO '{name}': Null weapon data found, skipping.");
+                //Debug.LogWarning($"WeaponSO '{name}': Null weapon data found, skipping.");
                 continue;
             }
 
             // Kiểm tra duplicate ID
             if (weaponLookup.ContainsKey(weapon.weaponId))
             {
-                Debug.LogWarning($"WeaponSO '{name}': Duplicate weapon ID '{weapon.weaponId}', skipping.");
+                //Debug.LogWarning($"WeaponSO '{name}': Duplicate weapon ID '{weapon.weaponId}', skipping.");
                 continue;
             }
 
             // Kiểm tra duplicate name
             if (!string.IsNullOrEmpty(weapon.weaponName) && weaponNameLookup.ContainsKey(weapon.weaponName))
             {
-                Debug.LogWarning($"WeaponSO '{name}': Duplicate weapon name '{weapon.weaponName}', skipping.");
+                //Debug.LogWarning($"WeaponSO '{name}': Duplicate weapon name '{weapon.weaponName}', skipping.");
                 continue;
             }
 
@@ -80,7 +80,7 @@ public class WeaponSO : ScriptableObject
             return weapon;
         }
 
-        Debug.LogWarning($"WeaponSO '{name}': Weapon ID {weaponId} not found!");
+        //Debug.LogWarning($"WeaponSO '{name}': Weapon ID {weaponId} not found!");
         return null;
     }
     public WeaponData GetWeaponByName(string weaponName)
@@ -92,7 +92,7 @@ public class WeaponSO : ScriptableObject
             return weapon;
         }
 
-        Debug.LogWarning($"WeaponSO '{name}': Weapon '{weaponName}' not found!");
+        //Debug.LogWarning($"WeaponSO '{name}': Weapon '{weaponName}' not found!");
         return null;
     }
 

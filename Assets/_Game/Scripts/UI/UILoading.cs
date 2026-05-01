@@ -36,7 +36,7 @@ public class UILoading : MonoBehaviour
             progressText.text = $"{(currentProgress * 100f):F0}%";
         }
 
-        Debug.Log($"[UILoading] Progress: {currentProgress:P}");
+        //Debug.Log($"[UILoading] Progress: {currentProgress:P}");
     }
 
     /// <summary>

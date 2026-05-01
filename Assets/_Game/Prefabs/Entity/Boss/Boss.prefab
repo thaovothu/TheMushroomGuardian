@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 8652240870967951734}
   - component: {fileID: 146718057221057261}
   - component: {fileID: 7670473309268236716}
-  - component: {fileID: 8818940272916682830}
   m_Layer: 8
   m_Name: Boss
   m_TagString: Boss
@@ -33,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 14.686171, y: 5.7673736, z: 28.500574}
-  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6377396882181118209}
@@ -52,7 +51,7 @@ NavMeshAgent:
   m_Speed: 20
   m_Acceleration: 8
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 180
   m_StoppingDistance: 5
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -92,12 +91,13 @@ MonoBehaviour:
   agent: {fileID: 7081534428227395252}
   animator: {fileID: 263075717990306395}
   healthSystem: {fileID: 8548216361547541528}
-  detectRange: 50
+  detectRange: 20
   attackRange: 5
   attackCooldown: 2
   skillCooldown: 5
   moveSpeed: 15
   runSpeed: 20
+  damageBoss: 0
   distanceToPlayer: 0
   isPhase2: 0
   lastAttackTime: -99
@@ -156,23 +156,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &8818940272916682830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8035749023930785709}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bfb561c7e5eee417281109acb08d04f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  detectionAngle: 60
-  detectionRadius: 10
-  innerDetectionRadius: 5
-  detectionCooldown: 1
-  attackRange: 2
 --- !u!1001 &3072381899943995108
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -271,15 +254,20 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
-    - target: {fileID: 7277459274767519079, guid: a3f434c26f33543ed8eb64bcc7e804b1,
+    - target: {fileID: 6612153344261316599, guid: a3f434c26f33543ed8eb64bcc7e804b1,
         type: 3}
-      propertyPath: m_AnchorMax.x
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7277459274767519079, guid: a3f434c26f33543ed8eb64bcc7e804b1,
         type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7277459274767519079, guid: a3f434c26f33543ed8eb64bcc7e804b1,
+        type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7296012562949997149, guid: a3f434c26f33543ed8eb64bcc7e804b1,
         type: 3}

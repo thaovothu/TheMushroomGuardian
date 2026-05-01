@@ -24,7 +24,7 @@ public class SkillAttack : Action
         bb.PlayAnimation(BossAnimState.Skill);
         bb.lastSkillTime = Time.time;
         
-        Debug.Log($"[Boss] Skill Attack triggered! Element: {bb.currentElement}");
+        //Debug.Log($"[Boss] Skill Attack triggered! Element: {bb.currentElement}");
     }
 
     protected override TaskStatus OnUpdate()
@@ -40,7 +40,7 @@ public class SkillAttack : Action
                 float damage = bb.healthSystem.GetDamage() * skillDamageMultiplier;
                 playerHealth.TakeDamage(damage, bb.currentElement);
                 
-                Debug.Log($"[Boss] Skill hit player! Damage: {damage}");
+                //Debug.Log($"[Boss] Skill hit player! Damage: {damage}");
             }
 
             return TaskStatus.Success;

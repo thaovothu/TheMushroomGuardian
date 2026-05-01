@@ -36,7 +36,7 @@ public class LoadingManager : MonoBehaviour
         {
             uiLoading.gameObject.SetActive(true);
             uiLoading.ResetProgress();
-            Debug.Log("[LoadingManager] UILoading is now visible");
+            //Debug.Log("[LoadingManager] UILoading is now visible");
         }
 
         // Tự động load scene nếu được cấu hình
@@ -53,7 +53,7 @@ public class LoadingManager : MonoBehaviour
     {
         if (isLoading)
         {
-            Debug.LogWarning("[LoadingManager] Already loading a scene!");
+            //Debug.LogWarning("[LoadingManager] Already loading a scene!");
             return;
         }
 
@@ -139,11 +139,11 @@ public class LoadingManager : MonoBehaviour
             var so = Resources.Load(path);
             if (so != null)
             {
-                Debug.Log($"[LoadingManager] Loaded SO: {path}");
+                //Debug.Log($"[LoadingManager] Loaded SO: {path}");
             }
             else
             {
-                Debug.LogWarning($"[LoadingManager] Failed to load SO: {path}");
+                //Debug.LogWarning($"[LoadingManager] Failed to load SO: {path}");
             }
 
             IncrementProgress(stepSize);

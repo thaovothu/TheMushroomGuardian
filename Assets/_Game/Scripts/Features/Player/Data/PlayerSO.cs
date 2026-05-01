@@ -36,7 +36,7 @@ public class PlayerSO : ScriptableObject
 
         if (levelData == null || levelData.Count == 0)
         {
-            Debug.LogWarning($"PlayerSO '{name}': No level data configured!");
+            //Debug.LogWarning($"PlayerSO '{name}': No level data configured!");
             return;
         }
 
@@ -44,13 +44,13 @@ public class PlayerSO : ScriptableObject
         {
             if (data == null)
             {
-                Debug.LogWarning($"PlayerSO '{name}': Null level data found, skipping.");
+                //Debug.LogWarning($"PlayerSO '{name}': Null level data found, skipping.");
                 continue;
             }
 
             if (levelLookup.ContainsKey(data.level))
             {
-                Debug.LogWarning($"PlayerSO '{name}': Duplicate level '{data.level}', skipping.");
+                //Debug.LogWarning($"PlayerSO '{name}': Duplicate level '{data.level}', skipping.");
                 continue;
             }
 
@@ -69,7 +69,7 @@ public class PlayerSO : ScriptableObject
             return data;
         }
 
-        Debug.LogWarning($"PlayerSO '{name}': Level {level} not found!");
+        //Debug.LogWarning($"PlayerSO '{name}': Level {level} not found!");
         return null;
     }
 
