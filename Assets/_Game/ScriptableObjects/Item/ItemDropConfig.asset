@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e11831a6f038e463badda7809e767b88, type: 3}
+  m_Name: ItemDropConfig
+  m_EditorClassIdentifier: 
+  coinDrop:
+    itemType: 8
+    dropChance: 80
+    itemId: 8
+    dropAmount: 10
+  expGemDrop:
+    itemType: 7
+    dropChance: 50
+    itemId: 7
+    dropAmount: 1
+  earthCrystalDrop:
+    itemType: 9
+    dropChance: 5
+    itemId: 9
+    dropAmount: 1
+  windCrystalDrop:
+    itemType: 10
+    dropChance: 5
+    itemId: 10
+    dropAmount: 1
+  waterCrystalDrop:
+    itemType: 11
+    dropChance: 5
+    itemId: 11
+    dropAmount: 1
+  fireCrystalDrop:
+    itemType: 12
+    dropChance: 5
+    itemId: 12
+    dropAmount: 1
+  strengthBuffDrop:
+    itemType: 3
+    dropChance: 3
+    itemId: 3
+    dropAmount: 1
+  defenseBuffDrop:
+    itemType: 4
+    dropChance: 3
+    itemId: 4
+    dropAmount: 1
+  itemPickupPrefabs:
+  - itemType: 0
+    prefab: {fileID: 3638065601350895908, guid: dc725c5b737fe41de90e4b461c0a0666,
+      type: 3}
+  - itemType: 1
+    prefab: {fileID: 3638065601350895908, guid: 75b001ec150834bb8922c2480c884f7e,
+      type: 3}
+  - itemType: 2
+    prefab: {fileID: 3638065601350895908, guid: 21b00b83336d14282bed3ff0583b4e8d,
+      type: 3}
+  - itemType: 3
+    prefab: {fileID: 3638065601350895908, guid: e2fb134e383de4042ac72585dfac61bd,
+      type: 3}
+  - itemType: 4
+    prefab: {fileID: 3638065601350895908, guid: d4f0c7a8ec1ee4683a5bbc2fc641932d,
+      type: 3}
+  - itemType: 5
+    prefab: {fileID: 3638065601350895908, guid: 25692fa90792a43bda6700c9811c8668,
+      type: 3}
+  - itemType: 6
+    prefab: {fileID: 3638065601350895908, guid: 228fabe85447c4a3daa04cb099276f0f,
+      type: 3}
+  - itemType: 7
+    prefab: {fileID: 3638065601350895908, guid: 0a6e093117d0f4e55b2303cd79e974f6,
+      type: 3}
+  - itemType: 8
+    prefab: {fileID: 3638065601350895908, guid: cfeb40c9380cd4216848abd93a2ed975,
+      type: 3}
+  - itemType: 9
+    prefab: {fileID: 3638065601350895908, guid: e8b5743ead93e4eaca4220f7149c193c,
+      type: 3}
+  - itemType: 10
+    prefab: {fileID: 3638065601350895908, guid: eefe3d6494ef246869ec6d220ac2bf52,
+      type: 3}
+  - itemType: 11
+    prefab: {fileID: 3638065601350895908, guid: ae0affe28e06049498cdcb48289787e0,
+      type: 3}
+  - itemType: 12
+    prefab: {fileID: 3638065601350895908, guid: 9f394fdd87eae4c0fa352cd26c7e78f2,
+      type: 3}
+  fallbackItemPickupPrefab: {fileID: 3638065601350895908, guid: dc725c5b737fe41de90e4b461c0a0666,
+    type: 3}
+  dropForce: 5

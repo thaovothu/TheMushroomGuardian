@@ -14,7 +14,11 @@ public enum ItemType
     Sword = 5,             // Kiếm
     Bow = 6,               // Cung
     EXPGem = 7,            // Tinh thể EXP
-    ElementCrystal = 8     // Tinh thể yếu tố
+    Coin = 8,              // Xu
+    EarthCrystal = 9,      // Tinh thể đất
+    WindCrystal = 10,      // Tinh thể khí
+    WaterCrystal = 11,     // Tinh thể nước
+    FireCrystal = 12       // Tinh thể lửa
 }
 
 /// <summary>
@@ -253,10 +257,17 @@ public class ItemSO : ScriptableObject
     public ElementType GetCrystalElement(int itemId)
     {
         var item = GetItem(itemId);
-        if (item == null || item.itemType != ItemType.ElementCrystal)
+        if (item == null)
             return ElementType.None;
 
-        return item.element;
+        return item.itemType switch
+        {
+            ItemType.EarthCrystal => ElementType.Earth,
+            ItemType.WindCrystal => ElementType.Wind,
+            ItemType.WaterCrystal => ElementType.Water,
+            ItemType.FireCrystal => ElementType.Fire,
+            _ => ElementType.None
+        };
     }
 
     /// <summary>
