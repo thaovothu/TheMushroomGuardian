@@ -23,6 +23,8 @@ public class EnemyDieState : EnemyBaseState
         if (state.IsName("Die") && state.normalizedTime >= 1f)
         {
             _hasDied = true;
+            // Drop items trước khi die
+            _enemyController.DropItems();
             _enemyController.DieEnemy();
         }
     }

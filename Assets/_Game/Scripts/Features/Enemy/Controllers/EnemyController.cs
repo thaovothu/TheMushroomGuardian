@@ -225,5 +225,15 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
     
     public bool IsHitTimerDone() => _hitTimer.IsFinished();
 
+    public void DropItems()
+    {
+        // Drop item khi enemy chết
+        if (ItemDropManager.Instance != null)
+        {
+            // TODO: Check nếu là boss
+            ItemDropManager.Instance.DropItemsOnEnemyDeath(transform.position, false);
+        }
+    }
+
     public void DieEnemy() => PoolSpawnManager.OnRelease?.Invoke(gameObject);
 }
