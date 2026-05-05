@@ -175,6 +175,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8609513086510257999}
+  - component: {fileID: 7032742363343489575}
   m_Layer: 0
   m_Name: 'BowBase '
   m_TagString: Untagged
@@ -191,7 +192,7 @@ Transform:
   m_GameObject: {fileID: 7565231334304266331}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.4, y: 0, z: 0}
+  m_LocalPosition: {x: -0.713, y: 0, z: 0}
   m_LocalScale: {x: 0.33146164, y: 0.33146167, z: 0.3314617}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -201,6 +202,20 @@ Transform:
   - {fileID: 3925362640365708473}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7032742363343489575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7565231334304266331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bd7e24a70e0340288dbcdfe98b4474d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bowStringPosition: {fileID: 0}
+  raycastDistance: 1000
 --- !u!1 &8842521371444315067
 GameObject:
   m_ObjectHideFlags: 0

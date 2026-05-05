@@ -410,7 +410,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4012942280476858298}
-  - component: {fileID: 6494078123824395408}
+  - component: {fileID: 7239349277896839138}
   m_Layer: 0
   m_Name: Damage
   m_TagString: Untagged
@@ -433,7 +433,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6573463031431253568}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
---- !u!114 &6494078123824395408
+--- !u!114 &7239349277896839138
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -442,10 +442,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7400397299843312948}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 055375a8e7db641c0b052f06406f93a5, type: 3}
+  m_Script: {fileID: 11500000, guid: eba83554b56ec482595cdfb4ca279dcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponLength: 1.2
+  weaponLength: 1
   weaponDamage: 50
 --- !u!1 &9197593160241693303
 GameObject:
