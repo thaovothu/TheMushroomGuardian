@@ -53,7 +53,7 @@ public class EquipmentSystem : MonoBehaviour
     }
 
     public bool IsAttackNormal(){
-        //Debug.Log("Current weapon type:asdasda " + currentWeaponType);
+        Debug.Log("Current weapon type:asdasda " + currentWeaponType);
         if (currentWeaponType == WeaponType.None) return true;
         return false;
     }
@@ -66,7 +66,10 @@ public class EquipmentSystem : MonoBehaviour
     {
         //Debug.Log("Change weapon to " + type);
         if (currentWeaponType == type) return;
-        Destroy(currentWeaponInHand);
+        
+        if (currentWeaponInHand != null)
+            Destroy(currentWeaponInHand);
+            
         currentWeaponType = type;
         //Debug.Log("currentWeaponTypeHIHIHI"+ currentWeaponType);
         DrawWeapon();
@@ -124,10 +127,20 @@ public class EquipmentSystem : MonoBehaviour
 
     public void StartDealDamage()
     {
-        currentWeaponInHand.GetComponentInChildren<DamageDealer>().StartDealDamage();
+        if (currentWeaponType == WeaponType.Sword)
+        {
+            currentWeaponInHand.GetComponentInChildren<SwordAttack>()?.StartDealDamage();
+        }
+        else if (currentWeaponType == WeaponType.Bow)
+        {
+            currentWeaponInHand.GetComponentInChildren<BowAttack>()?.FireArrow();
+        }
     }
     public void EndDealDamage()
     {
-        currentWeaponInHand.GetComponentInChildren<DamageDealer>().EndDealDamage();
+        if (currentWeaponType == WeaponType.Sword)
+        {
+            currentWeaponInHand.GetComponentInChildren<SwordAttack>()?.EndDealDamage();
+        }
     }
 }

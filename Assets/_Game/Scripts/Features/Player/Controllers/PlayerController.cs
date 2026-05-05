@@ -327,7 +327,7 @@ public class PlayerController : MonoBehaviour
 
     public void CombatAttack()
     {
-        StartCoroutine(DoCombatAttackWindow(0.15f)); // chỉnh 0.15s phù hợp animation
+        StartCoroutine(DoCombatAttackWindow(0.15f)); 
     }
 
     IEnumerator DoCombatAttackWindow(float window)
