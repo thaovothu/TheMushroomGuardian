@@ -46,7 +46,6 @@ GameObject:
   - component: {fileID: 2344544117716131075}
   - component: {fileID: 4784903554988055207}
   - component: {fileID: 7782412570375716345}
-  - component: {fileID: 4597631145767251850}
   - component: {fileID: 5371692734678377173}
   m_Layer: 0
   m_Name: Player
@@ -85,7 +84,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 4784903554988055207}
   groundChecker: {fileID: 2344544117716131075}
-  equipmentSystem: {fileID: 4597631145767251850}
+  equipmentSystem: {fileID: 0}
   healthSystem: {fileID: 5371692734678377173}
   animator: {fileID: 7283971351278425884}
   freeLookVCam: {fileID: 0}
@@ -172,32 +171,6 @@ CapsuleCollider:
   m_Height: 1.5
   m_Direction: 1
   m_Center: {x: 0, y: 0.7, z: 0}
---- !u!114 &4597631145767251850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6884184332377935561}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0e4f4296d6644329b2ea756969db703, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponHolder: {fileID: 7113913222101526408}
-  weaponSheath: {fileID: 4818346365699451050}
-  currentWeaponType: 0
-  weaponList:
-  - {fileID: 3974729404590891400, guid: 2b33ff2a932dd41c699c96c7c681b55e, type: 3}
-  - {fileID: 7565231334304266331, guid: 44d0db5b9cba24584b201d563d126f9b, type: 3}
-  - {fileID: 5656417020975345133, guid: 3ac26237c568a4842a48a4626375b0fb, type: 3}
-  weaponNone: {fileID: 0}
-  weaponBow: {fileID: 0}
-  weaponSword: {fileID: 0}
-  animator: {fileID: 7283971351278425884}
-  PlayerController: {fileID: 9100000, guid: de26237ff78d446ec9cf3ca36996a6c6, type: 2}
-  Sword_Override: {fileID: 22100000, guid: 5e6c2d5e361d147c7a711c9f0e00f69d, type: 2}
-  Bow_Override: {fileID: 22100000, guid: b4bf2acb386e1456585c2eb14bcf8867, type: 2}
 --- !u!114 &5371692734678377173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,7 +196,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3601296221332180917}
   m_Layer: 0
-  m_Name: 'WeaponHolder '
+  m_Name: WeaponHolderRight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -244,6 +217,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7670075955953780547}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7665595373797711184
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 26560576095209313}
+  m_Layer: 0
+  m_Name: WeaponHolderLeft
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &26560576095209313
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7665595373797711184}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.2122493, y: 0.6008782, z: 0.33947882, w: 0.6918451}
+  m_LocalPosition: {x: -0.0013, y: -0.007, z: 0.0018}
+  m_LocalScale: {x: 0.0398355, y: 0.0398355, z: 0.0398355}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 658378649764776457}
+  m_LocalEulerAnglesHint: {x: -44.56, y: 74.718, z: 17.534}
 --- !u!1 &8778748592197040054
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,7 +258,7 @@ GameObject:
   m_Component:
   - component: {fileID: 58639690530015924}
   m_Layer: 0
-  m_Name: BowPos
+  m_Name: ArrowSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -760,6 +764,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 58639690530015924}
+    - targetCorrespondingSourceObject: {fileID: 1330755669629619180, guid: 028d129b7dc6749558e43855cf2a5dbb,
+        type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 26560576095209313}
     - targetCorrespondingSourceObject: {fileID: -3321919801592875672, guid: 028d129b7dc6749558e43855cf2a5dbb,
         type: 3}
       insertIndex: -1
@@ -774,6 +782,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 7283971351278425884}
   m_SourcePrefab: {fileID: 100100000, guid: 028d129b7dc6749558e43855cf2a5dbb, type: 3}
+--- !u!4 &658378649764776457 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1330755669629619180, guid: 028d129b7dc6749558e43855cf2a5dbb,
+    type: 3}
+  m_PrefabInstance: {fileID: 1969424198739821029}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1699445914856275124 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 028d129b7dc6749558e43855cf2a5dbb,

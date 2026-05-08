@@ -1,1 +1,107 @@
-Test CI/CD
+KICH BAN THE MUSHROOM GUARDIAN - PHIEN BAN WOW
+
+Thong diep trung tam:
+Dat Me dang bi bua vay boi 4 vet thuong o nhiem: Dat, Khi, Nuoc, Lua.
+Nguoi choi vao vai Ve Binh Nam, vua chien dau vua hoc cach hoa giai tac dong cua con nguoi len tu nhien.
+Nguoi choi co 2 cach choi:
+1) Theo nhiem vu dan duong (Story Path)
+2) Kham pha tu do (Free Path)
+Du choi cach nao, dieu kien bat buoc de win van la: thu thap du EarthCrystal + WindCrystal + WaterCrystal + FireCrystal.
+
+Quy tac tien trinh:
+- Co 5 map, 5 boss.
+- Map 1-4 moi map co 1 boss nguyen to va 1 crystal tuong ung.
+- Chi khi hoan thanh 4 map dau (da thu du 4 crystal) moi mo khoa Map 5 de dau trum cuoi.
+- Coin dung de mua vu khi va nang cap tai cua NPC Thuong Nhan Reu.
+- EXP Gem dung de tang dame va max HP (thong qua he thong level).
+- HealthPotion, ManaPotion, StrengthBuff, DefenseBuff la vat pham ho tro trong cac tran kho.
+
+DINH DANG 3 COT: SO THU TU | NHIEM VU LON | NHIEM VU NHO
+
+1 | THUC TINH VE BINH NAM | 1) Catscene mo dau: Rung Nam bi den hoa, dat nut vo, suong doc bao phu.
+1 | THUC TINH VE BINH NAM | 2) Gap Tien Tri Co Thu, nhan loi hua: thu du 4 crystal de han gan Dat Me.
+1 | THUC TINH VE BINH NAM | 3) Hoc co ban: di chuyen, tan cong, ne, dung potion.
+
+2 | MAP 1 - DIA VUC DAT DOC (O NHIEM DAT) | 1) Kham pha bai thai mo, dong ket sat, ruong dat chet.
+2 | MAP 1 - DIA VUC DAT DOC (O NHIEM DAT) | 2) Nhiem vu chinh: pha 3 Cot Doc Dat de lam sach khu vuc.
+2 | MAP 1 - DIA VUC DAT DOC (O NHIEM DAT) | 3) Nhiem vu phu: thu Coin tu ham mo de mua kiem cap 1.
+2 | MAP 1 - DIA VUC DAT DOC (O NHIEM DAT) | 4) Danh boss 1: Golem Bun Thai.
+2 | MAP 1 - DIA VUC DAT DOC (O NHIEM DAT) | 5) Nhan EarthCrystal + bai hoc: Dat khong chi de khai thac, ma can duoc tai tao.
+
+3 | MAP 2 - THUNG LUNG KHOI MU (O NHIEM KHONG KHI) | 1) Co che map: tam nhin giam do suong doc cong nghiep.
+3 | MAP 2 - THUNG LUNG KHOI MU (O NHIEM KHONG KHI) | 2) Nhiem vu chinh: khoi dong 4 Thap Loc Gio co.
+3 | MAP 2 - THUNG LUNG KHOI MU (O NHIEM KHONG KHI) | 3) Nhiem vu phu: san EXPGem, nang level tang dame/HP de chuan bi boss.
+3 | MAP 2 - THUNG LUNG KHOI MU (O NHIEM KHONG KHI) | 4) Danh boss 2: Harpy Khoi Doc.
+3 | MAP 2 - THUNG LUNG KHOI MU (O NHIEM KHONG KHI) | 5) Nhan WindCrystal + bai hoc: Moi hoi tho cua tu nhien deu dang gia.
+
+4 | MAP 3 - DAM NUOC DEN (O NHIEM NGUON NUOC) | 1) Co che map: nuoc doc gay giam mau neu dung lau.
+4 | MAP 3 - DAM NUOC DEN (O NHIEM NGUON NUOC) | 2) Nhiem vu chinh: tim 3 Van Thanh Loc bi quai canh giu.
+4 | MAP 3 - DAM NUOC DEN (O NHIEM NGUON NUOC) | 3) Nhiem vu phu: thu thap ManaPotion de dung skill lien tuc.
+4 | MAP 3 - DAM NUOC DEN (O NHIEM NGUON NUOC) | 4) Danh boss 3: Xa Vuong Nuoc Ban.
+4 | MAP 3 - DAM NUOC DEN (O NHIEM NGUON NUOC) | 5) Nhan WaterCrystal + bai hoc: Nuoc ban la no do van minh vo trach nhiem.
+
+5 | MAP 4 - MIENG NUI TRO TAN (NHIET THAI VA CHAY RUNG) | 1) Co che map: vung nong gay sat thuong theo thoi gian.
+5 | MAP 4 - MIENG NUI TRO TAN (NHIET THAI VA CHAY RUNG) | 2) Nhiem vu chinh: kich hoat 3 Mua Gieo Mam de ha nhiet do.
+5 | MAP 4 - MIENG NUI TRO TAN (NHIET THAI VA CHAY RUNG) | 3) Nhiem vu phu: thu StrengthBuff va DefenseBuff truoc tran boss.
+5 | MAP 4 - MIENG NUI TRO TAN (NHIET THAI VA CHAY RUNG) | 4) Danh boss 4: Phuong Hoang Tro.
+5 | MAP 4 - MIENG NUI TRO TAN (NHIET THAI VA CHAY RUNG) | 5) Nhan FireCrystal + bai hoc: Lua vua soi am vua huy diet, con nguoi quyet dinh no la gi.
+
+6 | DIEU KIEN MO MAP 5 | 1) Bat buoc so huu: EarthCrystal + WindCrystal + WaterCrystal + FireCrystal.
+6 | DIEU KIEN MO MAP 5 | 2) Neu thieu 1 crystal, cua co gioi phong an cuoi se khong mo.
+6 | DIEU KIEN MO MAP 5 | 3) NPC nhac: ban co the quay lai map cu de kham pha tu do va hoan tat phan con thieu.
+
+7 | MAP 5 - TIM DAT ME (TRUM CUOI) | 1) Trum cuoi la AI O NHIEM Tong Hop, hut suc manh tu 4 vet thuong nguyen to.
+7 | MAP 5 - TIM DAT ME (TRUM CUOI) | 2) Co che dau boss 3 phase: Dat (chan dong), Khi (gio xoay), Nuoc (song doc), Lua (mua tro).
+7 | MAP 5 - TIM DAT ME (TRUM CUOI) | 3) Nguoi choi dat 4 crystal vao Te Dan Can Bang de mo giai doan ket lieu.
+7 | MAP 5 - TIM DAT ME (TRUM CUOI) | 4) Ha boss, catscene Dat Me hoi sinh, rung nam no hoa tro lai.
+
+8 | HE THONG PHAT TRIEN NHAN VAT | 1) Coin: mua kiem/cung moi, mo skin, nang cap cua hang.
+8 | HE THONG PHAT TRIEN NHAN VAT | 2) EXPGem: tang level -> tang dame co ban va max HP.
+8 | HE THONG PHAT TRIEN NHAN VAT | 3) Potion/Buff: dung dung luc de lat keo tran boss.
+
+9 | CHE DO CHOI TU DO (OPTIONAL) | 1) Sau khi mo map, nguoi choi co the tu do quay lai tim ruong an, mini boss, truyen thuyet.
+9 | CHE DO CHOI TU DO (OPTIONAL) | 2) Hoan thanh su menh phu cho diem Danh Vong Xanh (unlock hoi thoai, vat pham hiem).
+9 | CHE DO CHOI TU DO (OPTIONAL) | 3) Tuy tu do, van phai thu du 4 crystal de ket thuc game.
+
+10 | CAM XUC WOW VA BAI HOC DE LAI | 1) Moi boss bi ha khong chet han, ma duoc thanh tay va tro lai canh giu he sinh thai.
+10 | CAM XUC WOW VA BAI HOC DE LAI | 2) Loi ket: Ke dich lon nhat khong phai quai vat, ma la su vo cam truoc thien nhien.
+10 | CAM XUC WOW VA BAI HOC DE LAI | 3) New Game+: o nhiem tang muc do, them quyet dinh dao duc de mo ending khac.
+
+TOM TAT LOOP GAMEPLAY HAP DAN:
+Kham pha -> Chien dau -> Thu Coin/EXP -> Nang cap -> Xu ly co che moi truong -> Ha boss -> Nhan crystal -> Mo map moi -> Doi dau trum cuoi.
+
+MUC TIEU CHIEN THANG CUOI CUNG:
+Thu du 4 crystal + ha boss map 5 + kich hoat Te Dan Can Bang de giai cuu Dat Me.
+
+================================================================================
+DANH SACH 10 NPC - DAN DUONG VA HUONG DAN COC CHE
+================================================================================
+
+STT | TEN NPC | VI TRI | TINH CACH | LOI THOAI CHINH | CHUC NANG
+
+1 | Tien Tri Co Thu | Dau Map Hub | Co khon, diu da | "Ve Binh Nam... dat nha ta can cuu roi. Thu du 4 tinh the nguyen to truoc." | Dan tuyến story chính, giao nhiệm vụ chính mỗi map.
+
+2 | Thuong Nhan Reu | Map Hub/Tang Hang | Tan nhoc, giau tuong tac | "Coin? Hay, nguoi nha co gia cai kieu khong? Kiem, cung, armor deu co!" | NPC Cửa Hàng: mua vũ khí, potion, nâng cấp.
+
+3 | Nhi Thu - Hiep Si Dung | Map 1 - Thuy Luc | Toan tay, can dem | "Kieu... o nhiem Dat nay. Hay de tao chi duong, tao se ho tro ban!" | Hướng dẫn cơ chế tấn công, né tránh, xây dựng combo.
+
+4 | Dao Nhan Thanh | Map 1 - Rui Nuoc | Solemn, hay suy ngam | "Dat nay da mot la the nao. Khai thac qua da, thay la chung ta cung khong khong mat." | Dạy bài học về ô nhiễm đất, tầm quan trọng tái tạo.
+
+5 | Khi Linh Thong | Map 2 - Dinh Nui | Nhanh nhan, vui ve | "Khong khi nen mat rui! Hay dung Potion de cong mat de hon. Vuot qua 4 thap nay!" | Hướng dẫn cơ chế Potion, Mana, skill dùng liên tục.
+
+6 | Sinh Long Nang Cam | Map 2 - Hang Than | Chu trung, liem nhat | "Lua cua con nguoi khong bao gio tha thi. Khi dang chiu. Hay lay crystals de cuu no." | Giải thích bài học về ô nhiễm không khí, hậu quả.
+
+7 | Duong Tu Y Hoc | Map 3 - Chot Da | Chu tam, nhat nhung | "Nuoc ban nay dang theo doc. Hay su dung HealthPotion de song sot qua vung nay." | Dạy cơ chế Poison mechanic, cách dùng Potion khôn ngoan.
+
+8 | Tien Xa Ban | Map 3 - Song Me | Bi ca, nghi la | "Chung ta da lam gi voi dong song nay? Nuoc sach da thanh nuoc ban, ca trong dang chet het." | Truyện sâu về ô nhiễm nước, hậu quả sinh thái.
+
+9 | Kiem Si Lua | Map 4 - Mieng Nui | Hanh dong, dau tranh | "Lua no lam chay rung! Dung StrengthBuff va DefenseBuff de no so. Hay chien dau!" | Hướng dẫn cơ chế Buff (Strength + Defense), timing sử dụng.
+
+10 | Phe Kiep Hoan | Map 5 - Hung Dien | Bi an, ngan gon | "Ban da toi day... voi day du 4 crystal. Dat Me dang chap tay. Hay han gan no vi toan the." | Boss cuối cùng NPC - gợi ý chiến thuật phase, kết nối toàn cảnh.
+
+================================================================================
+HUONG DAN TUONG TAC VOI NPC:
+- Moi NPC co the noi chuyen lai nhieu lan, hoi thoai se thay doi tuy theo tien trinh game.
+- NPC phu cap: sau khi hoan thanh map, co the quay lai hoi thoai them de hieu sau hon ve bai hoc, lich su.
+- Secret NPC: Lay du 4 crystal dung giu se gap NPC Tinh Khong (ve thien nhien tu do, cach hoa giai that su).
+================================================================================

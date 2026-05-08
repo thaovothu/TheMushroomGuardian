@@ -1,29 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-/// <summary>
-/// Quản lý item drop logic
-/// </summary>
-public class ItemDropManager : MonoBehaviour
+public class ItemDropManager : BaseSingleton<ItemDropManager>
 {
     [SerializeField] private ItemDropConfig dropConfig;
     [SerializeField] private ItemSO itemSO;
-    
-    private static ItemDropManager _instance;
-
-    void Awake()
-    {
-        if (_instance == null)
-        {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (_instance != this)
-        {
-            Destroy(gameObject);
-        }
-    }
-
     /// <summary>
     /// Spawn item drop khi enemy chết (logic cơ bản: Coin hoặc EXPGem)
     /// </summary>
@@ -97,5 +78,4 @@ public class ItemDropManager : MonoBehaviour
         }
     }
 
-    public static ItemDropManager Instance => _instance;
 }

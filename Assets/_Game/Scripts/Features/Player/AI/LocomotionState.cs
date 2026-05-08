@@ -13,8 +13,9 @@ using System;
             _animator.CrossFade(LocomotionHash, crossFadeDuration);
         }
 
-        public override void FixedUpdate()
-        {
-            _playerController.HandleMovement();
-        }
+    public override void FixedUpdate()
+    {
+        _playerController.HandleMovement();
+        _playerController.ApplyGravity();
+    }
     }

@@ -6,14 +6,15 @@ using UnityEngine;
 public class GroundChecker : MonoBehaviour
 {
     [SerializeField] float groundDistance = 0.5f;
+    [SerializeField] float sphereRadius = 0f;
     [SerializeField] LayerMask groundLayer;
 
     public bool IsGrounded { get; private set; }
     
     void Update()
     {
-        // Use raycast - simpler and more reliable
-        IsGrounded = Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, groundDistance);
+        // Use SphereCast instead of Raycast - bắt slope tốt hơn
+        IsGrounded = Physics.SphereCast(transform.position, sphereRadius, Vector3.down, out RaycastHit hit, groundDistance);
     
         // Draw debug line
         Debug.DrawLine(transform.position, transform.position + Vector3.down * groundDistance, 

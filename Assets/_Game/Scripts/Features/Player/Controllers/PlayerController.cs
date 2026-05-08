@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviour
         [Header("References")]
         [SerializeField] Rigidbody rb;
         [SerializeField] GroundChecker groundChecker;
-        [SerializeField] EquipmentSystem equipmentSystem;
         [SerializeField]public HealthSystem healthSystem;
         [SerializeField] Animator animator;
         [SerializeField] CinemachineFreeLook freeLookVCam;
@@ -119,8 +118,8 @@ public class PlayerController : MonoBehaviour
         //Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}");
         At(locomotionState, dashState, new FuncPredicate(() => dashTimer.IsRunning));
         //Debug.Log($"[PlayerController] DashTimer is running {dashTimer.IsRunning}");
-        At(locomotionState, attackState, new FuncPredicate(() => attackCooldownTimer.IsRunning && equipmentSystem.IsAttackNormal()));
-        At(locomotionState, combatState, new FuncPredicate(() => attackCooldownTimer.IsRunning && !equipmentSystem.IsAttackNormal()));
+        At(locomotionState, attackState, new FuncPredicate(() => attackCooldownTimer.IsRunning && EquipmentSystem.Instance.IsAttackNormal()));
+        At(locomotionState, combatState, new FuncPredicate(() => attackCooldownTimer.IsRunning && !EquipmentSystem.Instance.IsAttackNormal()));
         Any(hitState, new FuncPredicate(() => healthSystem.IsHit));
         Any(locomotionState, new FuncPredicate(ReturnToLocomotion));
         //Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}, Grounded {groundChecker.IsGrounded}");
@@ -241,6 +240,22 @@ public class PlayerController : MonoBehaviour
         //Debug.Log($"[PlayerController] JumpVelocity {jumpVelocity}, Grounded {groundChecker.IsGrounded}");
     }
 
+    public void ApplyGravity()
+    {
+        // // Nếu grounded, không apply gravity
+        Debug.Log("groundChecker.IsGrounded"+ groundChecker.IsGrounded);
+        if (groundChecker.IsGrounded)
+            return;
+
+        // Nếu đang jump, HandleJump() đã xử lý, không cần apply lại
+        if (jumpTimer.IsRunning)
+            return;
+
+        // Apply gravity khi không grounded và không jump (trên slope)
+        jumpVelocity += Physics.gravity.y * gravityMultiplier * Time.fixedDeltaTime;
+        rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
+    }
+
     public void HandleMovement()
     {
         // if (dashTimer.IsRunning) return;
@@ -332,9 +347,9 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator DoCombatAttackWindow(float window)
     {
-        equipmentSystem.StartDealDamage();
+        EquipmentSystem.Instance.StartDealDamage();
         yield return new WaitForSeconds(window);
-        equipmentSystem.EndDealDamage();
+        EquipmentSystem.Instance.EndDealDamage();
     }
 
 }

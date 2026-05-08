@@ -21,7 +21,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1113696034404210793
 RectTransform:
   m_ObjectHideFlags: 0
@@ -210,34 +210,34 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.5023804
-      inSlope: 3.215241
-      outSlope: 3.215241
+      value: 0.5060425
+      inSlope: 4.471172
+      outSlope: 4.471172
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.10544522
+      outWeight: 0.06831688
     - serializedVersion: 3
-      time: 0.15388998
-      value: 1.2159271
-      inSlope: 2.775934
-      outSlope: 2.775934
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.073074006
-      outWeight: 0.411659
-    - serializedVersion: 3
-      time: 0.25714573
-      value: 2.0210617
-      inSlope: 3.762848
-      outSlope: 3.762848
+      time: 0.40096202
+      value: 1.4837555
+      inSlope: 2.860388
+      outSlope: 2.860388
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.28879976
-      outWeight: 0.17179333
+      outWeight: 0.8247214
     - serializedVersion: 3
-      time: 0.44396192
-      value: 2.2875204
+      time: 0.4927735
+      value: 1.8870739
+      inSlope: 4.1938896
+      outSlope: 4.1938896
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.073074006
+      outWeight: 0.40464717
+    - serializedVersion: 3
+      time: 0.5510176
+      value: 2.3108053
       inSlope: -0.19138032
       outSlope: -0.19138032
       tangentMode: 0

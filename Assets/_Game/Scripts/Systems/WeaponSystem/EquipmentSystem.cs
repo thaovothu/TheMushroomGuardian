@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,23 +17,34 @@ public enum WeaponButton
     SwordButton
 }
 
-public class EquipmentSystem : MonoBehaviour
+public class EquipmentSystem : BaseSingleton<EquipmentSystem>
 {
-    [SerializeField] GameObject weaponHolder;
-    [SerializeField] GameObject weaponSheath;
+    const string WeaponHolderRightName = "WeaponHolderRight";
+    const string WeaponHolderLeftName = "WeaponHolderLeft";
+    const string PlayerTag = "Player";
+
+    [SerializeField] Transform weaponHolderRight;
+    [SerializeField] Transform weaponHolderLeft;
     [SerializeField] WeaponType currentWeaponType ;
     [SerializeField] GameObject[] weaponList;
     [SerializeField] Button weaponNone;
     [SerializeField] Button weaponBow;
     [SerializeField] Button weaponSword;
-    GameObject currentWeaponInSheath;
-    GameObject currentWeaponInHand;
+    GameObject currentWeaponInHandRight;
+    GameObject currentWeaponInHandLeft;
 
     [SerializeField] private Animator animator;
     [SerializeField] private RuntimeAnimatorController PlayerController;
 
     [SerializeField] private AnimatorOverrideController Sword_Override;
     [SerializeField] private AnimatorOverrideController Bow_Override;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        TryResolveWeaponHolders();
+        TryResolveAnimator();
+    }
 
     void Start()
     {
@@ -42,14 +54,76 @@ public class EquipmentSystem : MonoBehaviour
     }
     void OnEnable()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
         weaponBow.onClick.AddListener(() => OnClickButton(WeaponButton.BowButton));
         weaponSword.onClick.AddListener(() => OnClickButton(WeaponButton.SwordButton));
         weaponNone.onClick.AddListener(() => OnClickButton(WeaponButton.NoneButton));
     }
     private void OnDisable() {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
         weaponBow.onClick.RemoveAllListeners();
         weaponSword.onClick.RemoveAllListeners();
         weaponNone.onClick.RemoveAllListeners();
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        TryResolveWeaponHolders();
+        TryResolveAnimator();
+        RebuildWeaponVisuals();
+    }
+
+    void TryResolveWeaponHolders()
+    {
+        if (weaponHolderRight == null)
+        {
+            var rightHolderObject = GameObject.Find(WeaponHolderRightName);
+            if (rightHolderObject != null)
+                weaponHolderRight = rightHolderObject.transform;
+        }
+
+        if (weaponHolderLeft == null)
+        {
+            var leftHolderObject = GameObject.Find(WeaponHolderLeftName);
+            if (leftHolderObject != null)
+                weaponHolderLeft = leftHolderObject.transform;
+        }
+    }
+
+    void TryResolveAnimator()
+    {
+        if (animator != null)
+            return;
+
+        var playerObject = GameObject.FindGameObjectWithTag(PlayerTag);
+        if (playerObject == null)
+            return;
+
+        animator = playerObject.GetComponentInChildren<Animator>();
+        if (animator == null)
+            Debug.LogWarning("[EquipmentSystem] Cannot find Animator on Player object.");
+    }
+
+    void RebuildWeaponVisuals()
+    {
+        if (currentWeaponType == WeaponType.None)
+            return;
+
+        if (weaponHolderRight == null || weaponHolderLeft == null)
+            return;
+
+        if (currentWeaponInHandRight != null)
+            Destroy(currentWeaponInHandRight);
+        if (currentWeaponInHandLeft != null)
+            Destroy(currentWeaponInHandLeft);
+
+        currentWeaponInHandRight = null;
+        currentWeaponInHandLeft = null;
+
+        if (currentWeaponType == WeaponType.Bow)
+            DrawWeaponLeft();
+        else if (currentWeaponType == WeaponType.Sword)
+            DrawWeaponRight();
     }
 
     public bool IsAttackNormal(){
@@ -64,20 +138,28 @@ public class EquipmentSystem : MonoBehaviour
     }
     public void ChangeWeapon(WeaponType type)
     {
-        //Debug.Log("Change weapon to " + type);
+        Debug.Log("Change weapon to " + type);
         if (currentWeaponType == type) return;
         
-        if (currentWeaponInHand != null)
-            Destroy(currentWeaponInHand);
-            
+        if (currentWeaponInHandRight != null)
+            Destroy(currentWeaponInHandRight);
+        if (currentWeaponInHandLeft != null)
+            Destroy(currentWeaponInHandLeft);
+
         currentWeaponType = type;
-        //Debug.Log("currentWeaponTypeHIHIHI"+ currentWeaponType);
-        DrawWeapon();
+        if (currentWeaponType == WeaponType.Bow)
+            DrawWeaponLeft();
+        else if (currentWeaponType == WeaponType.Sword)
+            DrawWeaponRight();
         SetWeaponAnim(type);
     }
 
     void SetWeaponAnim(WeaponType type)
     {
+        TryResolveAnimator();
+        if (animator == null)
+            return;
+
         //Debug.Log("Set weapon animation for " + type);
         switch (type)
         {
@@ -95,15 +177,14 @@ public class EquipmentSystem : MonoBehaviour
         }
     }
 
-    public void DrawWeapon()
+    public void DrawWeaponRight()
     {
-        currentWeaponInHand = Instantiate(weaponList[(int)currentWeaponType], weaponHolder.transform);
-        //Debug.Log("Current weapon in hand: " + (int)currentWeaponType);
+        currentWeaponInHandRight = Instantiate(weaponList[(int)currentWeaponType], weaponHolderRight.transform);
     }
 
-    public void SheathWeapon()
+    public void DrawWeaponLeft()
     {
-        currentWeaponInSheath = Instantiate(weaponList[(int)currentWeaponType], weaponSheath.transform);
+        currentWeaponInHandLeft = Instantiate(weaponList[(int)currentWeaponType], weaponHolderLeft.transform);
     }
 
     public void OnClickButton(WeaponButton button)
@@ -129,18 +210,18 @@ public class EquipmentSystem : MonoBehaviour
     {
         if (currentWeaponType == WeaponType.Sword)
         {
-            currentWeaponInHand.GetComponentInChildren<SwordAttack>()?.StartDealDamage();
+            currentWeaponInHandRight.GetComponentInChildren<SwordAttack>()?.StartDealDamage();
         }
         else if (currentWeaponType == WeaponType.Bow)
         {
-            currentWeaponInHand.GetComponentInChildren<BowAttack>()?.FireArrow();
+            currentWeaponInHandLeft.GetComponentInChildren<BowAttack>()?.FireArrow();
         }
     }
     public void EndDealDamage()
     {
         if (currentWeaponType == WeaponType.Sword)
         {
-            currentWeaponInHand.GetComponentInChildren<SwordAttack>()?.EndDealDamage();
+            currentWeaponInHandRight.GetComponentInChildren<SwordAttack>()?.EndDealDamage();
         }
     }
 }

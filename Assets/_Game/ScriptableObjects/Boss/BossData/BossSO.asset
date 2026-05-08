@@ -14,19 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyVariants:
   - enemyName: Boss1
-    enemyPrefab: {fileID: 8035749023930785709, guid: b05c5fcfacd4e458baa66e86d6902d81,
+    enemyPrefab: {fileID: 2869362887871855709, guid: a7b27a3e48a37424a9c48caa13db768d,
       type: 3}
   - enemyName: Boss2
-    enemyPrefab: {fileID: 8035749023930785709, guid: b05c5fcfacd4e458baa66e86d6902d81,
+    enemyPrefab: {fileID: 2869362887871855709, guid: a7b27a3e48a37424a9c48caa13db768d,
       type: 3}
   - enemyName: Boss3
-    enemyPrefab: {fileID: 8035749023930785709, guid: b05c5fcfacd4e458baa66e86d6902d81,
+    enemyPrefab: {fileID: 2869362887871855709, guid: a7b27a3e48a37424a9c48caa13db768d,
       type: 3}
   - enemyName: Boss3
-    enemyPrefab: {fileID: 8035749023930785709, guid: b05c5fcfacd4e458baa66e86d6902d81,
+    enemyPrefab: {fileID: 2869362887871855709, guid: a7b27a3e48a37424a9c48caa13db768d,
       type: 3}
   - enemyName: Boss3
-    enemyPrefab: {fileID: 8035749023930785709, guid: b05c5fcfacd4e458baa66e86d6902d81,
+    enemyPrefab: {fileID: 2869362887871855709, guid: a7b27a3e48a37424a9c48caa13db768d,
       type: 3}
   enemyData:
   - levelEnemy: 1

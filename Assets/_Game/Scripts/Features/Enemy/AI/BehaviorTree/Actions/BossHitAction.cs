@@ -3,7 +3,7 @@ using UnityEngine;
 public class BossHitAction : Action
 {
     private BossBlackboard bb;
-    private float hitDuration = 1f;  // Duration of hit animation
+    private float hitDuration = 0.35f;  // Duration of hit animation
 
     protected override void OnAwake()
     {
