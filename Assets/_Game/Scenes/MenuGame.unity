@@ -222,30 +222,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 797241336830450774, guid: 3f569e800ca07498db1e279ee251ccb7,
-        type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 797241336830450774, guid: 3f569e800ca07498db1e279ee251ccb7,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4234764980774686195, guid: 3f569e800ca07498db1e279ee251ccb7,
         type: 3}
       propertyPath: m_Name
       value: UIManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 7644178446035567443, guid: 3f569e800ca07498db1e279ee251ccb7,
-        type: 3}
-      propertyPath: m_SortingOrder
-      value: 999
-      objectReference: {fileID: 0}
-    - target: {fileID: 7644178446035567443, guid: 3f569e800ca07498db1e279ee251ccb7,
-        type: 3}
-      propertyPath: m_OverrideSorting
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8822045130255328694, guid: 3f569e800ca07498db1e279ee251ccb7,
         type: 3}
@@ -348,9 +328,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 67933440025732918, guid: 3f569e800ca07498db1e279ee251ccb7, type: 3}
-    - {fileID: 665869211818421653, guid: 3f569e800ca07498db1e279ee251ccb7, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f569e800ca07498db1e279ee251ccb7, type: 3}

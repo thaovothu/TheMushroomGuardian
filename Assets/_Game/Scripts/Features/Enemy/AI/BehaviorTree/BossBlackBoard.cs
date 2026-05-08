@@ -32,7 +32,7 @@ public class BossBlackboard : MonoBehaviour, IPoolSpawned
     [HideInInspector] public bool isHit = false;
     private float lastHealthValue;
     private float hitTimeout = 0f;      // Timeout để reset isHit
-    private const float HIT_DURATION = 1f; // Hit animation duration
+    private const float HIT_DURATION = 0.35f; // Hit animation duration
     private bool healthInitialized = false;
 
     void Awake()
