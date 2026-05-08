@@ -8,8 +8,4 @@ public class UIBillBoarding : MonoBehaviour
     void Awake() {
         cam = Camera.main;
     }
-    void Update()
-    {
-        transform.forward = cam.transform.forward;
-    }
 }
