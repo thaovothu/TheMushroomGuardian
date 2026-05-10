@@ -10,6 +10,9 @@ public class UILoading : MonoBehaviour
     
     private float currentProgress = 0f;
 
+    // Event trigger khi loading hoàn thành
+    public static System.Action OnLoadingComplete;
+
     void OnEnable()
     {
         if (progressSlider != null)
@@ -61,6 +64,8 @@ public class UILoading : MonoBehaviour
     public void CompleteLoading()
     {
         UpdateProgress(1f);
+        // Trigger event để báo các system khác loading xong
+        OnLoadingComplete?.Invoke();
     }
 
     /// <summary>

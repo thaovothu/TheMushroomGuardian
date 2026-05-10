@@ -2,7 +2,7 @@ using System.Collections;
 using Cinemachine;
 using UnityEngine;
 
-public class CameraManager : MonoBehaviour
+public class CameraManager : BaseSingleton<CameraManager>
 {
     [Header("References")]
     [SerializeField] InputReader input;
@@ -42,7 +42,8 @@ public class CameraManager : MonoBehaviour
         if (cameraMovementLock) return;
         if (isDeviceMouse && !isRMBPressed) return; // chỉ xoay khi giữ RMB
 
-        float deviceMultiplier = isDeviceMouse ? Time.fixedDeltaTime : Time.deltaTime;
+        // float deviceMultiplier = isDeviceMouse ? Time.fixedDeltaTime : Time.deltaTime;
+        float deviceMultiplier = isDeviceMouse ? 1f : Time.deltaTime;
         freeLookVCam.m_XAxis.m_InputAxisValue = cameraMovement.x * speedMultiplier * deviceMultiplier;
         freeLookVCam.m_YAxis.m_InputAxisValue = cameraMovement.y * speedMultiplier * deviceMultiplier;
     }
@@ -70,5 +71,16 @@ public class CameraManager : MonoBehaviour
         cameraMovementLock = true;
         yield return new WaitForEndOfFrame();
         cameraMovementLock = false;
+    }
+
+    public void SetTarget(Transform target)
+    {
+        freeLookVCam.Follow = target;
+        freeLookVCam.LookAt = target;
+
+        freeLookVCam.OnTargetObjectWarped(
+            target,
+            target.position - freeLookVCam.transform.position - Vector3.forward
+        );
     }
 }

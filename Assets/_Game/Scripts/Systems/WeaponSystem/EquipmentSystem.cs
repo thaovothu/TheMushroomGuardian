@@ -42,32 +42,38 @@ public class EquipmentSystem : BaseSingleton<EquipmentSystem>
     protected override void Awake()
     {
         base.Awake();
-        TryResolveWeaponHolders();
-        TryResolveAnimator();
     }
 
-    void Start()
-    {
-        currentWeaponType = WeaponType.None;
-        // DrawWeapon();
-        // SheathWeapon();
-    }
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
-        weaponBow.onClick.AddListener(() => OnClickButton(WeaponButton.BowButton));
-        weaponSword.onClick.AddListener(() => OnClickButton(WeaponButton.SwordButton));
-        weaponNone.onClick.AddListener(() => OnClickButton(WeaponButton.NoneButton));
+        // Listen khi player được spawn xong
+        PlayerSpawner.OnPlayerSpawned += OnPlayerSpawned;
+        if (weaponBow != null) weaponBow.onClick.AddListener(() => OnClickButton(WeaponButton.BowButton));
+        if (weaponSword != null) weaponSword.onClick.AddListener(() => OnClickButton(WeaponButton.SwordButton));
+        if (weaponNone != null) weaponNone.onClick.AddListener(() => OnClickButton(WeaponButton.NoneButton));
     }
-    private void OnDisable() {
+
+    void OnDisable()
+    {
         SceneManager.sceneLoaded -= OnSceneLoaded;
-        weaponBow.onClick.RemoveAllListeners();
-        weaponSword.onClick.RemoveAllListeners();
-        weaponNone.onClick.RemoveAllListeners();
+        PlayerSpawner.OnPlayerSpawned -= OnPlayerSpawned;
+        if (weaponBow != null) weaponBow.onClick.RemoveAllListeners();
+        if (weaponSword != null) weaponSword.onClick.RemoveAllListeners();
+        if (weaponNone != null) weaponNone.onClick.RemoveAllListeners();
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // Reset khi load scene mới
+        currentWeaponType = WeaponType.None;
+        currentWeaponInHandRight = null;
+        currentWeaponInHandLeft = null;
+    }
+
+    void OnPlayerSpawned(GameObject player)
+    {
+        Debug.Log("[EquipmentSystem] OnPlayerSpawned called - resolving weapon holders...");
         TryResolveWeaponHolders();
         TryResolveAnimator();
         RebuildWeaponVisuals();
@@ -75,19 +81,52 @@ public class EquipmentSystem : BaseSingleton<EquipmentSystem>
 
     void TryResolveWeaponHolders()
     {
+        // Tìm player object
+        var playerObject = GameObject.FindGameObjectWithTag(PlayerTag);
+        if (playerObject == null)
+        {
+            Debug.LogError("[EquipmentSystem] Cannot find Player object with tag 'Player'!");
+            return;
+        }
+
+        Debug.Log($"[EquipmentSystem] Found player: {playerObject.name}");
+        
+        // Debug: log tất cả children của player
+        Debug.Log($"[EquipmentSystem] Player children: {string.Join(", ", System.Linq.Enumerable.Select(playerObject.GetComponentsInChildren<Transform>(), t => t.name))}");
+
+        // Tìm weapon holders trong hierarchy của player (recursive)
         if (weaponHolderRight == null)
         {
-            var rightHolderObject = GameObject.Find(WeaponHolderRightName);
-            if (rightHolderObject != null)
-                weaponHolderRight = rightHolderObject.transform;
+            weaponHolderRight = FindTransformRecursive(playerObject.transform, WeaponHolderRightName);
+            if (weaponHolderRight == null)
+                Debug.LogError($"[EquipmentSystem] Cannot find '{WeaponHolderRightName}' in player hierarchy!");
+            else
+                Debug.Log($"[EquipmentSystem] Found WeaponHolderRight: {weaponHolderRight.name}");
         }
 
         if (weaponHolderLeft == null)
         {
-            var leftHolderObject = GameObject.Find(WeaponHolderLeftName);
-            if (leftHolderObject != null)
-                weaponHolderLeft = leftHolderObject.transform;
+            weaponHolderLeft = FindTransformRecursive(playerObject.transform, WeaponHolderLeftName);
+            if (weaponHolderLeft == null)
+                Debug.LogError($"[EquipmentSystem] Cannot find '{WeaponHolderLeftName}' in player hierarchy!");
+            else
+                Debug.Log($"[EquipmentSystem] Found WeaponHolderLeft: {weaponHolderLeft.name}");
         }
+    }
+
+    Transform FindTransformRecursive(Transform parent, string name)
+    {
+        if (parent.name == name)
+            return parent;
+
+        foreach (Transform child in parent)
+        {
+            Transform result = FindTransformRecursive(child, name);
+            if (result != null)
+                return result;
+        }
+
+        return null;
     }
 
     void TryResolveAnimator()
@@ -110,7 +149,10 @@ public class EquipmentSystem : BaseSingleton<EquipmentSystem>
             return;
 
         if (weaponHolderRight == null || weaponHolderLeft == null)
+        {
+            Debug.LogWarning("[EquipmentSystem] Weapon holders not resolved yet, skipping visual rebuild.");
             return;
+        }
 
         if (currentWeaponInHandRight != null)
             Destroy(currentWeaponInHandRight);
@@ -179,11 +221,21 @@ public class EquipmentSystem : BaseSingleton<EquipmentSystem>
 
     public void DrawWeaponRight()
     {
+        if (weaponHolderRight == null)
+        {
+            Debug.LogError("[EquipmentSystem] weaponHolderRight is null! Cannot draw weapon.");
+            return;
+        }
         currentWeaponInHandRight = Instantiate(weaponList[(int)currentWeaponType], weaponHolderRight.transform);
     }
 
     public void DrawWeaponLeft()
     {
+        if (weaponHolderLeft == null)
+        {
+            Debug.LogError("[EquipmentSystem] weaponHolderLeft is null! Cannot draw weapon.");
+            return;
+        }
         currentWeaponInHandLeft = Instantiate(weaponList[(int)currentWeaponType], weaponHolderLeft.transform);
     }
 

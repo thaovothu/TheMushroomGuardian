@@ -9,12 +9,15 @@ public class ArrowPool : BaseSingleton<ArrowPool>
     
     Queue<GameObject> availableArrows;
     List<GameObject> allArrows;
-    
-    static ArrowPool instance;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        // Parent (DataGame) handles DontDestroyOnLoad
+    }
 
     void Start()
     {
-        instance = this;
         availableArrows = new Queue<GameObject>(poolSize);
         allArrows = new List<GameObject>();
         
@@ -29,18 +32,18 @@ public class ArrowPool : BaseSingleton<ArrowPool>
     }
 
     // Lấy arrow từ pool
-    public static GameObject GetArrow(Vector3 position, Quaternion rotation)
+    public GameObject GetArrow(Vector3 position, Quaternion rotation)
     {
-        Debug.Log($"[ArrowPool] GetArrow called. Pool available: {instance.availableArrows.Count}");
+        Debug.Log($"[ArrowPool] GetArrow called. Pool available: {availableArrows.Count}");
         
-        if (instance.availableArrows.Count == 0)
+        if (availableArrows.Count == 0)
         {
             Debug.LogWarning("Arrow pool hết! Tạo thêm arrow mới.");
-            GameObject newArrow = Instantiate(instance.arrowPrefab, position, rotation, instance.transform);
+            GameObject newArrow = Instantiate(arrowPrefab, position, rotation, transform);
             return newArrow;
         }
 
-        GameObject arrow = instance.availableArrows.Dequeue();
+        GameObject arrow = availableArrows.Dequeue();
         Debug.Log($"[ArrowPool] Got arrow from pool. Arrow name: {arrow.name}, has Arrow script: {arrow.GetComponent<Arrow>() != null}");
         
         arrow.transform.position = position;
@@ -67,9 +70,9 @@ public class ArrowPool : BaseSingleton<ArrowPool>
     }
 
     // Trả arrow về pool
-    public static void ReturnArrow(GameObject arrow)
+    public void ReturnArrow(GameObject arrow)
     {
         arrow.SetActive(false);
-        instance.availableArrows.Enqueue(arrow);
+        availableArrows.Enqueue(arrow);
     }
 }

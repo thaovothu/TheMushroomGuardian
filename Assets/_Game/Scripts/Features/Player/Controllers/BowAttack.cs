@@ -50,7 +50,7 @@ public class BowAttack : MonoBehaviour
         Debug.Log($"[BowAttack] Firing from position: {firePosition}, toward: {targetPoint}, direction: {arrowDirection}");
 
         // Lấy arrow từ pool với hướng chuột
-        GameObject arrow = ArrowPool.GetArrow(firePosition, fireRotation);
+        GameObject arrow = ArrowPool.Instance.GetArrow(firePosition, fireRotation);
         
         Debug.Log("[BowAttack] Bắn mũi tên!");
     }

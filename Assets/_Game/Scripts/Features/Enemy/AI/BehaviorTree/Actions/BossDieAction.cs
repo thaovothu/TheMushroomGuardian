@@ -28,7 +28,7 @@ public class BossDieAction : Action
         {
             //Debug.Log($"[BossDieAction] Die animation finished! Removing boss");
             // Call death handler (e.g., PoolSpawnManager.OnRelease)
-            PoolSpawnManager.OnRelease?.Invoke(bb.gameObject);
+            PoolSpawnManager.Instance.OnRelease?.Invoke(bb.gameObject);
             return TaskStatus.Success;
         }
 
