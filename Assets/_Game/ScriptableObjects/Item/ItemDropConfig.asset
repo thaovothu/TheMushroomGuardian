@@ -44,12 +44,12 @@ MonoBehaviour:
     dropAmount: 1
   strengthBuffDrop:
     itemType: 3
-    dropChance: 3
+    dropChance: 100
     itemId: 3
     dropAmount: 1
   defenseBuffDrop:
     itemType: 4
-    dropChance: 3
+    dropChance: 100
     itemId: 4
     dropAmount: 1
   itemPickupPrefabs:

@@ -110,19 +110,21 @@ public class ItemDropConfig : ScriptableObject
     }
 
     /// <summary>
-    /// Lấy main drop items (Coin, EXPGem)
+    /// Lấy main drop items cho enemy thường (không bao gồm crystals)
     /// </summary>
     public List<ItemDropChance> GetMainDrops()
     {
         return new List<ItemDropChance> 
         { 
             coinDrop, 
-            expGemDrop 
+            expGemDrop,
+            defenseBuffDrop, 
+            strengthBuffDrop
         };
     }
 
     /// <summary>
-    /// Lấy tất cả drop items
+    /// Lấy tất cả drop items (chỉ cho boss, bao gồm cả crystals)
     /// </summary>
     public List<ItemDropChance> GetAllDrops()
     {
@@ -140,12 +142,14 @@ public class ItemDropConfig : ScriptableObject
     }
 
     /// <summary>
-    /// Lấy boss-only drops
+    /// Lấy boss-only drops (crystals + buff)
     /// </summary>
     public List<ItemDropChance> GetBossDrops()
     {
         return new List<ItemDropChance> 
         { 
+            coinDrop,
+            expGemDrop,
             earthCrystalDrop,
             windCrystalDrop,
             waterCrystalDrop,

@@ -10,6 +10,7 @@ public class InventorySystem : MonoBehaviour
     public static InventorySystem Instance { get; private set; }
 
     [SerializeField] private ItemSO itemSO;              // Cấu hình tất cả items
+    [SerializeField] private ItemIconSO itemIconSO;      // Icon 2D của items
 
     // Event khi có thay đổi trong inventory
     public delegate void InventoryChangedDelegate(int bagIndex, int slotIndex);
@@ -269,5 +270,19 @@ public class InventorySystem : MonoBehaviour
             bag.ClearAll();
         }
         Debug.Log("[InventorySystem] Inventory cleared");
+    }
+
+    /// <summary>
+    /// Lấy icon của item
+    /// </summary>
+    public Sprite GetItemIcon(int itemId)
+    {
+        if (itemIconSO == null)
+        {
+            Debug.LogWarning("[InventorySystem] ItemIconSO not assigned!");
+            return null;
+        }
+
+        return itemIconSO.GetIcon(itemId);
     }
 }
