@@ -104,7 +104,7 @@ public class Arrow : MonoBehaviour
     {
         if (lifeCoroutine != null)
             StopCoroutine(lifeCoroutine);
-        ArrowPool.ReturnArrow(gameObject);
+        ArrowPool.Instance.ReturnArrow(gameObject);
     }
 }
 

@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
         [SerializeField] GroundChecker groundChecker;
         [SerializeField]public HealthSystem healthSystem;
         [SerializeField] Animator animator;
-        [SerializeField] CinemachineFreeLook freeLookVCam;
+        // private CinemachineFreeLook freeLookVCam;
         [SerializeField] InputReader input;
 
         [Header("Movement Settings")]
@@ -66,21 +66,33 @@ public class PlayerController : MonoBehaviour
         // Animator parameters
         static readonly int Speed = Animator.StringToHash("Speed");
 
-        void Awake()
-        {
-            mainCam = Camera.main.transform;
-            freeLookVCam.Follow = transform;
-            freeLookVCam.LookAt = transform;
-            // Invoke event when observed transform is teleported, adjusting freeLookVCam's position accordingly
-            freeLookVCam.OnTargetObjectWarped(transform, transform.position - freeLookVCam.transform.position - Vector3.forward);
+    // void Awake()
+    // {
+    //     mainCam = Camera.main.transform;
+    //     freeLookVCam.Follow = transform;
+    //     freeLookVCam.LookAt = transform;
+    //     // Invoke event when observed transform is teleported, adjusting freeLookVCam's position accordingly
+    //     freeLookVCam.OnTargetObjectWarped(transform, transform.position - freeLookVCam.transform.position - Vector3.forward);
 
-            rb.freezeRotation = true;    
+    //     rb.freezeRotation = true;    
 
-            SetupTimers();
-            SetupStateMachine();
-        }
+    //     SetupTimers();
+    //     SetupStateMachine();
+    // }
 
-        void Start() => input.EnablePlayerActions();
+    void Awake()
+    {
+        mainCam = Camera.main.transform;
+
+        CameraManager.Instance.SetTarget(transform);
+
+        rb.freezeRotation = true;
+
+        SetupTimers();
+        SetupStateMachine();
+    }
+
+    void Start() => input.EnablePlayerActions();
 
         void Update()
         {
