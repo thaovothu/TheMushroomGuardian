@@ -64,11 +64,12 @@ public class ItemDetailUI : MonoBehaviour
         if (descriptionText != null)
             descriptionText.text = itemData.description;
 
-        // TODO: Load image từ Resources
-        // if (itemImage != null && !string.IsNullOrEmpty(itemData.iconPath))
-        // {
-        //     itemImage.sprite = Resources.Load<Sprite>(itemData.iconPath);
-        // }
+        // Thiết lập icon từ ItemIconSO
+        if (itemImage != null)
+        {
+            Sprite icon = InventorySystem.Instance.GetItemIcon(itemData.itemId);
+            itemImage.sprite = icon;
+        }
 
         // Enable buttons
         if (useItemButton != null)

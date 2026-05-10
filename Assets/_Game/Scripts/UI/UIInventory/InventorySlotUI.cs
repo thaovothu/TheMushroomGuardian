@@ -87,11 +87,12 @@ public class InventorySlotUI : MonoBehaviour
             if (slotBackground != null)
                 slotBackground.color = filledColor;
 
-            // TODO: Thiết lập icon từ Resources
-            // if (itemIcon != null && !string.IsNullOrEmpty(itemData.iconPath))
-            // {
-            //     itemIcon.sprite = Resources.Load<Sprite>(itemData.iconPath);
-            // }
+            // Thiết lập icon từ ItemIconSO
+            if (itemIcon != null)
+            {
+                Sprite icon = InventorySystem.Instance.GetItemIcon(itemData.itemId);
+                itemIcon.sprite = icon;
+            }
         }
     }
 
