@@ -5,20 +5,32 @@ using System.Collections.Generic;
 
 /// <summary>
 /// Giao diện chính của Inventory
-/// Hiển thị 20 slots và các nút hành động
+/// Hỗ trợ 3 túi, mỗi túi hiển thị 9 slots, có phân trang
 /// </summary>
 public class InventoryUI : MonoBehaviour
 {
     [SerializeField] private GridLayoutGroup slotsGrid;       // Grid chứa slots
     [SerializeField] private InventorySlotUI slotPrefab;      // Prefab của 1 slot
-    [SerializeField] private TextMeshProUGUI itemDetailsText;  // Hiển thị chi tiết item
-    [SerializeField] private Button useItemButton;            // Nút sử dụng
-    [SerializeField] private Button deleteItemButton;         // Nút xoá
+    [SerializeField] private ItemDetailUI itemDetailUI;       // Panel hiển thị chi tiết item
     [SerializeField] private Button closeButton;              // Nút đóng
+    
+    // Túi
+    [SerializeField] private Button bag1Button;               // Nút túi 1
+    [SerializeField] private Button bag2Button;               // Nút túi 2
+    [SerializeField] private Button bag3Button;               // Nút túi 3
+    
+    // Phân trang
+    [SerializeField] private Button prevPageButton;           // Nút trang trước
+    [SerializeField] private Button nextPageButton;           // Nút trang sau
+    [SerializeField] private TextMeshProUGUI pageText;         // Hiển thị trang hiện tại
 
+    private const int SLOTS_PER_PAGE = 9;
     private List<InventorySlotUI> slotUIs = new();
     private InventorySlotUI selectedSlot;
     private CanvasGroup canvasGroup;
+    
+    private int currentBagIndex = 0;
+    private int currentPage = 0;
 
     private void Awake()
     {
@@ -28,13 +40,23 @@ public class InventoryUI : MonoBehaviour
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
         }
 
-        // Setup buttons
-        if (useItemButton != null)
-            useItemButton.onClick.AddListener(OnUseItemClicked);
-        if (deleteItemButton != null)
-            deleteItemButton.onClick.AddListener(OnDeleteItemClicked);
+        // Setup close button
         if (closeButton != null)
             closeButton.onClick.AddListener(OnCloseClicked);
+
+        // Setup bag buttons
+        if (bag1Button != null)
+            bag1Button.onClick.AddListener(() => SelectBag(0));
+        if (bag2Button != null)
+            bag2Button.onClick.AddListener(() => SelectBag(1));
+        if (bag3Button != null)
+            bag3Button.onClick.AddListener(() => SelectBag(2));
+
+        // Setup pagination buttons
+        if (prevPageButton != null)
+            prevPageButton.onClick.AddListener(PreviousPage);
+        if (nextPageButton != null)
+            nextPageButton.onClick.AddListener(NextPage);
 
         // Subscribe to inventory changes
         if (InventorySystem.Instance != null)
@@ -54,11 +76,12 @@ public class InventoryUI : MonoBehaviour
     private void Start()
     {
         InitializeSlots();
+        UpdateBagButtons();
         Hide();
     }
 
     /// <summary>
-    /// Khởi tạo tất cả 20 slots
+    /// Khởi tạo 9 slots UI
     /// </summary>
     private void InitializeSlots()
     {
@@ -68,8 +91,6 @@ public class InventoryUI : MonoBehaviour
             return;
         }
 
-        const int MAX_SLOTS = 20;
-
         // Xoá slots cũ nếu có
         foreach (Transform child in slotsGrid.transform)
         {
@@ -77,21 +98,145 @@ public class InventoryUI : MonoBehaviour
         }
         slotUIs.Clear();
 
-        // Tạo 20 slots
-        for (int i = 0; i < MAX_SLOTS; i++)
+        // Tạo 9 slots
+        for (int i = 0; i < SLOTS_PER_PAGE; i++)
         {
             InventorySlotUI slotUI = Instantiate(slotPrefab, slotsGrid.transform);
             slotUI.Initialize(i, this);
             slotUIs.Add(slotUI);
         }
 
-        Debug.Log("[InventoryUI] Initialized 20 inventory slots");
+        Debug.Log("[InventoryUI] Initialized 9 inventory slots");
+    }
+
+    /// <summary>
+    /// Chọn túi
+    /// </summary>
+    public void SelectBag(int bagIndex)
+    {
+        if (bagIndex < 0 || bagIndex >= InventorySystem.Instance.GetBagCount())
+        {
+            Debug.LogError($"[InventoryUI] Invalid bag index: {bagIndex}");
+            return;
+        }
+
+        currentBagIndex = bagIndex;
+        currentPage = 0;
+        selectedSlot = null;
+        if (itemDetailUI != null)
+            itemDetailUI.ClearDetail();
+        UpdateBagButtons();
+        RefreshCurrentPage();
+        Debug.Log($"[InventoryUI] Selected bag {bagIndex}");
+    }
+
+    /// <summary>
+    /// Cập nhật trạng thái các nút túi
+    /// </summary>
+    private void UpdateBagButtons()
+    {
+        if (bag1Button != null)
+            bag1Button.interactable = currentBagIndex != 0;
+        if (bag2Button != null)
+            bag2Button.interactable = currentBagIndex != 1;
+        if (bag3Button != null)
+            bag3Button.interactable = currentBagIndex != 2;
+    }
+
+    /// <summary>
+    /// Trang trước
+    /// </summary>
+    public void PreviousPage()
+    {
+        if (currentPage > 0)
+        {
+            currentPage--;
+            selectedSlot = null;
+            if (itemDetailUI != null)
+                itemDetailUI.ClearDetail();
+            RefreshCurrentPage();
+        }
+    }
+
+    /// <summary>
+    /// Trang sau
+    /// </summary>
+    public void NextPage()
+    {
+        InventoryBag currentBag = InventorySystem.Instance.GetBag(currentBagIndex);
+        int maxPages = Mathf.CeilToInt((float)currentBag.SlotCount / SLOTS_PER_PAGE);
+        
+        if (currentPage < maxPages - 1)
+        {
+            currentPage++;
+            selectedSlot = null;
+            if (itemDetailUI != null)
+                itemDetailUI.ClearDetail();
+            RefreshCurrentPage();
+        }
+    }
+
+    /// <summary>
+    /// Cập nhật các slots hiện tại dựa vào trang
+    /// </summary>
+    private void RefreshCurrentPage()
+    {
+        InventoryBag currentBag = InventorySystem.Instance.GetBag(currentBagIndex);
+        int startIndex = currentPage * SLOTS_PER_PAGE;
+
+        // Cập nhật các slots hiển thị
+        for (int i = 0; i < SLOTS_PER_PAGE; i++)
+        {
+            int actualSlotIndex = startIndex + i;
+            if (actualSlotIndex < currentBag.SlotCount)
+            {
+                slotUIs[i].SetSlotData(currentBagIndex, actualSlotIndex);
+                slotUIs[i].RefreshUI();
+                slotUIs[i].gameObject.SetActive(true);
+            }
+            else
+            {
+                slotUIs[i].gameObject.SetActive(false);
+            }
+        }
+
+        // Cập nhật nút phân trang
+        UpdatePaginationButtons();
+        UpdatePageText();
+    }
+
+    /// <summary>
+    /// Cập nhật trạng thái nút phân trang
+    /// </summary>
+    private void UpdatePaginationButtons()
+    {
+        InventoryBag currentBag = InventorySystem.Instance.GetBag(currentBagIndex);
+        int maxPages = Mathf.CeilToInt((float)currentBag.SlotCount / SLOTS_PER_PAGE);
+
+        if (prevPageButton != null)
+            prevPageButton.interactable = currentPage > 0;
+        if (nextPageButton != null)
+            nextPageButton.interactable = currentPage < maxPages - 1;
+    }
+
+    /// <summary>
+    /// Cập nhật hiển thị số trang
+    /// </summary>
+    private void UpdatePageText()
+    {
+        InventoryBag currentBag = InventorySystem.Instance.GetBag(currentBagIndex);
+        int maxPages = Mathf.CeilToInt((float)currentBag.SlotCount / SLOTS_PER_PAGE);
+        
+        if (pageText != null)
+        {
+            pageText.text = $"Page {currentPage + 1}/{maxPages}";
+        }
     }
 
     /// <summary>
     /// Khi click vào 1 slot
     /// </summary>
-    public void OnSlotClicked(int slotIndex)
+    public void OnSlotClicked(int displaySlotIndex)
     {
         // Bỏ highlight slot cũ
         if (selectedSlot != null)
@@ -100,64 +245,8 @@ public class InventoryUI : MonoBehaviour
         }
 
         // Highlight slot mới
-        selectedSlot = slotUIs[slotIndex];
+        selectedSlot = slotUIs[displaySlotIndex];
         selectedSlot.SetSelected(true);
-
-        // Cập nhật chi tiết
-        UpdateItemDetails();
-    }
-
-    /// <summary>
-    /// Cập nhật chi tiết item
-    /// </summary>
-    private void UpdateItemDetails()
-    {
-        if (selectedSlot == null || itemDetailsText == null)
-            return;
-
-        InventorySlot slotData = selectedSlot.GetSlotData();
-
-        if (slotData == null || slotData.IsEmpty)
-        {
-            itemDetailsText.text = "No item selected";
-            useItemButton.interactable = false;
-            deleteItemButton.interactable = false;
-            return;
-        }
-
-        ItemData itemData = slotData.ItemData;
-        string details = $"<b>{itemData.itemName}</b>\n";
-        details += $"Type: {itemData.itemType}\n";
-        details += $"Quantity: {slotData.Quantity}\n";
-        details += $"\n{itemData.description}";
-
-        itemDetailsText.text = details;
-        useItemButton.interactable = true;
-        deleteItemButton.interactable = true;
-    }
-
-    /// <summary>
-    /// Nút sử dụng item
-    /// </summary>
-    private void OnUseItemClicked()
-    {
-        if (selectedSlot != null)
-        {
-            selectedSlot.UseItem();
-            UpdateItemDetails();
-        }
-    }
-
-    /// <summary>
-    /// Nút xoá item
-    /// </summary>
-    private void OnDeleteItemClicked()
-    {
-        if (selectedSlot != null)
-        {
-            selectedSlot.DeleteItem();
-            UpdateItemDetails();
-        }
     }
 
     /// <summary>
@@ -171,17 +260,12 @@ public class InventoryUI : MonoBehaviour
     /// <summary>
     /// Callback khi inventory thay đổi
     /// </summary>
-    private void OnInventorySlotChanged(int slotIndex)
+    private void OnInventorySlotChanged(int bagIndex, int slotIndex)
     {
-        if (slotIndex >= 0 && slotIndex < slotUIs.Count)
+        // Chỉ cập nhật nếu là túi hiện tại đang hiển thị
+        if (bagIndex == currentBagIndex)
         {
-            slotUIs[slotIndex].RefreshUI();
-
-            // Nếu slot được chọn thay đổi, update chi tiết
-            if (selectedSlot != null && selectedSlot.GetSlotIndex() == slotIndex)
-            {
-                UpdateItemDetails();
-            }
+            RefreshCurrentPage();
         }
     }
 
@@ -194,12 +278,8 @@ public class InventoryUI : MonoBehaviour
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
         
-        // Refresh tất cả slots
-        foreach (var slotUI in slotUIs)
-        {
-            slotUI.RefreshUI();
-        }
-
+        // Refresh trang hiện tại
+        RefreshCurrentPage();
         Debug.Log("[InventoryUI] Inventory shown");
     }
 
@@ -212,6 +292,8 @@ public class InventoryUI : MonoBehaviour
         canvasGroup.alpha = 0f;
         canvasGroup.blocksRaycasts = false;
         selectedSlot = null;
+        if (itemDetailUI != null)
+            itemDetailUI.Hide();
         Debug.Log("[InventoryUI] Inventory hidden");
     }
 
@@ -231,3 +313,4 @@ public class InventoryUI : MonoBehaviour
     /// </summary>
     public bool IsOpen => gameObject.activeSelf;
 }
+

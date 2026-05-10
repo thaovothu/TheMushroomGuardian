@@ -8,7 +8,7 @@ using UnityEngine;
 [System.Serializable]
 public class InventoryBag
 {
-    public const int MAX_SLOTS = 20;
+    public const int MAX_SLOTS = 9;
     
     [SerializeField] private List<InventorySlot> slots = new();
     [SerializeField] private string bagName = "Main Bag";
@@ -22,7 +22,7 @@ public class InventoryBag
         bagName = name;
         slots = new List<InventorySlot>();
 
-        // Khởi tạo 20 slots rỗng
+        // Khởi tạo 9 slots rỗng
         for (int i = 0; i < MAX_SLOTS; i++)
         {
             slots.Add(new InventorySlot());

@@ -93,10 +93,27 @@ public class ItemPickup : MonoBehaviour
 
     private void PickUp()
     {
-        // TODO: Add to player inventory
-        // Tạm thời chỉ log
-        Debug.Log($"[ItemPickup] Picked up item ID: {itemId}, Amount: {amount}");
-        
+        // Thêm vào inventory hoặc UI Money
+        if (InventorySystem.Instance != null)
+        {
+            InventorySystem.Instance.AddItem(itemId, amount);
+            Debug.Log($"[ItemPickup] Added to inventory - Item ID: {itemId}, Amount: {amount}");
+        }
+
+        // Cập nhật UI Money (nếu là coin hoặc exp)
+        if (UIMoney.Instance != null)
+        {
+            // Item ID 8 = Coin, 7 = EXPGem
+            if (itemId == 8)  // Coin
+            {
+                UIMoney.Instance.AddCoin(amount);
+            }
+            else if (itemId == 7)  // EXP Gem
+            {
+                UIMoney.Instance.AddExp(amount);
+            }
+        }
+
         // Destroy item
         Destroy(gameObject);
     }
