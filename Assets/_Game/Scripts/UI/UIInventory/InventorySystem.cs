@@ -10,13 +10,15 @@ public class InventorySystem : MonoBehaviour
     public static InventorySystem Instance { get; private set; }
 
     [SerializeField] private ItemSO itemSO;              // Cấu hình tất cả items
-    [SerializeField] private InventoryBag mainBag;      // Túi chính của player
 
     // Event khi có thay đổi trong inventory
-    public delegate void InventoryChangedDelegate(int slotIndex);
+    public delegate void InventoryChangedDelegate(int bagIndex, int slotIndex);
     public event InventoryChangedDelegate OnItemAdded;
     public event InventoryChangedDelegate OnItemRemoved;
     public event InventoryChangedDelegate OnSlotChanged;
+
+    private List<InventoryBag> bags = new();
+    private const int BAG_COUNT = 3;
 
     private void Awake()
     {
@@ -29,9 +31,12 @@ public class InventorySystem : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        // Khởi tạo túi chính
-        mainBag = new InventoryBag("Main Bag");
-        Debug.Log("[InventorySystem] Initialized with main bag of 20 slots");
+        // Khởi tạo 3 túi
+        for (int i = 0; i < BAG_COUNT; i++)
+        {
+            bags.Add(new InventoryBag($"Bag {i + 1}"));
+        }
+        Debug.Log("[InventorySystem] Initialized with 3 bags of 9 slots each");
     }
 
     private void OnValidate()
@@ -43,7 +48,7 @@ public class InventorySystem : MonoBehaviour
     }
 
     /// <summary>
-    /// Thêm item vào inventory
+    /// Thêm item vào inventory (túi đầu tiên có chỗ trống)
     /// </summary>
     public bool AddItem(int itemId, int quantity = 1)
     {
@@ -68,21 +73,54 @@ public class InventorySystem : MonoBehaviour
     /// </summary>
     public bool AddItem(ItemData itemData, int quantity = 1)
     {
-        if (!mainBag.HasEmptySlot())
+        // Thử thêm vào túi đầu tiên có chỗ trống
+        for (int bagIndex = 0; bagIndex < bags.Count; bagIndex++)
         {
-            Debug.LogWarning("[InventorySystem] Inventory is full!");
+            if (bags[bagIndex].HasEmptySlot())
+            {
+                for (int i = 0; i < bags[bagIndex].SlotCount; i++)
+                {
+                    if (bags[bagIndex].GetSlot(i).IsEmpty)
+                    {
+                        bags[bagIndex].GetSlot(i).AddItem(itemData, quantity);
+                        OnItemAdded?.Invoke(bagIndex, i);
+                        OnSlotChanged?.Invoke(bagIndex, i);
+                        Debug.Log($"[InventorySystem] Item '{itemData.itemName}' added to bag {bagIndex} slot {i}");
+                        return true;
+                    }
+                }
+            }
+        }
+
+        Debug.LogWarning("[InventorySystem] All bags are full!");
+        return false;
+    }
+
+    /// <summary>
+    /// Thêm item vào túi cụ thể
+    /// </summary>
+    public bool AddItemToBag(int bagIndex, ItemData itemData, int quantity = 1)
+    {
+        if (bagIndex < 0 || bagIndex >= bags.Count)
+        {
+            Debug.LogError($"[InventorySystem] Invalid bag index: {bagIndex}");
             return false;
         }
 
-        // Tìm slot trống và thêm item
-        for (int i = 0; i < mainBag.SlotCount; i++)
+        if (!bags[bagIndex].HasEmptySlot())
         {
-            if (mainBag.GetSlot(i).IsEmpty)
+            Debug.LogWarning($"[InventorySystem] Bag {bagIndex} is full!");
+            return false;
+        }
+
+        for (int i = 0; i < bags[bagIndex].SlotCount; i++)
+        {
+            if (bags[bagIndex].GetSlot(i).IsEmpty)
             {
-                mainBag.GetSlot(i).AddItem(itemData, quantity);
-                OnItemAdded?.Invoke(i);
-                OnSlotChanged?.Invoke(i);
-                Debug.Log($"[InventorySystem] Item '{itemData.itemName}' added to slot {i}");
+                bags[bagIndex].GetSlot(i).AddItem(itemData, quantity);
+                OnItemAdded?.Invoke(bagIndex, i);
+                OnSlotChanged?.Invoke(bagIndex, i);
+                Debug.Log($"[InventorySystem] Item '{itemData.itemName}' added to bag {bagIndex} slot {i}");
                 return true;
             }
         }
@@ -93,31 +131,43 @@ public class InventorySystem : MonoBehaviour
     /// <summary>
     /// Lấy item từ inventory
     /// </summary>
-    public bool RemoveItem(int slotIndex, int quantity = 1)
+    public bool RemoveItem(int bagIndex, int slotIndex, int quantity = 1)
     {
-        InventorySlot slot = mainBag.GetSlot(slotIndex);
+        if (bagIndex < 0 || bagIndex >= bags.Count)
+        {
+            Debug.LogError($"[InventorySystem] Invalid bag index: {bagIndex}");
+            return false;
+        }
+
+        InventorySlot slot = bags[bagIndex].GetSlot(slotIndex);
         if (slot == null || slot.IsEmpty)
         {
-            Debug.LogWarning($"[InventorySystem] Cannot remove item from empty slot {slotIndex}");
+            Debug.LogWarning($"[InventorySystem] Cannot remove item from empty slot {slotIndex} in bag {bagIndex}");
             return false;
         }
 
         slot.RemoveItem(quantity);
-        OnItemRemoved?.Invoke(slotIndex);
-        OnSlotChanged?.Invoke(slotIndex);
-        Debug.Log($"[InventorySystem] Item removed from slot {slotIndex}");
+        OnItemRemoved?.Invoke(bagIndex, slotIndex);
+        OnSlotChanged?.Invoke(bagIndex, slotIndex);
+        Debug.Log($"[InventorySystem] Item removed from bag {bagIndex} slot {slotIndex}");
         return true;
     }
 
     /// <summary>
     /// Sử dụng item
     /// </summary>
-    public void UseItem(int slotIndex)
+    public void UseItem(int bagIndex, int slotIndex)
     {
-        InventorySlot slot = mainBag.GetSlot(slotIndex);
+        if (bagIndex < 0 || bagIndex >= bags.Count)
+        {
+            Debug.LogError($"[InventorySystem] Invalid bag index: {bagIndex}");
+            return;
+        }
+
+        InventorySlot slot = bags[bagIndex].GetSlot(slotIndex);
         if (slot == null || slot.IsEmpty)
         {
-            Debug.LogWarning($"[InventorySystem] Cannot use item from empty slot {slotIndex}");
+            Debug.LogWarning($"[InventorySystem] Cannot use item from empty slot {slotIndex} in bag {bagIndex}");
             return;
         }
 
@@ -125,36 +175,61 @@ public class InventorySystem : MonoBehaviour
         Debug.Log($"[InventorySystem] Using item: {itemData.itemName}");
 
         // TODO: Xử lý logic sử dụng item dựa vào ItemType
-        // Ví dụ: HealthPotion -> heal player, StrengthBuff -> apply buff, v.v.
 
         // Sau khi dùng, lấy item khỏi inventory
-        RemoveItem(slotIndex, 1);
+        RemoveItem(bagIndex, slotIndex, 1);
     }
 
     /// <summary>
     /// Xoá item từ slot
     /// </summary>
-    public void DeleteItem(int slotIndex)
+    public void DeleteItem(int bagIndex, int slotIndex)
     {
-        mainBag.ClearSlot(slotIndex);
-        OnSlotChanged?.Invoke(slotIndex);
-        Debug.Log($"[InventorySystem] Item deleted from slot {slotIndex}");
+        if (bagIndex < 0 || bagIndex >= bags.Count)
+        {
+            Debug.LogError($"[InventorySystem] Invalid bag index: {bagIndex}");
+            return;
+        }
+
+        bags[bagIndex].ClearSlot(slotIndex);
+        OnSlotChanged?.Invoke(bagIndex, slotIndex);
+        Debug.Log($"[InventorySystem] Item deleted from bag {bagIndex} slot {slotIndex}");
     }
 
     /// <summary>
     /// Lấy slot tại vị trí
     /// </summary>
-    public InventorySlot GetSlot(int slotIndex)
+    public InventorySlot GetSlot(int bagIndex, int slotIndex)
     {
-        return mainBag.GetSlot(slotIndex);
+        if (bagIndex < 0 || bagIndex >= bags.Count)
+        {
+            Debug.LogError($"[InventorySystem] Invalid bag index: {bagIndex}");
+            return null;
+        }
+
+        return bags[bagIndex].GetSlot(slotIndex);
     }
 
     /// <summary>
-    /// Lấy túi chính
+    /// Lấy túi tại chỉ số
     /// </summary>
-    public InventoryBag GetMainBag()
+    public InventoryBag GetBag(int bagIndex)
     {
-        return mainBag;
+        if (bagIndex < 0 || bagIndex >= bags.Count)
+        {
+            Debug.LogError($"[InventorySystem] Invalid bag index: {bagIndex}");
+            return null;
+        }
+
+        return bags[bagIndex];
+    }
+
+    /// <summary>
+    /// Lấy số lượng túi
+    /// </summary>
+    public int GetBagCount()
+    {
+        return bags.Count;
     }
 
     /// <summary>
@@ -162,15 +237,26 @@ public class InventorySystem : MonoBehaviour
     /// </summary>
     public bool IsFull()
     {
-        return !mainBag.HasEmptySlot();
+        // Kiểm tra tất cả túi
+        foreach (var bag in bags)
+        {
+            if (bag.HasEmptySlot())
+                return false;
+        }
+        return true;
     }
 
     /// <summary>
-    /// Lấy số slot trống
+    /// Lấy tổng số slot trống
     /// </summary>
     public int GetEmptySlotCount()
     {
-        return mainBag.GetEmptySlotCount();
+        int total = 0;
+        foreach (var bag in bags)
+        {
+            total += bag.GetEmptySlotCount();
+        }
+        return total;
     }
 
     /// <summary>
@@ -178,7 +264,10 @@ public class InventorySystem : MonoBehaviour
     /// </summary>
     public void ClearInventory()
     {
-        mainBag.ClearAll();
+        foreach (var bag in bags)
+        {
+            bag.ClearAll();
+        }
         Debug.Log("[InventorySystem] Inventory cleared");
     }
 }
