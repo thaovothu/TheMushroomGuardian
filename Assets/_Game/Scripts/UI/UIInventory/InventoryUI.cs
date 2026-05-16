@@ -14,10 +14,10 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private ItemDetailUI itemDetailUI;       // Panel hiển thị chi tiết item
     [SerializeField] private Button closeButton;              // Nút đóng
     
-    // Túi
-    [SerializeField] private Button bag1Button;               // Nút túi 1
-    [SerializeField] private Button bag2Button;               // Nút túi 2
-    [SerializeField] private Button bag3Button;               // Nút túi 3
+    // Túi - toggle bằng button
+    [SerializeField] private Toggle bag1Button;               // Nút túi 1
+    [SerializeField] private Toggle bag2Button;               // Nút túi 2
+    [SerializeField] private Toggle bag3Button;               // Nút túi 3
     
     // Phân trang
     [SerializeField] private Button prevPageButton;           // Nút trang trước
@@ -40,24 +40,6 @@ public class InventoryUI : MonoBehaviour
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
         }
 
-        // Setup close button
-        if (closeButton != null)
-            closeButton.onClick.AddListener(OnCloseClicked);
-
-        // Setup bag buttons
-        if (bag1Button != null)
-            bag1Button.onClick.AddListener(() => SelectBag(0));
-        if (bag2Button != null)
-            bag2Button.onClick.AddListener(() => SelectBag(1));
-        if (bag3Button != null)
-            bag3Button.onClick.AddListener(() => SelectBag(2));
-
-        // Setup pagination buttons
-        if (prevPageButton != null)
-            prevPageButton.onClick.AddListener(PreviousPage);
-        if (nextPageButton != null)
-            nextPageButton.onClick.AddListener(NextPage);
-
         // Subscribe to inventory changes
         if (InventorySystem.Instance != null)
         {
@@ -73,11 +55,52 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
+    void OnEnable()
+    {
+        if (closeButton != null)
+            closeButton.onClick.AddListener(OnCloseClicked);
+
+        // Setup bag toggles
+        if (bag1Button != null)
+            bag1Button.onValueChanged.AddListener(OnBag1Toggled);
+        if (bag2Button != null)
+            bag2Button.onValueChanged.AddListener(OnBag2Toggled);
+        if (bag3Button != null)
+            bag3Button.onValueChanged.AddListener(OnBag3Toggled);
+
+        // Setup pagination buttons
+        if (prevPageButton != null)
+            prevPageButton.onClick.AddListener(PreviousPage);
+        if (nextPageButton != null)
+            nextPageButton.onClick.AddListener(NextPage);
+    }
+    void OnDisable()
+    {
+        if (closeButton != null)
+            closeButton.onClick.RemoveListener(OnCloseClicked);
+
+        // Remove listeners from bag toggles
+        if (bag1Button != null)
+            bag1Button.onValueChanged.RemoveListener(OnBag1Toggled);
+        if (bag2Button != null)
+            bag2Button.onValueChanged.RemoveListener(OnBag2Toggled);
+        if (bag3Button != null)
+            bag3Button.onValueChanged.RemoveListener(OnBag3Toggled);
+
+        // Remove listeners from pagination buttons
+        if (prevPageButton != null)
+            prevPageButton.onClick.RemoveListener(PreviousPage);
+        if (nextPageButton != null)
+            nextPageButton.onClick.RemoveListener(NextPage);
+    }
+
+    private void OnBag1Toggled(bool value) { if (value) SelectBag(0); }
+    private void OnBag2Toggled(bool value) { if (value) SelectBag(1); }
+    private void OnBag3Toggled(bool value) { if (value) SelectBag(2); }
     private void Start()
     {
         InitializeSlots();
         UpdateBagButtons();
-        Hide();
     }
 
     /// <summary>
@@ -131,16 +154,16 @@ public class InventoryUI : MonoBehaviour
     }
 
     /// <summary>
-    /// Cập nhật trạng thái các nút túi
+    /// Cập nhật trạng thái các toggle túi
     /// </summary>
     private void UpdateBagButtons()
     {
         if (bag1Button != null)
-            bag1Button.interactable = currentBagIndex != 0;
+            bag1Button.isOn = currentBagIndex == 0;
         if (bag2Button != null)
-            bag2Button.interactable = currentBagIndex != 1;
+            bag2Button.isOn = currentBagIndex == 1;
         if (bag3Button != null)
-            bag3Button.interactable = currentBagIndex != 2;
+            bag3Button.isOn = currentBagIndex == 2;
     }
 
     /// <summary>
@@ -274,7 +297,9 @@ public class InventoryUI : MonoBehaviour
     /// </summary>
     public void Show()
     {
+        // Show được quản lý thông qua UIManager.ShowUI()
         gameObject.SetActive(true);
+        // UIManager.Instance.ShowUI("UIInventory");
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
         
@@ -288,7 +313,8 @@ public class InventoryUI : MonoBehaviour
     /// </summary>
     public void Hide()
     {
-        gameObject.SetActive(false);
+        // UIManager.Instance.HideUI("UIInventory");
+        gameObject.SetActive(true);
         canvasGroup.alpha = 0f;
         canvasGroup.blocksRaycasts = false;
         selectedSlot = null;

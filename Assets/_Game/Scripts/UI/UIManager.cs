@@ -1,26 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class UIManager : BaseSingleton<UIManager>
 {
-    public static UIManager Instance { get; private set; }
-
     [SerializeField] private List<UIPanel> uiPanels = new List<UIPanel>();
     
     private Dictionary<string, GameObject> uiDictionary = new Dictionary<string, GameObject>();
 
-    void Awake()
+    protected override void Awake()
     {
-        // Singleton pattern
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-
+        // BaseSingleton handles singleton initialization
+        base.Awake();
+        
         // Initialize UI dictionary
         InitializeUIPanels();
     }
@@ -34,8 +25,10 @@ public class UIManager : MonoBehaviour
                 uiDictionary[panel.panelName] = panel.uiObject;
                 // Hide all panels by default
                 panel.uiObject.SetActive(false);
+                Debug.Log($"[UIManager] Registered UI panel: {panel.panelName}");
             }
         }
+        Debug.Log($"[UIManager] Total UI panels registered: {uiDictionary.Count}");
     }
 
     /// <summary>
@@ -43,15 +36,25 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void ShowUI(string panelName)
     {
-        //Debug.Log("hihi" + panelName);
+        Debug.Log($"[UIManager] ShowUI called for: {panelName}");
+        Debug.Log($"[UIManager] Dictionary contains: {string.Join(", ", uiDictionary.Keys)}");
+        
         if (uiDictionary.ContainsKey(panelName))
         {
-            uiDictionary[panelName].SetActive(true);
-            //Debug.Log($"[UIManager] Showing UI: {panelName}");
+            GameObject panel = uiDictionary[panelName];
+            Debug.Log($"[UIManager] Found panel, setting active: {panelName}");
+            Debug.Log($"[UIManager] Panel parent active: {panel.transform.parent?.gameObject.activeSelf}");
+            
+            CanvasGroup canvasGroup = panel.GetComponent<CanvasGroup>();
+            if (canvasGroup != null)
+                Debug.Log($"[UIManager] CanvasGroup alpha: {canvasGroup.alpha}, blocksRaycasts: {canvasGroup.blocksRaycasts}");
+            
+            panel.SetActive(true);
+            Debug.Log($"[UIManager] Panel active state: {panel.activeSelf}");
         }
         else
         {
-            //Debug.LogWarning($"[UIManager] UI panel '{panelName}' not found!");
+            Debug.LogWarning($"[UIManager] UI panel '{panelName}' NOT FOUND in dictionary!");
         }
     }
 

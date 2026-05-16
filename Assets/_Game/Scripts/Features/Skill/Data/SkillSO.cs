@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Enum cho loại yếu tố
-/// </summary>
 public enum ElementType
 {
     None = 0,
@@ -13,18 +10,12 @@ public enum ElementType
     Fire = 4     // Lửa
 }
 
-/// <summary>
-/// Enum cho tầm đánh
-/// </summary>
 public enum SkillRange
 {
     Melee = 0,   // Gần
     Ranged = 1   // Xa
 }
 
-/// <summary>
-/// Dữ liệu của từng kỹ năng
-/// </summary>
 [System.Serializable]
 public class SkillData
 {
@@ -56,83 +47,18 @@ public class SkillSO : ScriptableObject
 {
     [SerializeField] private List<SkillData> skills = new();
 
-    private Dictionary<int, SkillData> skillLookup;
-    private Dictionary<string, SkillData> skillNameLookup;
-    private Dictionary<ElementType, List<SkillData>> skillsByElement;
-    private bool isInitialized = false;
-
-    private void Init()
-    {
-        if (isInitialized) return;
-
-        skillLookup = new Dictionary<int, SkillData>();
-        skillNameLookup = new Dictionary<string, SkillData>();
-        skillsByElement = new Dictionary<ElementType, List<SkillData>>();
-
-        // Initialize element lists
-        foreach (ElementType element in System.Enum.GetValues(typeof(ElementType)))
-        {
-            skillsByElement[element] = new List<SkillData>();
-        }
-
-        if (skills == null || skills.Count == 0)
-        {
-            //Debug.LogWarning($"SkillSO '{name}': No skill data configured!");
-            return;
-        }
-
-        foreach (var skill in skills)
-        {
-            if (skill == null)
-            {
-                //Debug.LogWarning($"SkillSO '{name}': Null skill data found, skipping.");
-                continue;
-            }
-
-            // Kiểm tra duplicate ID
-            if (skillLookup.ContainsKey(skill.skillId))
-            {
-                //Debug.LogWarning($"SkillSO '{name}': Duplicate skill ID '{skill.skillId}', skipping.");
-                continue;
-            }
-
-            // Kiểm tra duplicate name
-            if (!string.IsNullOrEmpty(skill.skillName) && skillNameLookup.ContainsKey(skill.skillName))
-            {
-                //Debug.LogWarning($"SkillSO '{name}': Duplicate skill name '{skill.skillName}', skipping.");
-                continue;
-            }
-
-            skillLookup.Add(skill.skillId, skill);
-
-            if (!string.IsNullOrEmpty(skill.skillName))
-            {
-                skillNameLookup.Add(skill.skillName, skill);
-            }
-
-            // Add to element list
-            if (skill.element != ElementType.None && skillsByElement.ContainsKey(skill.element))
-            {
-                skillsByElement[skill.element].Add(skill);
-            }
-        }
-
-        isInitialized = true;
-    }
-
     /// <summary>
     /// Lấy thông tin kỹ năng theo ID
     /// </summary>
     public SkillData GetSkill(int skillId)
     {
-        Init();
-
-        if (skillLookup.TryGetValue(skillId, out SkillData skill))
+        if (skills == null) return null;
+        
+        foreach (var skill in skills)
         {
-            return skill;
+            if (skill != null && skill.skillId == skillId)
+                return skill;
         }
-
-        //Debug.LogWarning($"SkillSO '{name}': Skill ID {skillId} not found!");
         return null;
     }
 
@@ -141,14 +67,14 @@ public class SkillSO : ScriptableObject
     /// </summary>
     public SkillData GetSkillByName(string skillName)
     {
-        Init();
-
-        if (skillNameLookup.TryGetValue(skillName, out SkillData skill))
+        if (string.IsNullOrEmpty(skillName) || skills == null) return null;
+        
+        foreach (var skill in skills)
         {
-            return skill;
+            Debug.Log($"Checking skill: {skill?.skillName} against {skillName}");
+            if (skill != null && skill.skillName == skillName)
+                return skill;
         }
-
-        //Debug.LogWarning($"SkillSO '{name}': Skill '{skillName}' not found!");
         return null;
     }
 
@@ -157,14 +83,15 @@ public class SkillSO : ScriptableObject
     /// </summary>
     public List<SkillData> GetSkillsByElement(ElementType element)
     {
-        Init();
-
-        if (skillsByElement.TryGetValue(element, out List<SkillData> elementSkills))
+        var result = new List<SkillData>();
+        if (skills == null) return result;
+        
+        foreach (var skill in skills)
         {
-            return new List<SkillData>(elementSkills);
+            if (skill != null && skill.element == element)
+                result.Add(skill);
         }
-
-        return new List<SkillData>();
+        return result;
     }
 
     /// <summary>
@@ -242,8 +169,7 @@ public class SkillSO : ScriptableObject
     /// </summary>
     public List<SkillData> GetAllSkills()
     {
-        Init();
-        return new List<SkillData>(skills);
+        return skills != null ? new List<SkillData>(skills) : new List<SkillData>();
     }
 
     /// <summary>
@@ -251,8 +177,7 @@ public class SkillSO : ScriptableObject
     /// </summary>
     public bool SkillExists(int skillId)
     {
-        Init();
-        return skillLookup.ContainsKey(skillId);
+        return GetSkill(skillId) != null;
     }
 
     /// <summary>
@@ -260,8 +185,7 @@ public class SkillSO : ScriptableObject
     /// </summary>
     public int GetSkillCount()
     {
-        Init();
-        return skillLookup.Count;
+        return skills != null ? skills.Count : 0;
     }
 
     /// <summary>
@@ -270,5 +194,26 @@ public class SkillSO : ScriptableObject
     public int GetSkillCountByElement(ElementType element)
     {
         return GetSkillsByElement(element).Count;
+    }
+
+    /// <summary>
+    /// Thêm skill vào danh sách (dùng cho runtime initialization)
+    /// </summary>
+    public void AddSkill(SkillData skillData)
+    {
+        if (skillData == null)
+        {
+            Debug.LogWarning("[SkillSO] Cannot add null skill!");
+            return;
+        }
+
+        // Ensure skills list exists
+        if (skills == null)
+        {
+            skills = new List<SkillData>();
+        }
+
+        skills.Add(skillData);
+        Debug.Log($"[SkillSO] Added skill: {skillData.skillName} (ID: {skillData.skillId}, Element: {skillData.element})");
     }
 }

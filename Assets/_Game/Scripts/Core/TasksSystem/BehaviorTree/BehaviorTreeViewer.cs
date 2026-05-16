@@ -1,8 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+
+#if UNITY_EDITOR
 
 public class BehaviorTreeViewer : EditorWindow
 {
@@ -215,3 +214,5 @@ public class BehaviorTreeViewer : EditorWindow
 
     }
 }
+
+#endif

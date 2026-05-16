@@ -41,6 +41,10 @@ public class PlayerController : MonoBehaviour
         [SerializeField] float hitForce = 0;
         [SerializeField] float hitDuration = 2f;
 
+        [Header("Skill Settings")]
+        [SerializeField] float skillAttackDuration = 1f;
+        [SerializeField] float skillDefendDuration = 1f;
+
         const float ZeroF = 0f;
 
         Transform mainCam;
@@ -60,6 +64,8 @@ public class PlayerController : MonoBehaviour
         CountdownTimer attackCooldownTimer;
         CountdownTimer hitTimer;
         CountdownTimer hitCooldownTimer;
+        CountdownTimer skillAttackTimer;
+        CountdownTimer skillDefendTimer;
 
         StateMachine stateMachine;
 
@@ -123,6 +129,8 @@ public class PlayerController : MonoBehaviour
         var attackState = new AttackState(this, animator);
         var combatState = new CombatState(this, animator);
         var hitState = new HitState(this, animator);
+        var skillAttackState = new CastAttackState(this, animator);
+        var skillDefendState = new CastShieldState(this, animator);
         // var dieState = new DieState(this, animator);
 
         // Define transitions
@@ -132,6 +140,8 @@ public class PlayerController : MonoBehaviour
         //Debug.Log($"[PlayerController] DashTimer is running {dashTimer.IsRunning}");
         At(locomotionState, attackState, new FuncPredicate(() => attackCooldownTimer.IsRunning && EquipmentSystem.Instance.IsAttackNormal()));
         At(locomotionState, combatState, new FuncPredicate(() => attackCooldownTimer.IsRunning && !EquipmentSystem.Instance.IsAttackNormal()));
+        At(locomotionState, skillAttackState, new FuncPredicate(() => skillAttackTimer.IsRunning));
+        At(locomotionState, skillDefendState, new FuncPredicate(() => skillDefendTimer.IsRunning));
         Any(hitState, new FuncPredicate(() => healthSystem.IsHit));
         Any(locomotionState, new FuncPredicate(ReturnToLocomotion));
         //Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}, Grounded {groundChecker.IsGrounded}");
@@ -146,6 +156,8 @@ public class PlayerController : MonoBehaviour
         && groundChecker.IsGrounded 
         && !dashTimer.IsRunning 
         && !attackCooldownTimer.IsRunning
+        && !skillAttackTimer.IsRunning
+        && !skillDefendTimer.IsRunning
         && !healthSystem.IsHit;
     }
 
@@ -168,9 +180,11 @@ public class PlayerController : MonoBehaviour
                 rb.velocity = new Vector3(rb.velocity.x * 0.3f, rb.velocity.y, rb.velocity.z * 0.3f);
             };
             attackCooldownTimer = new CountdownTimer(attackCooldown);
+            skillAttackTimer = new CountdownTimer(skillAttackDuration);
+            skillDefendTimer = new CountdownTimer(skillDefendDuration);
 
-            hitTimer = new CountdownTimer(hitDuration);    
-            timers = new List<Timer> {jumpTimer, jumpCooldownTimer, dashTimer, dashCooldownTimer, attackCooldownTimer, hitTimer };
+            hitTimer = new CountdownTimer(hitDuration);
+            timers = new List<Timer> {jumpTimer, jumpCooldownTimer, dashTimer, dashCooldownTimer, attackCooldownTimer, skillAttackTimer, skillDefendTimer, hitTimer };
         }
 
 
@@ -182,6 +196,8 @@ public class PlayerController : MonoBehaviour
             input.Jump += OnJump;
             input.Dash += OnDash;
             input.Attack += OnAttack;
+            input.SkillAttack += OnSkillAttack;
+            input.SkillDefend += OnSkillDefend;
         }
 
         void OnDisable()
@@ -189,6 +205,47 @@ public class PlayerController : MonoBehaviour
             input.Jump -= OnJump;
             input.Dash -= OnDash;
             input.Attack -= OnAttack;
+            input.SkillAttack -= OnSkillAttack;
+            input.SkillDefend -= OnSkillDefend;
+        }
+
+        void OnSkillAttack(bool performed)
+        {
+            if (performed && !skillAttackTimer.IsRunning)
+            {
+                Debug.Log("[PlayerController] SkillAttack input received, starting skill attack timer.");
+                skillAttackTimer.Start();
+            }
+        }
+
+        void OnSkillDefend(bool performed)
+        {
+            if (performed && !skillDefendTimer.IsRunning)
+            {
+                skillDefendTimer.Start();
+            }
+        }
+
+        /// <summary>
+        /// Legacy method - skill attack now triggered via input event
+        /// </summary>
+        public void SkillAttack()
+        {
+            if (!skillAttackTimer.IsRunning)
+            {
+                skillAttackTimer.Start();
+            }
+        }
+
+        /// <summary>
+        /// Legacy method - skill defend now triggered via input event
+        /// </summary>
+        public void SkillDefend()
+        {
+            if (!skillDefendTimer.IsRunning)
+            {
+                skillDefendTimer.Start();
+            }
         }
 
         void OnJump(bool performed)

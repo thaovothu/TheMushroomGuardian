@@ -1,0 +1,128 @@
+// ═════════════════════════════════════════════════════════════════════════
+// SETUP HỆ THỐNG CHIÊU (SKILL SYSTEM)
+// ═════════════════════════════════════════════════════════════════════════
+
+/*
+ * BƯỚC 1: Tạo SkillSO Config Asset
+ * ────────────────────────────────
+ * 1. Right-click trong Assets → Create → EntityData/Skill
+ * 2. Rename thành "SkillConfig"
+ * 3. Open nó lên (double-click)
+ * 
+ * 
+ * BƯỚC 2: Thêm Skill Data
+ * ──────────────────────
+ * 
+ * ║ EARTH (Đất) ║
+ * ─────────────────
+ * Skill1 (Shield):
+ * - ID: 101
+ * - Name: "Lá chắn đất" (Shield Earth)
+ * - Element: Earth
+ * - Range: Melee
+ * - Damage: 0
+ * - Defense: 120
+ * - ManaCost: 30
+ * 
+ * Skill2 (Attack):
+ * - ID: 102
+ * - Name: "Địa chấn quyền" (Earth Quake)
+ * - Element: Earth
+ * - Range: Melee
+ * - Damage: 75
+ * - Defense: 40
+ * - ManaCost: 25
+ * 
+ * 
+ * ║ WIND (Khí) ║
+ * ──────────────
+ * Skill1 (Shield):
+ * - ID: 201
+ * - Name: "Lá chắn khí" (Shield Wind)
+ * - Element: Wind
+ * - Range: Melee
+ * - Damage: 0
+ * - Defense: 60
+ * - ManaCost: 20
+ * 
+ * Skill2 (Attack):
+ * - ID: 202
+ * - Name: "Cuồng phong" (Tornado)
+ * - Element: Wind
+ * - Range: Ranged
+ * - Damage: 50
+ * - Defense: 30
+ * - ManaCost: 20
+ * 
+ * 
+ * ║ WATER (Nước) ║
+ * ───────────────
+ * Skill1 (Shield):
+ * - ID: 301
+ * - Name: "Lá chắn nước" (Shield Water)
+ * - Element: Water
+ * - Range: Melee
+ * - Damage: 0
+ * - Defense: 90
+ * - ManaCost: 30
+ * 
+ * Skill2 (Attack):
+ * - ID: 302
+ * - Name: "Sóng thần" (Tidal Wave)
+ * - Element: Water
+ * - Range: Ranged
+ * - Damage: 55
+ * - Defense: 35
+ * - ManaCost: 25
+ * 
+ * 
+ * ║ FIRE (Lửa) ║
+ * ─────────────
+ * Skill1 (Shield):
+ * - ID: 401
+ * - Name: "Lá chắn lửa" (Shield Fire)
+ * - Element: Fire
+ * - Range: Melee
+ * - Damage: 10
+ * - Defense: 70
+ * - ManaCost: 35
+ * 
+ * Skill2 (Attack):
+ * - ID: 402
+ * - Name: "Nham thần" (Inferno)
+ * - Element: Fire
+ * - Range: Ranged
+ * - Damage: 85
+ * - Defense: 30
+ * - ManaCost: 30
+ * 
+ * 
+ * BƯỚC 3: Gắn SkillSO vào Player
+ * ──────────────────────────────
+ * 1. Select Player GameObject
+ * 2. Add Component: PlayerSkillController
+ * 3. Ở SkillSystem Instance, kéo SkillConfig asset vào field
+ * 4. Set Attack Point (nếu không set sẽ dùng Player position)
+ * 
+ * 
+ * BƯỚC 4: Tạo UI Skill Panel
+ * ──────────────────────────
+ * 1. Create → UI → Panel (Canvas)
+ * 2. Rename thành "SkillPanel"
+ * 3. Add Component: UISkillPanel
+ * 4. Set references (Buttons, Text, Slider, ...)
+ * 
+ * 
+ * BƯỚC 5: Control Keys
+ * ────────────────────
+ * E: Cast Shield (Lá chắn)
+ * Q: Cast Attack (Tấn công)
+ * R: Switch Element (Đổi nguyên tố)
+ * 
+ * 
+ * BƯỚC 6: Test
+ * ──────────
+ * Play game → Nhấn R để đổi nguyên tố
+ * Nhấn E để dùng Shield, Q để dùng Attack
+ * Xem console log để kiểm tra skill cast
+*/
