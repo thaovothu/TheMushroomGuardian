@@ -17,9 +17,31 @@ public class PlayerDetector : MonoBehaviour
 
     void Awake()
     {
+        Debug.Log("[PlayerDetector] Awake started");
+        
         detectionTimer = new CountdownTimer(detectionCooldown);
-        Player = GameObject.FindGameObjectWithTag("Player").transform;
-        detectionStrategy = new ConnectDetectionStrategy(detectionAngle, detectionRadius, innerDetectionRadius);
+        Debug.Log("[PlayerDetector] Detection timer created");
+        
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null)
+        {
+            Player = playerObj.transform;
+            Debug.Log("[PlayerDetector] Player found in Awake");
+        }
+        else
+        {
+            Debug.LogWarning("[PlayerDetector] Player not found in Awake - will search later");
+        }
+        
+        try
+        {
+            detectionStrategy = new ConnectDetectionStrategy(detectionAngle, detectionRadius, innerDetectionRadius);
+            Debug.Log("[PlayerDetector] Detection strategy created successfully");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[PlayerDetector] Error creating detection strategy: {e.Message}");
+        }
     }
 
     void Update()
@@ -29,11 +51,42 @@ public class PlayerDetector : MonoBehaviour
     }
     public bool CanDetectPlayer()
     {
+        // Tìm lại Player nếu nó null (có thể chưa spawn lúc Awake)
+        if (Player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+            {
+                Player = playerObj.transform;
+                Debug.Log("[PlayerDetector] Player found after spawn!");
+            }
+            else
+            {
+                Debug.LogError("[PlayerDetector] Player not found in scene!");
+                return false;
+            }
+        }
+        
+        if (detectionStrategy == null)
+        {
+            Debug.LogError("[PlayerDetector] Detection strategy is null!");
+            return false;
+        }
+        
+        if (detectionTimer == null)
+        {
+            Debug.LogError("[PlayerDetector] Detection timer is null!");
+            return false;
+        }
+        
         return detectionTimer.IsRunning || detectionStrategy.Execute(Player, transform, detectionTimer);
     }
 
     public bool CanAttackPlayer()
     {
+        if (Player == null)
+            return false;
+            
         var directionToPlayer = Player.position - transform.position;
         return directionToPlayer.magnitude <= attackRange;
     }

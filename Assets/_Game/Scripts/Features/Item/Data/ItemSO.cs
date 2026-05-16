@@ -139,13 +139,21 @@ public class ItemSO : ScriptableObject
     public ItemData GetItem(int itemId)
     {
         Init();
+        
+        Debug.Log($"[ItemSO] GetItem called for ID: {itemId}, itemLookup count: {itemLookup.Count}");
+
+        if (itemLookup == null)
+        {
+            Debug.LogError("[ItemSO] itemLookup is null!");
+            return null;
+        }
 
         if (itemLookup.TryGetValue(itemId, out ItemData item))
         {
             return item;
         }
 
-        //Debug.LogWarning($"ItemSO '{name}': Item ID {itemId} not found!");
+        Debug.LogWarning($"ItemSO '{name}': Item ID {itemId} not found! Available IDs: {string.Join(", ", itemLookup.Keys)}");
         return null;
     }
 

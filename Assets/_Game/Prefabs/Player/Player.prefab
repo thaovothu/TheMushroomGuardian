@@ -109,6 +109,7 @@ GameObject:
   - component: {fileID: 2844876494443110269}
   - component: {fileID: 5988228756334631479}
   - component: {fileID: 5827152198828151132}
+  - component: {fileID: 5057070618927461595}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -165,6 +166,8 @@ MonoBehaviour:
   attackDamage: 10
   hitForce: 0
   hitDuration: 2
+  skillAttackDuration: 0.8
+  skillDefendDuration: 0.8
 --- !u!114 &6844213670305243853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,6 +250,25 @@ MonoBehaviour:
   maxHealth: 200
   baseDamage: 10
   _currentHealth: 0
+--- !u!114 &5057070618927461595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4016301608865483912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 733e7131b42b6417db25692fdd307da7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthSystem: {fileID: 5827152198828151132}
+  attackPoint: {fileID: 5091462996813217735}
+  skillCooldown: 1.5
+  maxMana: 100
+  shieldKey: 101
+  attackKey: 113
+  switchElementKey: 114
 --- !u!1 &5783744246487940258
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,7 +294,7 @@ Transform:
   m_GameObject: {fileID: 5783744246487940258}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0083, y: 0.0069, z: 0.0012}
+  m_LocalPosition: {x: -0.0003, y: -0.0056, z: 0.0137}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -800,7 +822,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: de26237ff78d446ec9cf3ca36996a6c6, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 

@@ -34,6 +34,24 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "SkillAttack",
+                    "type": "Button",
+                    "id": "47df063b-a04d-4593-9b90-801315db2e69",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SkillDefend",
+                    "type": "Button",
+                    "id": "4c9dc281-5608-492e-a8e8-64f60f7fd72c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "MouseControlCamera",
                     "type": "Button",
                     "id": "f7771a84-db1d-4415-9f27-2e3aec04a6cf",
@@ -354,6 +372,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "80a0e8a5-1a9e-405f-abb2-f69b3fa5d7fd",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "SkillAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f4142768-7203-4ccd-88e7-c94bad933f09",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "SkillDefend",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

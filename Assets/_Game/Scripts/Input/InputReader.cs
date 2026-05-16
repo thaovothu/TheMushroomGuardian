@@ -14,6 +14,8 @@ using static PlayerInputActions;
         public event UnityAction<bool> Jump = delegate { };
         public event UnityAction<bool> Dash = delegate { };
         public event UnityAction Attack = delegate { };
+        public event UnityAction<bool> SkillAttack = delegate { };
+        public event UnityAction<bool> SkillDefend = delegate { };
 
         PlayerInputActions inputActions;
 
@@ -61,6 +63,32 @@ using static PlayerInputActions;
                 return;
 
             Attack?.Invoke();
+        }
+    }
+
+    public void OnSkillAttack(InputAction.CallbackContext context)
+    {
+        switch (context.phase)
+        {
+            case InputActionPhase.Started:
+                SkillAttack.Invoke(true);
+                break;
+            case InputActionPhase.Canceled:
+                SkillAttack.Invoke(false);
+                break;
+        }
+    }
+
+    public void OnSkillDefend(InputAction.CallbackContext context)
+    {
+        switch (context.phase)
+        {
+            case InputActionPhase.Started:
+                SkillDefend.Invoke(true);
+                break;
+            case InputActionPhase.Canceled:
+                SkillDefend.Invoke(false);
+                break;
         }
     }
 
