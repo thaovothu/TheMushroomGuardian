@@ -9,6 +9,8 @@ public class PlayerSkillController : MonoBehaviour
     [Header("References")]
     [SerializeField] private HealthSystem healthSystem;
     [SerializeField] private Transform attackPoint; // Vị trí phát chiêu
+    [SerializeField] private GameObject skillProjectilePrefab; // Projectile prefab - drag here in Inspector
+    [SerializeField] private ParticleSystem meleImpactVFX; // VFX cho melee hit - drag here in Inspector
     private PlayerController playerController;
 
     [Header("Skill Settings")]
@@ -98,6 +100,8 @@ public class PlayerSkillController : MonoBehaviour
     /// </summary>
     public void TriggerAttackCast()
     {
+        Debug.Log("[PlayerSkillController] TriggerAttackCast() called");
+
         var attackSkill = SkillSystem.Instance.GetElementAttack(currentElement);
         if (attackSkill == null)
         {
@@ -105,15 +109,23 @@ public class PlayerSkillController : MonoBehaviour
             return;
         }
 
+        Debug.Log($"[PlayerSkillController] Got skill: {attackSkill.skillName}");
+        Debug.Log($"[PlayerSkillController] DEBUG - Skill range: {attackSkill.range}");
+        Debug.Log($"[PlayerSkillController] DEBUG - Checking if can cast...");
+
         if (!CanCastSkill(attackSkill))
         {
             Debug.Log($"[PlayerSkillController] Cannot cast attack - cooldown or mana");
             return;
         }
 
+        Debug.Log($"[PlayerSkillController] DEBUG - Can cast, consuming mana...");
+
         // Consume mana
         currentMana -= attackSkill.manaCost;
         SkillSystem.Instance.RecordSkillCast(attackSkill.skillId);
+
+        Debug.Log($"[PlayerSkillController] DEBUG - Mana consumed. Calling ApplyDamageEffect...");
 
         // Apply damage effect
         ApplyDamageEffect(attackSkill);
@@ -181,44 +193,146 @@ public class PlayerSkillController : MonoBehaviour
     /// </summary>
     private void ApplyDamageEffect(SkillData skill)
     {
-        // Raycast để tìm enemy trong range
-        RaycastHit[] hits = Physics.SphereCastAll(attackPoint.position, 3f, attackPoint.forward, 10f);
-
-        foreach (RaycastHit hit in hits)
+        // Phân loại: Melee (tại chỗ) vs Ranged (bay)
+        if (skill.range == SkillRange.Melee)
         {
-            // Skip nếu hit vào player
-            if (hit.collider.gameObject == gameObject)
-                continue;
-
-            HealthSystem enemyHealth = hit.collider.GetComponent<HealthSystem>();
-            if (enemyHealth != null && !enemyHealth.IsDead)
-            {
-                // Tính damage với elemental multiplier
-                float multiplier = SkillSystem.Instance.GetElementalMultiplier(skill.element, enemyHealth.GetElement());
-                float finalDamage = skill.damage * multiplier;
-
-                enemyHealth.TakeDamage(finalDamage, skill.element);
-                Debug.Log($"[PlayerSkillController] ✓ Hit {hit.collider.name} with {skill.skillName}: {finalDamage} damage (multiplier: {multiplier:F2})");
-            }
+            ApplyMeleeDamage(skill);
+        }
+        else
+        {
+            ApplyRangedDamage(skill);
         }
 
         lastSkillCastTime = Time.time;
     }
 
     /// <summary>
+    /// Skill đánh gần - SphereCast tại chỗ
+    /// </summary>
+    private void ApplyMeleeDamage(SkillData skill)
+    {
+        float radius = 3f;
+        float range = 5f;
+
+        RaycastHit[] hits = Physics.SphereCastAll(
+            attackPoint.position,
+            radius,
+            attackPoint.forward,
+            range
+        );
+
+        // Visualize SphereCast
+        Debug.DrawLine(attackPoint.position, 
+            attackPoint.position + attackPoint.forward * range, 
+            Color.red, 0.5f);
+
+        foreach (RaycastHit hit in hits)
+        {
+            if (hit.collider.gameObject == gameObject)
+                continue;
+
+            HealthSystem enemyHealth = hit.collider.GetComponent<HealthSystem>();
+            if (enemyHealth != null && !enemyHealth.IsDead)
+            {
+                float multiplier = SkillSystem.Instance.GetElementalMultiplier(skill.element, enemyHealth.GetElement());
+                float finalDamage = skill.damage * multiplier;
+
+                enemyHealth.TakeDamage(finalDamage, skill.element);
+                Debug.Log($"[PlayerSkillController] ✓ Hit {hit.collider.name} with {skill.skillName}: {finalDamage} damage (multiplier: {multiplier:F2})");
+
+                // Spawn VFX impact tại vị trí hit
+                SpawnMeleeImpactVFX(hit.point, skill.element);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Skill đánh xa - Projectile bay
+    /// </summary>
+    private void ApplyRangedDamage(SkillData skill)
+    {
+        if (skillProjectilePrefab == null)
+        {
+            Debug.LogError("[PlayerSkillController] ✗ Skill Projectile Prefab is NOT assigned in Inspector!");
+            return;
+        }
+
+        Debug.Log("[PlayerSkillController] ✓ Prefab assigned, instantiating...");
+
+        var projectile = Instantiate(
+            skillProjectilePrefab,
+            attackPoint.position,
+            Quaternion.LookRotation(attackPoint.forward)
+        );
+
+        var projectileController = projectile.GetComponent<SkillProjectile>();
+        if (projectileController != null)
+        {
+            Debug.Log($"[PlayerSkillController] ✓ Initializing: {skill.skillName}");
+            projectileController.Initialize(skill, attackPoint.forward);
+        }
+        else
+        {
+            Debug.LogError("[PlayerSkillController] ✗ SkillProjectile component NOT FOUND on prefab!");
+        }
+
+        Debug.Log($"[PlayerSkillController] ✓ Spawned projectile: {skill.skillName}");
+    }
+
+    /// <summary>
     /// Áp dụng effect phòng thủ (Defender/Shield)
-    /// Tăng Defense tạm thời
+    /// Tăng Defense tạm thời - giảm damage từ enemy/boss dựa trên skill.defense
     /// </summary>
     private void ApplyDefenderEffect(SkillData skill)
     {
         if (healthSystem != null)
         {
-            // TODO: Implement temporary defense buff
-            // healthSystem.AddDefenseBuff(skill.defense, 5f); // +defense cho 5 giây
-            Debug.Log($"[PlayerSkillController] ✓ Applied shield defense: +{skill.defense}");
+            // Áp dụng defense buff tạm thời - skill.defense là % giảm damage
+            float buffDuration = 5f; // 5 giây
+            healthSystem.AddDefenseBuff(skill.defense, buffDuration);
+            Debug.Log($"[PlayerSkillController] ✓ Applied shield defense: +{skill.defense}% damage reduction for {buffDuration}s");
         }
 
         lastSkillCastTime = Time.time;
+    }
+
+    /// <summary>
+    /// Spawn VFX impact cho melee attack
+    /// </summary>
+    private void SpawnMeleeImpactVFX(Vector3 hitPosition, ElementType element)
+    {
+        if (meleImpactVFX == null)
+        {
+            Debug.LogWarning("[PlayerSkillController] ✗ Melee Impact VFX is NOT assigned in Inspector!");
+            return;
+        }
+
+        // Spawn particles tại vị trí hit
+        var particles = Instantiate(meleImpactVFX, hitPosition, Quaternion.identity);
+        
+        // Set màu particles theo element
+        var main = particles.main;
+        main.startColor = GetElementColor(element);
+        
+        particles.Play();
+        Destroy(particles.gameObject, 2f);
+        
+        Debug.Log($"[PlayerSkillController] ✓ Spawned melee impact VFX: {element}");
+    }
+
+    /// <summary>
+    /// Lấy màu tuỳ element (giống như SkillProjectile)
+    /// </summary>
+    private Color GetElementColor(ElementType element)
+    {
+        return element switch
+        {
+            ElementType.Earth => new Color(0.6f, 0.4f, 0.2f),  // Brown
+            ElementType.Wind => new Color(0.7f, 0.9f, 1f),     // Light blue
+            ElementType.Water => new Color(0.2f, 0.6f, 1f),    // Blue
+            ElementType.Fire => new Color(1f, 0.5f, 0f),       // Orange
+            _ => Color.white
+        };
     }
 
     /// <summary>

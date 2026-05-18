@@ -10,10 +10,16 @@ public class HealthSystem : MonoBehaviour
     bool _isHit;
     bool _isDead;
 
+    // Temporary defense buff
+    private float _defenseBuffAmount = 0f;
+    private float _defenseBuffEndTime = 0f;
+    private Coroutine _defenseBuffCoroutine;
+
     public bool IsHit => _isHit;
     public bool IsDead => _isDead;
     public float CurrentHealth => _currentHealth;
     public float MaxHealth => maxHealth;
+    public float DefenseBuffAmount => _defenseBuffAmount;
 
     // Events — bất kỳ ai quan tâm đều subscribe, HealthSystem không biết UI tồn tại
     public static Action<HealthSystem, float, float> OnHealthChanged;
@@ -40,13 +46,21 @@ public class HealthSystem : MonoBehaviour
         TakeDamage(amount, ElementType.None);
     }
 
-    // Overload chính — tính elemental multiplier
+    // Overload chính — tính elemental multiplier và defense buff
     public void TakeDamage(float amount, ElementType incomingElement)
     {
         if (_isDead) return;
 
         float multiplier = ElementalSystem.GetMultiplier(incomingElement, GetElement());
         float finalDamage = amount * multiplier;
+        
+        // Áp dụng defense buff (giảm damage)
+        if (_defenseBuffAmount > 0f && Time.time < _defenseBuffEndTime)
+        {
+            float reducedDamage = finalDamage * (1f - (_defenseBuffAmount / 100f));
+            finalDamage = Mathf.Max(1f, reducedDamage); // Tối thiểu 1 damage
+            Debug.Log($"[HealthSystem] ✓ Defense buff active: {_defenseBuffAmount:F1}% damage reduction applied. Original: {amount}, Final: {finalDamage:F2}");
+        }
 
         _currentHealth = Mathf.Max(0f, _currentHealth - finalDamage);
         _isHit = true;
@@ -93,6 +107,32 @@ public class HealthSystem : MonoBehaviour
 
     // Entity này thuộc nguyên tố nào — override ở subclass hoặc set qua Inspector
     public virtual ElementType GetElement() => ElementType.None;
+
+    /// <summary>
+    /// Thêm temporary defense buff — giảm damage đến từ enemy
+    /// </summary>
+    public void AddDefenseBuff(float defenseAmount, float duration)
+    {
+        // Nếu đã có buff, hủy cái cũ
+        if (_defenseBuffCoroutine != null)
+        {
+            StopCoroutine(_defenseBuffCoroutine);
+        }
+
+        _defenseBuffAmount = defenseAmount;
+        _defenseBuffEndTime = Time.time + duration;
+        _defenseBuffCoroutine = StartCoroutine(DefenseBuffCoroutine(duration));
+        
+        Debug.Log($"[HealthSystem] ✓ Defense buff added: +{defenseAmount:F1}% for {duration}s");
+    }
+
+    private System.Collections.IEnumerator DefenseBuffCoroutine(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        _defenseBuffAmount = 0f;
+        _defenseBuffEndTime = 0f;
+        Debug.Log($"[HealthSystem] ✓ Defense buff expired");
+    }
     
 }
 

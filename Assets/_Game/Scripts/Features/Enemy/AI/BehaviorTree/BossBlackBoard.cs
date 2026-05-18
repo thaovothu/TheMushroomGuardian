@@ -81,7 +81,7 @@ public class BossBlackboard : MonoBehaviour, IPoolSpawned
         
         // Cập nhật distance mỗi frame — dùng chung cho mọi node
         distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        Debug.Log($"[BossBlackboard.Update] Distance updated: {distanceToPlayer}");
+        // Debug.Log($"[BossBlackboard.Update] Distance updated: {distanceToPlayer}");
         
         // Phase check
         isPhase2 = healthSystem.GetHPPercent() < 0.5f;

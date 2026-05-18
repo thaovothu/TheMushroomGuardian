@@ -17,20 +17,20 @@ public class PlayerDetector : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log("[PlayerDetector] Awake started");
+        // Debug.Log("[PlayerDetector] Awake started");
         
         detectionTimer = new CountdownTimer(detectionCooldown);
-        Debug.Log("[PlayerDetector] Detection timer created");
+        // Debug.Log("[PlayerDetector] Detection timer created");
         
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
         {
             Player = playerObj.transform;
-            Debug.Log("[PlayerDetector] Player found in Awake");
+            // Debug.Log("[PlayerDetector] Player found in Awake");
         }
         else
         {
-            Debug.LogWarning("[PlayerDetector] Player not found in Awake - will search later");
+            // Debug.LogWarning("[PlayerDetector] Player not found in Awake - will search later");
         }
         
         try
@@ -58,24 +58,24 @@ public class PlayerDetector : MonoBehaviour
             if (playerObj != null)
             {
                 Player = playerObj.transform;
-                Debug.Log("[PlayerDetector] Player found after spawn!");
+                // Debug.Log("[PlayerDetector] Player found after spawn!");
             }
             else
             {
-                Debug.LogError("[PlayerDetector] Player not found in scene!");
+                // Debug.LogError("[PlayerDetector] Player not found in scene!");
                 return false;
             }
         }
         
         if (detectionStrategy == null)
         {
-            Debug.LogError("[PlayerDetector] Detection strategy is null!");
+            // Debug.LogError("[PlayerDetector] Detection strategy is null!");
             return false;
         }
         
         if (detectionTimer == null)
         {
-            Debug.LogError("[PlayerDetector] Detection timer is null!");
+            // Debug.LogError("[PlayerDetector] Detection timer is null!");
             return false;
         }
         

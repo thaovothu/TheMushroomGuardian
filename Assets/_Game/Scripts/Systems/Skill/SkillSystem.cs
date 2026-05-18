@@ -68,23 +68,23 @@ public class SkillSystem : BaseSingleton<SkillSystem>
     /// <summary>
     /// Kiểm tra có thể cast skill không (cooldown, mana, ...)
     /// </summary>
-    public bool CanCastSkill(int skillId, int currentMana, float cooldown = 1f)
-    {
-        if (skillConfig == null) return false;
+    // public bool CanCastSkill(int skillId, int currentMana, float cooldown = 1f)
+    // {
+    //     if (skillConfig == null) return false;
 
-        var skill = skillConfig.GetSkill(skillId);
-        if (skill == null) return false;
+    //     var skill = skillConfig.GetSkill(skillId);
+    //     if (skill == null) return false;
 
-        // Kiểm tra mana
-        if (currentMana < skill.manaCost)
-            return false;
+    //     // Kiểm tra mana
+    //     if (currentMana < skill.manaCost)
+    //         return false;
 
-        // Kiểm tra cooldown
-        if (Time.time - lastSkillCastTime[skill.element] < cooldown)
-            return false;
+    //     // Kiểm tra cooldown
+    //     if (Time.time - lastSkillCastTime[skill.element] < cooldown)
+    //         return false;
 
-        return true;
-    }
+    //     return true;
+    // }
 
     /// <summary>
     /// Ghi nhận thời điểm cast skill (cho cooldown)
