@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cae796b8fb59437cb5b8082a0a28d23, type: 3}
+  m_Name: SkillProjectileConfig
+  m_EditorClassIdentifier: 
+  defendVFX: {fileID: 7177991128484655658, guid: 59a35ab9f68edff40b6e5332bed330f5,
+    type: 3}
+  attackEarthVFX: {fileID: 7226888052703040407, guid: 7ec363c8df426644ea85f8d6d570561c,
+    type: 3}
+  attackWindVFX: {fileID: 4772634663558126228, guid: e1385af346f4e624eb313ec1ea4fcd7e,
+    type: 3}
+  attackWaterVFX: {fileID: 4772634663558126228, guid: e1385af346f4e624eb313ec1ea4fcd7e,
+    type: 3}
+  attackFireVFX: {fileID: 6822807260539482636, guid: badbd861efe604452ae3b197be47582e,
+    type: 3}
+  impactEarthVFX: {fileID: 7177991128484655658, guid: 59a35ab9f68edff40b6e5332bed330f5,
+    type: 3}
+  impactWindVFX: {fileID: 7177991128484655658, guid: 59a35ab9f68edff40b6e5332bed330f5,
+    type: 3}
+  impactWaterVFX: {fileID: 7177991128484655658, guid: 59a35ab9f68edff40b6e5332bed330f5,
+    type: 3}
+  impactFireVFX: {fileID: 7177991128484655658, guid: 59a35ab9f68edff40b6e5332bed330f5,
+    type: 3}
+  projectileEarthPrefab: {fileID: 3323294455745290126, guid: 411122f857b234910b52290e8c6ab509,
+    type: 3}
+  projectileWindPrefab: {fileID: 3323294455745290126, guid: 63d0da7d2676c412d857a6ba87de0ce7,
+    type: 3}
+  projectileWaterPrefab: {fileID: 3323294455745290126, guid: 63d0da7d2676c412d857a6ba87de0ce7,
+    type: 3}
+  projectileFirePrefab: {fileID: 3323294455745290126, guid: badbd861efe604452ae3b197be47582e,
+    type: 3}
+  skillMappings:
+  - skillId: 101
+    skillName: Defend Earth
+    element: earth
+    isDefend: 1
+  - skillId: 102
+    skillName: Attack Earth
+    element: earth
+    isDefend: 0
+  - skillId: 201
+    skillName: Defend Wind
+    element: wind
+    isDefend: 1
+  - skillId: 202
+    skillName: Attack Wind
+    element: wind
+    isDefend: 0
+  - skillId: 301
+    skillName: Defend Water
+    element: water
+    isDefend: 1
+  - skillId: 302
+    skillName: Attack Water
+    element: water
+    isDefend: 0
+  - skillId: 401
+    skillName: Defend Fire
+    element: fire
+    isDefend: 1
+  - skillId: 402
+    skillName: Attack Fire
+    element: fire
+    isDefend: 0

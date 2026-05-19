@@ -872,8 +872,109 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[5].skillId
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[6].skillId
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[7].skillId
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[0].skillVFX
+      value: 
+      objectReference: {fileID: 6822807260539482636, guid: 25914dffbe86f407d97360d1c59641c0,
+        type: 3}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[2].skillVFX
+      value: 
+      objectReference: {fileID: 6822807260539482636, guid: 25914dffbe86f407d97360d1c59641c0,
+        type: 3}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[4].skillVFX
+      value: 
+      objectReference: {fileID: 6822807260539482636, guid: 25914dffbe86f407d97360d1c59641c0,
+        type: 3}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[5].skillVFX
+      value: 
+      objectReference: {fileID: 6822807260539482636, guid: badbd861efe604452ae3b197be47582e,
+        type: 3}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[6].skillVFX
+      value: 
+      objectReference: {fileID: 6822807260539482636, guid: 25914dffbe86f407d97360d1c59641c0,
+        type: 3}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[7].skillVFX
+      value: 
+      objectReference: {fileID: 6822807260539482636, guid: badbd861efe604452ae3b197be47582e,
+        type: 3}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[0].impactVFX
+      value: 
+      objectReference: {fileID: 6822807260539482636, guid: 25914dffbe86f407d97360d1c59641c0,
+        type: 3}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[1].impactVFX
+      value: 
+      objectReference: {fileID: 6822807260539482636, guid: 25914dffbe86f407d97360d1c59641c0,
+        type: 3}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[2].impactVFX
+      value: 
+      objectReference: {fileID: 6822807260539482636, guid: 25914dffbe86f407d97360d1c59641c0,
+        type: 3}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[3].impactVFX
+      value: 
+      objectReference: {fileID: 6822807260539482636, guid: 25914dffbe86f407d97360d1c59641c0,
+        type: 3}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[4].impactVFX
+      value: 
+      objectReference: {fileID: 6822807260539482636, guid: 25914dffbe86f407d97360d1c59641c0,
+        type: 3}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[5].impactVFX
+      value: 
+      objectReference: {fileID: 6822807260539482636, guid: 25914dffbe86f407d97360d1c59641c0,
+        type: 3}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[6].impactVFX
+      value: 
+      objectReference: {fileID: 6822807260539482636, guid: 25914dffbe86f407d97360d1c59641c0,
+        type: 3}
+    - target: {fileID: 4209892092387029553, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: skillVFXMappings.Array.data[7].impactVFX
+      value: 
+      objectReference: {fileID: 6822807260539482636, guid: 25914dffbe86f407d97360d1c59641c0,
+        type: 3}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8389449582086712302, guid: 8ed2475fb74494ed4b433f5f683fe074, type: 3}
+    - {fileID: 1204685041431258350, guid: 8ed2475fb74494ed4b433f5f683fe074, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8ed2475fb74494ed4b433f5f683fe074, type: 3}

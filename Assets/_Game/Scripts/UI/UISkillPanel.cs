@@ -149,7 +149,7 @@ public class UISkillPanel : MonoBehaviour
         var shieldSkill = skillController.GetCurrentShield();
         var attackSkill = skillController.GetCurrentAttack();
         
-        Debug.Log($"[UISkillPanel] shieldSkill: {(shieldSkill != null ? shieldSkill.skillName : "NULL")}, attackSkill: {(attackSkill != null ? attackSkill.skillName : "NULL")}");
+        // Debug.Log($"[UISkillPanel] shieldSkill: {(shieldSkill != null ? shieldSkill.skillName : "NULL")}, attackSkill: {(attackSkill != null ? attackSkill.skillName : "NULL")}");
 
         if (shieldSkill != null && shieldNameText != null && shieldStatsText != null)
         {
@@ -177,7 +177,7 @@ public class UISkillPanel : MonoBehaviour
             attackButton.interactable = false;
         }
 
-        Debug.Log("[UISkillPanel] UI updated with current skill info: " + shieldNameText.text + ", " + attackNameText.text);
+        // Debug.Log("[UISkillPanel] UI updated with current skill info: " + shieldNameText.text + ", " + attackNameText.text);
     }
 
     /// <summary>
