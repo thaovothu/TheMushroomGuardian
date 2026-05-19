@@ -203,6 +203,7 @@ public class LoadingManager : MonoBehaviour
     {
         if (uiLoading != null)
         {
+            Debug.Log("[LoadingManager] Calling uiLoading.CompleteLoading()");
             uiLoading.CompleteLoading();
             // UIManager.Instance.ShowUI("UIWeapon");
             // UIManager.Instance.ShowUI("UIStatus");

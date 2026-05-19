@@ -18,16 +18,19 @@ public class PlayerSpawner : MonoBehaviour
 
     void OnEnable()
     {
+        Debug.Log("[PlayerSpawner] OnEnable - subscribing to UILoading.OnLoadingComplete");
         UILoading.OnLoadingComplete += SpawnPlayer;
     }
 
     void OnDisable()
     {
+        Debug.Log("[PlayerSpawner] OnDisable - unsubscribing from UILoading.OnLoadingComplete");
         UILoading.OnLoadingComplete -= SpawnPlayer;
     }
 
     void SpawnPlayer()
     {
+        Debug.Log("[PlayerSpawner] SpawnPlayer called!");
         if (playerPrefab == null)
         {
             Debug.LogError("[PlayerSpawner] Player prefab not assigned!");
