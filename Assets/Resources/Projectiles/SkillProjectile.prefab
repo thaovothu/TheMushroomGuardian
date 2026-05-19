@@ -253,7 +253,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trailRenderer: {fileID: 4848556726512786077}
-  particleSystem: {fileID: 6822807260539482636}
+  skillProjectileConfig: {fileID: 11400000, guid: f7701a00555fa4c3aac0d0cc5ac97b4b,
+    type: 2}
 --- !u!198 &6822807260539482636
 ParticleSystem:
   m_ObjectHideFlags: 0

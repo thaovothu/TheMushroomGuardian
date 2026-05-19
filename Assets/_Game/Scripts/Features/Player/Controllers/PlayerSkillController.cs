@@ -9,8 +9,6 @@ public class PlayerSkillController : MonoBehaviour
     [Header("References")]
     [SerializeField] private HealthSystem healthSystem;
     [SerializeField] private Transform attackPoint; // Vị trí phát chiêu
-    [SerializeField] private GameObject skillProjectilePrefab; // Projectile prefab - drag here in Inspector
-    [SerializeField] private ParticleSystem meleImpactVFX; // VFX cho melee hit - drag here in Inspector
     private PlayerController playerController;
 
     [Header("Skill Settings")]
@@ -226,6 +224,12 @@ public class PlayerSkillController : MonoBehaviour
             attackPoint.position + attackPoint.forward * range, 
             Color.red, 0.5f);
 
+        // Spawn melee attack VFX tại attackPoint
+        if (SkillVFXManager.Instance != null)
+        {
+            SkillVFXManager.Instance.SpawnSkillVFX(skill.skillId, attackPoint.position, attackPoint.rotation);
+        }
+
         foreach (RaycastHit hit in hits)
         {
             if (hit.collider.gameObject == gameObject)
@@ -240,8 +244,11 @@ public class PlayerSkillController : MonoBehaviour
                 enemyHealth.TakeDamage(finalDamage, skill.element);
                 Debug.Log($"[PlayerSkillController] ✓ Hit {hit.collider.name} with {skill.skillName}: {finalDamage} damage (multiplier: {multiplier:F2})");
 
-                // Spawn VFX impact tại vị trí hit
-                SpawnMeleeImpactVFX(hit.point, skill.element);
+                // Spawn impact VFX tại vị trí hit
+                if (SkillVFXManager.Instance != null)
+                {
+                    SkillVFXManager.Instance.SpawnImpactVFX(skill.skillId, hit.point);
+                }
             }
         }
     }
@@ -251,16 +258,24 @@ public class PlayerSkillController : MonoBehaviour
     /// </summary>
     private void ApplyRangedDamage(SkillData skill)
     {
-        if (skillProjectilePrefab == null)
+        if (SkillVFXManager.Instance == null)
         {
-            Debug.LogError("[PlayerSkillController] ✗ Skill Projectile Prefab is NOT assigned in Inspector!");
+            Debug.LogError("[PlayerSkillController] ✗ SkillVFXManager not found!");
             return;
         }
 
-        Debug.Log("[PlayerSkillController] ✓ Prefab assigned, instantiating...");
+        // Lấy prefab phù hợp cho skill từ manager
+        var prefab = SkillVFXManager.Instance.GetProjectilePrefab(skill.skillId);
+        if (prefab == null)
+        {
+            Debug.LogError($"[PlayerSkillController] ✗ No projectile prefab for skill: {skill.skillName}");
+            return;
+        }
+
+        Debug.Log($"[PlayerSkillController] ✓ Spawning projectile for: {skill.skillName}");
 
         var projectile = Instantiate(
-            skillProjectilePrefab,
+            prefab,
             attackPoint.position,
             Quaternion.LookRotation(attackPoint.forward)
         );
@@ -293,46 +308,13 @@ public class PlayerSkillController : MonoBehaviour
             Debug.Log($"[PlayerSkillController] ✓ Applied shield defense: +{skill.defense}% damage reduction for {buffDuration}s");
         }
 
-        lastSkillCastTime = Time.time;
-    }
-
-    /// <summary>
-    /// Spawn VFX impact cho melee attack
-    /// </summary>
-    private void SpawnMeleeImpactVFX(Vector3 hitPosition, ElementType element)
-    {
-        if (meleImpactVFX == null)
+        // Spawn defend VFX tại player position
+        if (SkillVFXManager.Instance != null)
         {
-            Debug.LogWarning("[PlayerSkillController] ✗ Melee Impact VFX is NOT assigned in Inspector!");
-            return;
+            SkillVFXManager.Instance.SpawnSkillVFX(skill.skillId, transform.position, transform.rotation);
         }
 
-        // Spawn particles tại vị trí hit
-        var particles = Instantiate(meleImpactVFX, hitPosition, Quaternion.identity);
-        
-        // Set màu particles theo element
-        var main = particles.main;
-        main.startColor = GetElementColor(element);
-        
-        particles.Play();
-        Destroy(particles.gameObject, 2f);
-        
-        Debug.Log($"[PlayerSkillController] ✓ Spawned melee impact VFX: {element}");
-    }
-
-    /// <summary>
-    /// Lấy màu tuỳ element (giống như SkillProjectile)
-    /// </summary>
-    private Color GetElementColor(ElementType element)
-    {
-        return element switch
-        {
-            ElementType.Earth => new Color(0.6f, 0.4f, 0.2f),  // Brown
-            ElementType.Wind => new Color(0.7f, 0.9f, 1f),     // Light blue
-            ElementType.Water => new Color(0.2f, 0.6f, 1f),    // Blue
-            ElementType.Fire => new Color(1f, 0.5f, 0f),       // Orange
-            _ => Color.white
-        };
+        lastSkillCastTime = Time.time;
     }
 
     /// <summary>

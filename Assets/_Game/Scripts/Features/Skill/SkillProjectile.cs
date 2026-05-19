@@ -2,6 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Controller cho skill projectile bay tầm xa
+/// Mỗi skill có riêng 1 SkillProjectile prefab với VFX khác nhau
 /// </summary>
 public class SkillProjectile : MonoBehaviour
 {
@@ -14,15 +15,28 @@ public class SkillProjectile : MonoBehaviour
 
     [Header("Visual")]
     [SerializeField] private TrailRenderer trailRenderer;
-    [SerializeField] private ParticleSystem particleSystem;
 
     void Start()
     {
+        Debug.Log($"[SkillProjectile] START - Position: {transform.position}, Direction: {direction}, Speed: {speed}");
+
         // Setup trail color theo element
         if (trailRenderer != null && skillData != null)
         {
             trailRenderer.startColor = GetElementColor(skillData.element);
             trailRenderer.endColor = GetElementColor(skillData.element);
+            Debug.Log($"[SkillProjectile] Trail color set for {skillData.element}");
+        }
+
+        // Spawn projectile VFX qua SkillVFXManager
+        if (skillData != null && SkillVFXManager.Instance != null)
+        {
+            Debug.Log($"[SkillProjectile] Spawning VFX for skill ID: {skillData.skillId}");
+            SkillVFXManager.Instance.SpawnSkillVFX(skillData.skillId, transform.position, transform.rotation);
+        }
+        else
+        {
+            Debug.LogWarning($"[SkillProjectile] ✗ Cannot spawn VFX - skillData: {skillData != null}, VFXManager: {SkillVFXManager.Instance != null}");
         }
     }
 
@@ -45,44 +59,81 @@ public class SkillProjectile : MonoBehaviour
             0.1f
         );
 
+        // Debug info mỗi frame (chi tiết quá thì comment đi)
+        if (elapsedTime % 0.5f < Time.deltaTime) // Log mỗi 0.5 giây
+        {
+            Debug.Log($"[SkillProjectile] {skillData.skillName} - Pos: {transform.position}, Time: {elapsedTime:F2}s/{lifetime}s");
+        }
+
         // Hết lifetime → destroy
         if (elapsedTime >= lifetime)
         {
+            Debug.Log($"[SkillProjectile] ✓ {skillData.skillName} reached lifetime, destroying");
             Destroy(gameObject);
         }
     }
 
     void OnTriggerEnter(Collider collision)
     {
+        Debug.Log($"[SkillProjectile] OnTriggerEnter: {collision.name}, Tag: {collision.tag}");
+
         if (skillData == null) return; // Chưa initialize
         
         // Bỏ qua player
         if (collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log($"[SkillProjectile] Skipped Player collision");
             return;
+        }
 
         // Đã hit rồi → bỏ qua
-        if (hasHit) return;
+        if (hasHit)
+        {
+            Debug.Log($"[SkillProjectile] Already hit, ignoring");
+            return;
+        }
 
         hasHit = true;
+        Debug.Log($"[SkillProjectile] Hit registered! Position: {transform.position}");
 
         // Kiểm tra enemy
         HealthSystem enemyHealth = collision.GetComponent<HealthSystem>();
-        if (enemyHealth != null && !enemyHealth.IsDead)
+        if (enemyHealth == null)
         {
-            // Tính damage
-            float multiplier = SkillSystem.Instance.GetElementalMultiplier(skillData.element, enemyHealth.GetElement());
-            float finalDamage = skillData.damage * multiplier;
+            Debug.LogWarning($"[SkillProjectile] ✗ {collision.name} has NO HealthSystem component!");
+            Destroy(gameObject);
+            return;
+        }
 
-            enemyHealth.TakeDamage(finalDamage, skillData.element);
-            Debug.Log($"[SkillProjectile] ✓ Hit {collision.name}: {finalDamage} damage");
+        if (enemyHealth.IsDead)
+        {
+            Debug.Log($"[SkillProjectile] ✗ {collision.name} is already dead");
+            Destroy(gameObject);
+            return;
+        }
 
-            // Spawn explosion effect
-            if (particleSystem != null)
-            {
-                var particles = Instantiate(particleSystem, transform.position, Quaternion.identity);
-                particles.Play();
-                Destroy(particles.gameObject, 2f);
-            }
+        // Lấy SkillSystem instance
+        if (SkillSystem.Instance == null)
+        {
+            Debug.LogError($"[SkillProjectile] ✗ SkillSystem.Instance is NULL!");
+            Destroy(gameObject);
+            return;
+        }
+
+        // Tính damage
+        Debug.Log($"[SkillProjectile] Calculating damage: skill element={skillData.element}, enemy element={enemyHealth.GetElement()}");
+        float multiplier = SkillSystem.Instance.GetElementalMultiplier(skillData.element, enemyHealth.GetElement());
+        float finalDamage = skillData.damage * multiplier;
+
+        Debug.Log($"[SkillProjectile] Damage calc: {skillData.damage} * {multiplier:F2} = {finalDamage}");
+
+        enemyHealth.TakeDamage(finalDamage, skillData.element);
+        Debug.Log($"[SkillProjectile] ✓ {skillData.skillName} hit {collision.name}: {finalDamage} damage (multiplier: {multiplier:F2})");
+
+        // Spawn impact VFX qua SkillVFXManager
+        if (skillData != null && SkillVFXManager.Instance != null)
+        {
+            SkillVFXManager.Instance.SpawnImpactVFX(skillData.skillId, transform.position);
         }
 
         Destroy(gameObject);
@@ -106,7 +157,15 @@ public class SkillProjectile : MonoBehaviour
             rb.isKinematic = true;
         }
 
-        Debug.Log($"[SkillProjectile] Initialized: {skill.skillName}, Element: {skill.element}, Speed: {speed}");
+        // Collider check
+        Collider col = GetComponent<Collider>();
+        Debug.Log($"[SkillProjectile] INIT: {skill.skillName}");
+        Debug.Log($"  • Element: {skill.element}");
+        Debug.Log($"  • Speed: {speed} units/s");
+        Debug.Log($"  • Direction: {direction}");
+        Debug.Log($"  • Max distance: {speed * lifetime} units");
+        Debug.Log($"  • Has Rigidbody: {rb != null}");
+        Debug.Log($"  • Has Collider: {col != null}");
     }
 
     /// <summary>

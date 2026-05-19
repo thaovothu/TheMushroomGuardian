@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4772634663558095668}
   - component: {fileID: 4772634663576830967}
   m_Layer: 0
-  m_Name: CFXR3 Shield Leaves A (Lit)
+  m_Name: WindAttack1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
