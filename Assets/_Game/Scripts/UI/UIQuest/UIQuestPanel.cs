@@ -33,7 +33,9 @@ public class UIQuestPanel : MonoBehaviour
     [SerializeField] private Button nextStepButton;
     [SerializeField] private Button prevStepButton;
     [SerializeField] private Button closeUIButton;
-
+    [SerializeField] private Button confirmUIButton;
+    [SerializeField] private Image stateQuestImg;
+    [SerializeField] private Sprite lockedSprite;
     private int currentQuestId = 1;
     private int currentStepId = 1;
     private int maxStepId = 1;
@@ -56,6 +58,13 @@ public class UIQuestPanel : MonoBehaviour
         if (QuestProgressManager.Instance != null)
         {
             QuestProgressManager.Instance.OnQuestChanged += OnQuestProgressChanged;
+            QuestProgressManager.Instance.OnStepChanged += OnStepProgressChanged;
+        }
+
+        // Subscribe vào objective completion
+        if (QuestObjectiveManager.Instance != null)
+        {
+            QuestObjectiveManager.Instance.OnObjectiveReached += OnObjectiveReached;
         }
 
         // Setup toggles - ToggleGroup sẽ tự tắt toggle khác
@@ -75,7 +84,6 @@ public class UIQuestPanel : MonoBehaviour
             }
         }
 
-        // Setup buttons
         
     }
     void OnEnable()
@@ -87,6 +95,8 @@ public class UIQuestPanel : MonoBehaviour
             prevStepButton.onClick.AddListener(PrevStep);
         if (closeUIButton != null)
             closeUIButton.onClick.AddListener(OnCloseUI);
+        if (confirmUIButton != null)
+            confirmUIButton.onClick.AddListener(OnConfirmUI);
     }
     void OnDisable()
     {
@@ -97,6 +107,8 @@ public class UIQuestPanel : MonoBehaviour
             prevStepButton.onClick.RemoveListener(PrevStep);
         if (closeUIButton != null)
             closeUIButton.onClick.RemoveListener(OnCloseUI);
+        if (confirmUIButton != null)
+            confirmUIButton.onClick.RemoveListener(OnConfirmUI);
     }
 
     private void OnQuestDataLoaded(System.Collections.Generic.List<QuestData> questList)
@@ -144,6 +156,10 @@ public class UIQuestPanel : MonoBehaviour
             Debug.Log($"[UIQuestPanel] Quest {questId}: Active={isActive}, Unlocked={isUnlocked}");
         }
     }
+    public void Show()
+    {
+        gameObject.SetActive(true);
+    }
 
     /// <summary>
     /// Chọn quest để xem chi tiết
@@ -177,13 +193,27 @@ public class UIQuestPanel : MonoBehaviour
             return;
         }
 
+        // Update QuestInfoClickHandler with current quest ID
+        var clickHandler = questInfoText?.GetComponent<QuestInfoClickHandler>();
+        if (clickHandler != null)
+        {
+            clickHandler.SetCurrentQuestId(currentQuestId);
+        }
+
+        // Lấy thông tin step state
+        bool isStepActive = QuestProgressManager.Instance.IsStepActive(currentQuestId, currentStepId);
+        bool isStepCompleted = QuestProgressManager.Instance.IsStepCompleted(currentQuestId, currentStepId);
+
         // Hiển thị title
         if (questTitleText != null)
             questTitleText.text = questData.titleQuest;
 
-        // Hiển thị info
+        // Hiển thị info - Convert color tags thành clickable links
         if (questInfoText != null)
-            questInfoText.text = questData.infoQuest;
+        {
+            string formattedInfo = QuestInfoClickHandler.ConvertQuestTextToClickable(questData.infoQuest);
+            questInfoText.text = formattedInfo;
+        }
 
         // Hiển thị short description
         if (stepDescriptionText != null)
@@ -213,7 +243,26 @@ public class UIQuestPanel : MonoBehaviour
         if (nextStepButton != null)
             nextStepButton.interactable = (currentStepId < maxStepId);
 
-        Debug.Log($"[UIQuestPanel] Displaying Quest {currentQuestId} Step {currentStepId}/{maxStepId}");
+        // === Cập nhật UI dựa trên trạng thái step ===
+        
+        // Hiển thị/Ẩn lockedSprite
+        // - Ẩn nếu step active hoặc completed
+        // - Hiện nếu step chưa mở khóa (bị khóa)
+        if (stateQuestImg != null)
+        {
+            stateQuestImg.sprite = lockedSprite;
+            stateQuestImg.enabled = !isStepActive && !isStepCompleted;
+        }
+
+        // Hiển thị/Ẩn confirmUIButton
+        // - Chỉ hiện khi step active (hiện tại đang làm)
+        // - Ẩn khi step chưa mở hoặc đã hoàn thành
+        if (confirmUIButton != null)
+        {
+            confirmUIButton.gameObject.SetActive(isStepActive);
+        }
+
+        Debug.Log($"[UIQuestPanel] Displaying Quest {currentQuestId} Step {currentStepId}/{maxStepId} | Active={isStepActive}, Completed={isStepCompleted}");
     }
 
     /// <summary>
@@ -251,6 +300,36 @@ public class UIQuestPanel : MonoBehaviour
         SelectQuest(newQuestId);
     }
 
+    /// <summary>
+    /// Callback khi step của quest thay đổi
+    /// </summary>
+    private void OnStepProgressChanged(int questId, int stepId)
+    {
+        Debug.Log($"[UIQuestPanel] Step progress changed - Quest {questId} -> Step {stepId}");
+        if (questId == currentQuestId)
+        {
+            currentStepId = stepId;
+            DisplayQuestInfo();
+        }
+    }
+
+    /// <summary>
+    /// Callback khi player tới objective
+    /// Auto-complete step nếu là objective-type quest
+    /// </summary>
+    private void OnObjectiveReached(QuestObjectiveManager.ObjectiveLocation objective)
+    {
+        Debug.Log($"[UIQuestPanel] Objective reached: {objective.name}");
+        
+        // Kiểm tra nếu là active step, tự động báo hoàn thành
+        if (QuestProgressManager.Instance.IsStepActive(currentQuestId, currentStepId))
+        {
+            Debug.Log($"[UIQuestPanel] Auto-completing step due to objective reach");
+            // Auto trigger confirm
+            OnConfirmUI();
+        }
+    }
+
     private void OnDestroy()
     {
         if (QuestDataManager.Instance != null)
@@ -261,6 +340,12 @@ public class UIQuestPanel : MonoBehaviour
         if (QuestProgressManager.Instance != null)
         {
             QuestProgressManager.Instance.OnQuestChanged -= OnQuestProgressChanged;
+            QuestProgressManager.Instance.OnStepChanged -= OnStepProgressChanged;
+        }
+
+        if (QuestObjectiveManager.Instance != null)
+        {
+            QuestObjectiveManager.Instance.OnObjectiveReached -= OnObjectiveReached;
         }
 
         if (nextStepButton != null)
@@ -278,5 +363,45 @@ public class UIQuestPanel : MonoBehaviour
     private void OnCloseUI()
     {
         gameObject.SetActive(false);
+    }
+
+    private void OnConfirmUI()
+    {
+        // Kiểm tra step có active không
+        if (!QuestProgressManager.Instance.IsStepActive(currentQuestId, currentStepId))
+        {
+            Debug.LogWarning($"[UIQuestPanel] Cannot confirm. Step {currentStepId} is not active!");
+            return;
+        }
+
+        // Lấy quest data để lấy reward
+        var questData = QuestDataManager.Instance.GetQuestStep(currentQuestId, currentStepId);
+        if (questData == null)
+        {
+            Debug.LogWarning($"[UIQuestPanel] Quest data not found!");
+            return;
+        }
+
+        // === Xử lý phần thưởng ===
+        Debug.Log($"[UIQuestPanel] Quest {currentQuestId} Step {currentStepId} completed!");
+        Debug.Log($"  Reward - Coin: {questData.coinReward}, Item: {questData.itemReward1}, Other: {questData.reward}");
+        // TODO: Thêm logic cấp phát reward cho player (coin, item, ...)
+
+        // === Hoàn thành step ===
+        var questSteps = QuestDataManager.Instance.GetQuestSteps(currentQuestId);
+        QuestProgressManager.Instance.CompleteCurrentStep(currentQuestId, currentStepId, questSteps.Count);
+
+        // Refresh UI
+        RefreshQuestToggles();
+        
+        // Nếu chưa hoàn thành tất cả step, hiển thị step tiếp theo
+        if (!QuestProgressManager.Instance.IsQuestActive(currentQuestId + 1))
+        {
+            int nextActiveStep = QuestProgressManager.Instance.GetActiveStepForQuest(currentQuestId);
+            currentStepId = nextActiveStep;
+            DisplayQuestInfo();
+        }
+        // Nếu đã hoàn thành quest, quest tiếp theo sẽ tự động được kích hoạt
+        // OnQuestProgressChanged sẽ được gọi và cập nhật UI
     }
 }
