@@ -18,22 +18,25 @@ public class PlayerSpawner : MonoBehaviour
 
     void OnEnable()
     {
+        Debug.Log("[PlayerSpawner] OnEnable - subscribing to UILoading.OnLoadingComplete");
         UILoading.OnLoadingComplete += SpawnPlayer;
+        Debug.Log("[PlayerSpawner] ✅ Subscribed to UILoading.OnLoadingComplete");
     }
 
     void OnDisable()
     {
+        Debug.Log("[PlayerSpawner] OnDisable - unsubscribing from UILoading.OnLoadingComplete");
         UILoading.OnLoadingComplete -= SpawnPlayer;
     }
 
     void SpawnPlayer()
     {
+        Debug.Log("[PlayerSpawner] SpawnPlayer called!");
         if (playerPrefab == null)
         {
             Debug.LogError("[PlayerSpawner] Player prefab not assigned!");
             return;
         }
-        Debug.Log("Chaydaynef");
 
         // Lấy vị trí spawn: dùng playerSpawnPoint nếu có, không thì dùng vị trí của PlayerSpawner
         Transform spawnTransform = playerSpawnPoint != null ? playerSpawnPoint : transform;
@@ -49,7 +52,25 @@ public class PlayerSpawner : MonoBehaviour
         Debug.Log($"[PlayerSpawner] Player spawned at {spawnPos} with tag 'Player'");
         
         // Trigger event để các system khác biết player đã spawn
+        Debug.Log($"[PlayerSpawner] 🔥 Firing OnPlayerSpawned event with player: {spawnedPlayer.name}");
+        
+        // Debug: check how many subscribers
+        if (OnPlayerSpawned != null)
+        {
+            var delegates = OnPlayerSpawned.GetInvocationList();
+            Debug.Log($"[PlayerSpawner] OnPlayerSpawned has {delegates.Length} subscribers");
+            foreach (var d in delegates)
+            {
+                Debug.Log($"[PlayerSpawner]   - Subscriber: {d.Target?.GetType().Name}");
+            }
+        }
+        else
+        {
+            Debug.LogError("[PlayerSpawner] ❌ OnPlayerSpawned is NULL! No subscribers!");
+        }
+        
         OnPlayerSpawned?.Invoke(spawnedPlayer);
+        Debug.Log($"[PlayerSpawner] ✅ OnPlayerSpawned event fired!");
     }
 
     /// <summary>

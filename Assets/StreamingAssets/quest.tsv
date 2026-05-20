@@ -1,0 +1,55 @@
+QuestID	StepID	Title Quest	Info Quest	ItemReward1	CointReward	Reward	Short Des_1	MapID
+1	1	Mầm Nấm Thức Tỉnh	Sau giấc ngủ dài trong lòng đại địa, hãy di chuyển quanh <color=#00FFFF>Làng Rễ Cây</color> để làm quen với cơ thể mới thức tỉnh		10	Di chuyển, nhảy	Học cách di chuyển	1
+1	2	Mầm Nấm Thức Tỉnh	Nhảy qua các rễ cây cổ bị gãy để tiến đến khu vực phát sáng phía trước		10	Đánh thường	Học cách nhảy	1
+1	3	Mầm Nấm Thức Tỉnh	Dùng đòn đánh thường phá hủy 5 <color=red>Bào Tử Gỗ</color> dùng cho luyện tập		50		Học đánh thường	1
+1	4	Mầm Nấm Thức Tỉnh	Một tiếng kêu cứu vang lên từ khu rừng. Hãy đi kiểm tra cùng những dấu vết phát sáng				Đi theo dấu vết	1
+1	5	Mầm Nấm Thức Tỉnh	Tiêu diệt 5 <color=red>Nấm Ký Sinh</color> đang giam giữ <color=green>Tinh Linh Lumi</color>		100	Tinh linh	Giải cứu Lumi	1
+1	6	Mầm Nấm Thức Tỉnh	Nói chuyện với <color=green>Tinh Linh Lumi</color>. Từ giờ Lumi sẽ đồng hành cùng bạn trên hành trình cứu thế giới				Đối thoại Lumi	1
+1	7	Mầm Nấm Thức Tỉnh	Theo <color=green>Lumi</color> đến gặp <color=green>Cổ Thụ Nấm</color> tại trung tâm làng				Gặp Cổ Thụ Nấm	1
+1	8	Mầm Nấm Thức Tỉnh	<color=green>Cổ Thụ Nấm</color> kể về sự sụp đổ của thế giới và 4 nguyên tố đã bị phong ấn bởi Hư Không				Nghe cốt truyện	1
+1	9	Mầm Nấm Thức Tỉnh	Nhận nhiệm vụ thu thập lại 4 nguyên tố để cứu lấy vùng đất nấm				Bắt đầu hành trình	1
+								
+2	1	Con Đường Chiến Đấu	Theo <color=green>Lumi</color> tiến vào <color=#00FFFF>Hang Rễ Cây</color> để bắt đầu cuộc hành trình				Tiến vào Hang Rễ Cây	1
+2	2	Con Đường Chiến Đấu	Tiêu diệt 10 <color=red>Nấm Ký Sinh</color> để luyện tập chiến đấu và thu thập vàng	Kiếm	200		Tiêu diệt Nấm Ký Sinh	1
+2	3	Con Đường Chiến Đấu	Thu thập 3 <color=yellow>Nấm</color> từ quái vật trong hang			Đất	Thu thập tinh thể	1
+2	4	Con Đường Chiến Đấu	Ghé qua <color=green>Thương Nhân Nấm</color> để mua vật phẩm hồi phục trước khi tiến sâu hơn				Mở khóa cửa hàng	1
+2	5	Con Đường Chiến Đấu	Tìm <color=green>Chiến Binh Rêu</color> bị mắc kẹt trong hang động		100		Tìm Chiến Binh Rêu	1
+2	6	Con Đường Chiến Đấu	<color=green>Chiến Binh Rêu</color> dạy bạn sử dụng <color=#FFCCFF>Kỹ năng Đập Đất</color>			EarthAttack, EarthDefend	Học Đập Đất	1
+2	7	Con Đường Chiến Đấu	Sử dụng kỹ năng mới để phá lớp giáp của <color=red>Golem Rễ Cây</color>				Đánh bại Golem	1
+2	8	Con Đường Chiến Đấu	Thu hồi <color=yellow>Lõi Nguyên Tố Đất</color> từ cơ thể Golem				Nhận nguyên tố Đất	1
+2	9	Con Đường Chiến Đấu	Mang <color=yellow>Lõi Đất</color> quay về cho <color=green>Cổ Thụ Nấm</color>				Nộp nguyên tố Đất	1
+								
+3	1	Hơi Thở Của Gió	Sau khi khôi phục nguyên tố Đất, <color=green>Lumi</color> dẫn bạn đến <color=#00FFFF>Rừng Trên Mây</color>				Đến Rừng Trên Mây	2
+3	2	Hơi Thở Của Gió	Tiêu diệt 12 <color=red>Dơi Bào Tử</color> đang phá hủy các luồng gió		480		Tiêu diệt Dơi Bào Tử	2
+3	3	Hơi Thở Của Gió	Dùng các luồng gió để vượt qua vực sâu đến <color=#00FFFF>Đài Nấm Trôi</color>				Vượt vực sâu	2
+3	4	Hơi Thở Của Gió	Giải cứu <color=green>Tinh Linh Gió</color> khỏi vòng phong ấn của Hư Không		100		Giải cứu Tinh Linh Gió	2
+3	5	Hơi Thở Của Gió	<color=green>Tinh Linh Gió</color> dạy bạn kỹ năng <color=#FFCCFF> Gió</color>			windAttack, windefend, dash	Học Dash Gió	2
+3	6	Hơi Thở Của Gió	Sử dụng Dash Gió để né tránh đòn tấn công của <color=red>Harpy Nấm</color>				Đánh bại Harpy	2
+3	7	Hơi Thở Của Gió	Thu hồi <color=yellow>Lõi Nguyên Tố Khí</color> từ đỉnh Đài Nấm Trôi				Nhận nguyên tố Khí	2
+3	8	Hơi Thở Của Gió	Mang <color=yellow>Lõi Khí</color> quay về cho <color=green>Cổ Thụ Nấm</color>				Nộp nguyên tố Khí	2
+								
+4	1	Dòng Nước Mục Nát	Nguồn nước của vùng đất đang bị ô nhiễm. Theo <color=green>Lumi</color> đến <color=#00FFFF>Đầm Xanh</color>				Đến Đầm Xanh	3
+4	2	Dòng Nước Mục Nát	Tiêu diệt 15 <color=red>Cua Ký Sinh</color> đang làm ô nhiễm vùng đầm		600		Tiêu diệt Cua Ký Sinh	3
+4	3	Dòng Nước Mục Nát	Thu thập 5 <color=yellow>Giọt Nước Tinh Khiết</color> từ các hồ nước chưa bị tha hóa				Thu thập nước tinh khiết	3
+4	4	Dòng Nước Mục Nát	Tìm gặp <color=green>Tư Tế Nấm Nước</color> trong ngôi đền cổ chìm dưới đầm				Tìm Tư Tế Nước	3
+4	5	Dòng Nước Mục Nát	<color=green>Tư Tế Nấm Nước</color> dạy bạn kỹ năng <color=#FFCCFF>Hồi Phục</color>			waterAttack, waterDefend	Học Hồi Phục	3
+4	6	Dòng Nước Mục Nát	Sử dụng sức mạnh hồi phục để chống lại độc tố từ <color=red>Rắn Nấm Vực Sâu</color>				Đánh bại Rắn Nấm	3
+4	7	Dòng Nước Mục Nát	Thu hồi <color=yellow>Lõi Nguyên Tố Nước</color> từ vực sâu đầm lầy				Nhận nguyên tố Nước	3
+4	8	Dòng Nước Mục Nát	Mang <color=yellow>Lõi Nước</color> quay về cho <color=green>Cổ Thụ Nấm</color>				Nộp nguyên tố Nước	3
+								
+5	1	Ngọn Lửa Sau Cùng	Nguyên tố cuối cùng đang nằm sâu trong <color=#00FFFF>Núi Lửa Tro</color>. Theo <color=green>Lumi</color> tiến lên				Đến Núi Lửa Tro	4
+5	2	Ngọn Lửa Sau Cùng	Tiêu diệt 20 <color=red>Bọ Lửa</color> canh giữ lối vào lõi dung nham		10000		Tiêu diệt Bọ Lửa	4
+5	3	Ngọn Lửa Sau Cùng	Thu thập 10 <color=yellow>Than Tinh Thể</color> để kích hoạt cánh cổng cổ				Thu thập Than Tinh Thể	4
+5	4	Ngọn Lửa Sau Cùng	Tìm gặp <color=green>Thợ Rèn Nấm</color> tại lò rèn cổ trong núi lửa				Gặp Thợ Rèn Nấm	4
+5	5	Ngọn Lửa Sau Cùng	<color=green>Thợ Rèn Nấm</color> truyền lại kỹ năng <color=#FFCCFF>Bùng Nổ Lửa</color>			fireAttack, fireDefend	Học Bùng Nổ Lửa	4
+5	6	Ngọn Lửa Sau Cùng	Sử dụng sức mạnh mới để phá lớp giáp dung nham của <color=red>Khổng Lồ Dung Nham</color>		25000		Đánh bại Khổng Lồ	4
+5	7	Ngọn Lửa Sau Cùng	Thu hồi <color=yellow>Lõi Nguyên Tố Lửa</color> từ trung tâm núi lửa				Nhận nguyên tố Lửa	4
+5	8	Ngọn Lửa Sau Cùng	Mang <color=yellow>Lõi Lửa</color> quay về cho <color=green>Cổ Thụ Nấm</color>				Nộp nguyên tố Lửa	4
+								
+6	1	Cội Rễ Cuối Cùng	Sau khi thu thập đủ 4 nguyên tố, hãy gặp lại <color=green>Cổ Thụ Nấm</color>				Gặp Cổ Thụ Nấm	5
+6	2	Cội Rễ Cuối Cùng	<color=green>Lumi</color> tiết lộ rằng Hư Không đang nuốt chửng thế giới từ bên dưới lòng đất				Nghe lời Lumi	5
+6	3	Cội Rễ Cuối Cùng	Tiến vào <color=#00FFFF>Vực Bóng Tối</color> — nơi phong ấn cuối cùng đang sụp đổ				Tiến vào Vực Bóng Tối	5
+6	4	Cội Rễ Cuối Cùng	Tiêu diệt 25 <color=red>Chiến Binh Hư Không</color> để mở cánh cổng cuối cùng				Tiêu diệt quân Hư Không	5
+6	5	Cội Rễ Cuối Cùng	Sử dụng sức mạnh của 4 nguyên tố để phá lớp chắn của <color=red>Vua Hư Không</color>				Phá phong ấn Boss	5
+6	6	Cội Rễ Cuối Cùng	Đánh bại <color=red>Vua Hư Không</color> và giải phóng cội nguồn thế giới				Đánh bại Vua Hư Không	5
+6	7	Cội Rễ Cuối Cùng	Nói chuyện với <color=green>Lumi</color> sau trận chiến cuối cùng. Ánh sáng bắt đầu quay trở lại thế giới				Hoàn thành hành trình	5

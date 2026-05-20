@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 5988228756334631479}
   - component: {fileID: 5827152198828151132}
   - component: {fileID: 5057070618927461595}
+  - component: {fileID: 6493796992997838656}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -264,15 +265,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthSystem: {fileID: 5827152198828151132}
   attackPoint: {fileID: 4908166584676422242}
-  skillProjectilePrefab: {fileID: 3323294455745290126, guid: badbd861efe604452ae3b197be47582e,
-    type: 3}
-  meleImpactVFX: {fileID: 7177991128484655658, guid: 59a35ab9f68edff40b6e5332bed330f5,
-    type: 3}
   skillCooldown: 1
   maxMana: 100
   shieldKey: 101
   attackKey: 113
   switchElementKey: 114
+--- !u!114 &6493796992997838656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4016301608865483912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fe7611e2a92c4390ba55b9e9b9ac560, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkInterval: 0.5
 --- !u!1 &5783744246487940258
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,17 +9,20 @@ public class UILoading : MonoBehaviour
     [SerializeField] private TextMeshProUGUI progressText; // Optional: để hiển thị %
     
     private float currentProgress = 0f;
+    private static bool hasCompleted = false; // Static flag - persist across scenes
 
     // Event trigger khi loading hoàn thành
     public static System.Action OnLoadingComplete;
 
     void OnEnable()
     {
+        Debug.Log("[UILoading] OnEnable called");
         if (progressSlider != null)
         {
             progressSlider.value = 0f;
         }
         currentProgress = 0f;
+        // Không reset hasCompleted ở đây!
     }
 
     /// <summary>
@@ -56,15 +59,24 @@ public class UILoading : MonoBehaviour
     public void ResetProgress()
     {
         UpdateProgress(0f);
+        hasCompleted = false; // Reset flag khi reset progress
     }
 
     /// <summary>
-    /// Hoàn thành loading (set 100%)
+    /// Hoàn thành loading (set 100%) - chỉ trigger event 1 lần
     /// </summary>
     public void CompleteLoading()
     {
+        if (hasCompleted)
+        {
+            Debug.LogWarning("[UILoading] CompleteLoading already called!");
+            return;
+        }
+
+        hasCompleted = true;
         UpdateProgress(1f);
         // Trigger event để báo các system khác loading xong
+        Debug.Log("[UILoading] OnLoadingComplete triggered");
         OnLoadingComplete?.Invoke();
     }
 
