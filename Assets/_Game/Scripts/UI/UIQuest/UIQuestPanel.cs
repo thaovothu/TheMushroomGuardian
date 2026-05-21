@@ -36,9 +36,11 @@ public class UIQuestPanel : MonoBehaviour
     [SerializeField] private Button confirmUIButton;
     [SerializeField] private Image stateQuestImg;
     [SerializeField] private Sprite lockedSprite;
+    [SerializeField] private Sprite inProgressSprite;
     private int currentQuestId = 1;
     private int currentStepId = 1;
     private int maxStepId = 1;
+    private bool isCurrentStepObjectiveReached = false;
 
     private void Start()
     {
@@ -174,6 +176,7 @@ public class UIQuestPanel : MonoBehaviour
 
         currentQuestId = questId;
         currentStepId = 1; // Reset về step 1
+        isCurrentStepObjectiveReached = false;
 
         // Hiển thị thông tin quest
         DisplayQuestInfo();
@@ -244,22 +247,38 @@ public class UIQuestPanel : MonoBehaviour
             nextStepButton.interactable = (currentStepId < maxStepId);
 
         // === Cập nhật UI dựa trên trạng thái step ===
+        // 4 trạng thái step:
+        // 1. Chưa thực hiện (!active && !completed) → hiện lockedSprite
+        // 2. Đang thực hiện (active && !completed) → hiện inProgressSprite
+        // 3. Objective reached (active && objective completed) → hiện confirmUIButton
+        // 4. Đã thực hiện xong (next step active) → không hiến gì
         
-        // Hiển thị/Ẩn lockedSprite
-        // - Ẩn nếu step active hoặc completed
-        // - Hiện nếu step chưa mở khóa (bị khóa)
         if (stateQuestImg != null)
         {
-            stateQuestImg.sprite = lockedSprite;
-            stateQuestImg.enabled = !isStepActive && !isStepCompleted;
+            if (!isStepActive && !isStepCompleted)
+            {
+                // Chưa thực hiện - hiển thị locked sprite
+                stateQuestImg.sprite = lockedSprite;
+                stateQuestImg.enabled = true;
+            }
+            else if (isStepActive && !isCurrentStepObjectiveReached && !isStepCompleted)
+            {
+                // Đang thực hiện - hiển thị inProgressSprite
+                stateQuestImg.sprite = inProgressSprite;
+                stateQuestImg.enabled = true;
+            }
+            else
+            {
+                // Objective reached hoặc đã làm - ẩn
+                stateQuestImg.enabled = false;
+            }
         }
 
-        // Hiển thị/Ẩn confirmUIButton
-        // - Chỉ hiện khi step active (hiện tại đang làm)
-        // - Ẩn khi step chưa mở hoặc đã hoàn thành
+        // Hiển thị confirmUIButton chỉ khi objective đã reached (nhưng chưa click confirm)
+        // Player click button này để nhận reward và qua step tiếp
         if (confirmUIButton != null)
         {
-            confirmUIButton.gameObject.SetActive(isStepActive);
+            confirmUIButton.gameObject.SetActive(isStepActive && isCurrentStepObjectiveReached && !isStepCompleted);
         }
 
         Debug.Log($"[UIQuestPanel] Displaying Quest {currentQuestId} Step {currentStepId}/{maxStepId} | Active={isStepActive}, Completed={isStepCompleted}");
@@ -309,6 +328,7 @@ public class UIQuestPanel : MonoBehaviour
         if (questId == currentQuestId)
         {
             currentStepId = stepId;
+            isCurrentStepObjectiveReached = false;
             DisplayQuestInfo();
         }
     }
@@ -321,12 +341,21 @@ public class UIQuestPanel : MonoBehaviour
     {
         Debug.Log($"[UIQuestPanel] Objective reached: {objective.name}");
         
-        // Kiểm tra nếu là active step, tự động báo hoàn thành
+        // Kiểm tra nếu là active step, set flag và hiện button
         if (QuestProgressManager.Instance.IsStepActive(currentQuestId, currentStepId))
         {
-            Debug.Log($"[UIQuestPanel] Auto-completing step due to objective reach");
-            // Auto trigger confirm
-            OnConfirmUI();
+            Debug.Log($"[UIQuestPanel] Objective reached for current active step");
+            
+            // Trigger dialog khi quest 1 step 1 tới objective
+            if (currentQuestId == 1 && currentStepId == 1)
+            {
+                Debug.Log($"[UIQuestPanel] Triggering Dialog NPC 1 for Quest 1 Step 1");
+                DialogManager.Instance.PlayDialog(1);
+            }
+            
+            // Chỉ set flag, không tự động confirm - chờ player click button
+            isCurrentStepObjectiveReached = true;
+            DisplayQuestInfo();
         }
     }
 
@@ -388,20 +417,16 @@ public class UIQuestPanel : MonoBehaviour
         // TODO: Thêm logic cấp phát reward cho player (coin, item, ...)
 
         // === Hoàn thành step ===
+        isCurrentStepObjectiveReached = false;
         var questSteps = QuestDataManager.Instance.GetQuestSteps(currentQuestId);
         QuestProgressManager.Instance.CompleteCurrentStep(currentQuestId, currentStepId, questSteps.Count);
 
-        // Refresh UI
+        // Refresh UI - mở khóa step/quest tiếp theo
         RefreshQuestToggles();
         
-        // Nếu chưa hoàn thành tất cả step, hiển thị step tiếp theo
-        if (!QuestProgressManager.Instance.IsQuestActive(currentQuestId + 1))
-        {
-            int nextActiveStep = QuestProgressManager.Instance.GetActiveStepForQuest(currentQuestId);
-            currentStepId = nextActiveStep;
-            DisplayQuestInfo();
-        }
-        // Nếu đã hoàn thành quest, quest tiếp theo sẽ tự động được kích hoạt
-        // OnQuestProgressChanged sẽ được gọi và cập nhật UI
+        // KHÔNG chuyển tự động sang step tiếp theo
+        // Chỉ refresh UI để hiển thị trạng thái mở khóa
+        // Người dùng phải click vào step tiếp theo để xem chi tiết
+        Debug.Log($"[UIQuestPanel] Step {currentStepId} completed. Next step/quest unlocked. Waiting for user action.");
     }
 }

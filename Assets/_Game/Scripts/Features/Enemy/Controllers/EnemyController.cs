@@ -30,6 +30,7 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
 
     void Awake()
     {
+        Debug.Log($"[EnemyController.Awake] {name} at {transform.position}");
         _attackTimer = new CountdownTimer(timeBetweenAttacks);
         _hitTimer = new CountdownTimer(hitDuration);
         _stateMachine = new StateMachine();
@@ -43,7 +44,15 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
         _hitTimer.Tick(Time.deltaTime);
     }
 
-    void FixedUpdate() => _stateMachine.FixedUpdate();
+    void FixedUpdate()
+    {
+        _stateMachine.FixedUpdate();
+    }
+
+    void LateUpdate()
+    {
+        Debug.Log($"[EnemyController.LateUpdate] {name} at {transform.position}");
+    }
 
     // ── IPoolSpawned ───────────────────────────────
     // Gọi bởi PoolSpawnManager mỗi lần enemy được lấy ra khỏi pool
@@ -51,18 +60,25 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
 
     public void OnSpawn(BaseEnemyData data)
     {
+        Debug.Log($"[EnemyController.OnSpawn START] {name} at {transform.position}");
+        
         _data = data ?? new BaseEnemyData { hp = 100, damage = 10, moveSpeed = 3.5f };
 
         // Apply stats từ data
         agent.speed = _data.moveSpeed;
+        Debug.Log($"[EnemyController] After setting agent.speed: {name} at {transform.position}");
+        
         healthSystem.Init(_data.hp);
+        Debug.Log($"[EnemyController] After healthSystem.Init: {name} at {transform.position}");
 
         // Reset timers
         _attackTimer = new CountdownTimer(timeBetweenAttacks);
         _hitTimer = new CountdownTimer(hitDuration);
+        Debug.Log($"[EnemyController] After resetting timers: {name} at {transform.position}");
 
         // Reset FSM
         SetUpStateMachine();
+        Debug.Log($"[EnemyController.OnSpawn END] {name} at {transform.position}");
 
         //Debug.Log($"[EnemyController] {name} — hp:{_data.hp} dmg:{_data.damage} spd:{_data.moveSpeed}");
     }
@@ -125,5 +141,9 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
         }
     }
 
-    public void DieEnemy() => PoolSpawnManager.Instance.OnRelease?.Invoke(gameObject);
+    public void DieEnemy()
+    {
+        QuestSpawnManager.Instance?.NotifySpawnedEnemyDied(gameObject);
+        PoolSpawnManager.Instance.OnRelease?.Invoke(gameObject);
+    }
 }

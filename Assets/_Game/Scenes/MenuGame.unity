@@ -137,11 +137,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 383530633877891160, guid: 3f569e800ca07498db1e279ee251ccb7,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 797241336830450774, guid: 3f569e800ca07498db1e279ee251ccb7,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -152,31 +147,16 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 842213459876934086, guid: 3f569e800ca07498db1e279ee251ccb7,
+    - target: {fileID: 1544112541324819910, guid: 3f569e800ca07498db1e279ee251ccb7,
         type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 863853843875620913, guid: 3f569e800ca07498db1e279ee251ccb7,
+    - target: {fileID: 3269830927001581524, guid: 3f569e800ca07498db1e279ee251ccb7,
         type: 3}
-      propertyPath: m_OverrideSorting
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 863853843875620913, guid: 3f569e800ca07498db1e279ee251ccb7,
-        type: 3}
-      propertyPath: m_OverridePixelPerfect
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 863853843875620913, guid: 3f569e800ca07498db1e279ee251ccb7,
-        type: 3}
-      propertyPath: m_VertexColorAlwaysGammaSpace
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1553795207302701241, guid: 3f569e800ca07498db1e279ee251ccb7,
-        type: 3}
-      propertyPath: m_PresetInfoIsWorld
-      value: 0
-      objectReference: {fileID: 0}
+      propertyPath: arrowImage
+      value: 
+      objectReference: {fileID: 1262118030}
     - target: {fileID: 3269830927001581524, guid: 3f569e800ca07498db1e279ee251ccb7,
         type: 3}
       propertyPath: waypointCanvas
@@ -212,6 +192,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIManager
       objectReference: {fileID: 0}
+    - target: {fileID: 5416613097886323472, guid: 3f569e800ca07498db1e279ee251ccb7,
+        type: 3}
+      propertyPath: uiPanels.Array.size
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5416613097886323472, guid: 3f569e800ca07498db1e279ee251ccb7,
+        type: 3}
+      propertyPath: uiPanels.Array.data[11].uiObject
+      value: 
+      objectReference: {fileID: 3156292615358748040, guid: 7fb3a3d99e60647f181f5b6168c0cee4,
+        type: 3}
+    - target: {fileID: 5416613097886323472, guid: 3f569e800ca07498db1e279ee251ccb7,
+        type: 3}
+      propertyPath: uiPanels.Array.data[11].panelName
+      value: UIDialog
+      objectReference: {fileID: 0}
     - target: {fileID: 5651354449996191483, guid: 3f569e800ca07498db1e279ee251ccb7,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -256,16 +252,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7773927257569032391, guid: 3f569e800ca07498db1e279ee251ccb7,
-        type: 3}
-      propertyPath: m_text
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 7874389062940225272, guid: 3f569e800ca07498db1e279ee251ccb7,
-        type: 3}
-      propertyPath: m_text
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8411699883065384395, guid: 3f569e800ca07498db1e279ee251ccb7,
         type: 3}
@@ -382,6 +368,30 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f569e800ca07498db1e279ee251ccb7, type: 3}
+--- !u!114 &1112496632 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 50983088674677992, guid: 3f569e800ca07498db1e279ee251ccb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1112496631}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f4079f5ea5c64906957990f228244b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1262118030 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2802405018066884136, guid: 8ed2475fb74494ed4b433f5f683fe074,
+    type: 3}
+  m_PrefabInstance: {fileID: 1305957898}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1305957898
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -390,6 +400,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1603327098581241947, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: uiDialog
+      value: 
+      objectReference: {fileID: 1112496632}
     - target: {fileID: 1630003249813757471, guid: 8ed2475fb74494ed4b433f5f683fe074,
         type: 3}
       propertyPath: m_Name
@@ -445,9 +460,19 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9042482667155124146, guid: 8ed2475fb74494ed4b433f5f683fe074,
+    - target: {fileID: 7685387758634032226, guid: 8ed2475fb74494ed4b433f5f683fe074,
         type: 3}
-      propertyPath: m_IsActive
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7685387758634032226, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7685387758634032226, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

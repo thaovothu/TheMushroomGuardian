@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 530caddf10ee549809140029d5242b4a, type: 3}
+  m_Name: Dialog
+  m_EditorClassIdentifier: 
+  dialogName: New Dialog
+  dialogEntries:
+  - dialogId: 1
+    text: "Cu\u1ED1i c\xF9ng th\xEC ng\u01B0\u01A1i c\u0169ng t\u1EC9nh l\u1EA1i\n\u0110\xE3
+      r\u1EA5t l\xE2u r\u1ED3i k\u1EC3 t\u1EEB khi m\u1ED9t M\u1EA7m N\u1EA5m mang
+      linh h\u1ED3n c\u1ED5 x\u01B0a th\u1EE9c gi\u1EA5c trong v\xF9ng \u0111\u1EA5t
+      n\xE0y...\n\u0110\u1EEBng s\u1EE3. C\u01A1 th\u1EC3 m\u1EDBi c\u1EE7a ng\u01B0\u01A1i
+      v\u1EABn ch\u01B0a quen v\u1EDBi th\u1EBF gi\u1EDBi b\xEAn ngo\xE0i.\nC\u1EA3m
+      nh\u1EADn m\u1EB7t \u0111\u1EA5t d\u01B0\u1EDBi ch\xE2n... nghe ti\u1EBFng
+      gi\xF3 xuy\xEAn qua nh\u1EEFng t\xE1n n\u1EA5m...\n"
+    displayDuration: 0
+  textDisplaySpeed: 0.1
+  delayBetweenLines: 0.5

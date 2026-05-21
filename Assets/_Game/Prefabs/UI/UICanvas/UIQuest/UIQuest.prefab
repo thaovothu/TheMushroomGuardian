@@ -2519,6 +2519,7 @@ MonoBehaviour:
   confirmUIButton: {fileID: 6973883849844675354}
   stateQuestImg: {fileID: 2652284629104895994}
   lockedSprite: {fileID: 1822879496, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
+  inProgressSprite: {fileID: 1087086722, guid: 132358e9bf26b60458b731bf001e31db, type: 3}
 --- !u!222 &8486176403435809449
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -10,6 +10,9 @@ using UnityEngine.UI;
 public class ObjectiveWaypointUI : MonoBehaviour
 {
     [SerializeField] private Canvas waypointCanvas;
+    [SerializeField] private Image arrowImage; // Image component để nâng lên hạ xuống
+    [SerializeField] private float bobSpeed = 2f; // Tốc độ nâng lên hạ xuống
+    [SerializeField] private float bobHeight = 0.3f; // Độ cao nâng lên/hạ xuống
     [SerializeField] private TextMeshProUGUI objectiveNameText;
     [SerializeField] private TextMeshProUGUI distanceText;
     [SerializeField] private Transform playerTransform;
@@ -20,6 +23,7 @@ public class ObjectiveWaypointUI : MonoBehaviour
     private float lastUpdateTime = 0f;
     private bool isActive = false;
     private RenderMode originalRenderMode;
+    private Vector3 arrowImageOriginalPos; // Lưu vị trí gốc của arrow image
     
     // Static subscription - survives component disable/enable
     private static ObjectiveWaypointUI instance;
@@ -49,6 +53,12 @@ public class ObjectiveWaypointUI : MonoBehaviour
     {
         Debug.Log($"[ObjectiveWaypointUI] Awake called");
         instance = this;
+        
+        // Lưu vị trí gốc của arrow image
+        if (arrowImage != null)
+        {
+            arrowImageOriginalPos = arrowImage.rectTransform.anchoredPosition;
+        }
         
         // Lưu render mode gốc
         if (waypointCanvas != null)
@@ -131,6 +141,19 @@ public class ObjectiveWaypointUI : MonoBehaviour
             UpdateWaypoint();
             lastUpdateTime = Time.time;
         }
+
+        // Cập nhật animation nâng lên hạ xuống cho arrow image
+        UpdateArrowBobbing();
+    }
+
+    private void UpdateArrowBobbing()
+    {
+        if (arrowImage == null)
+            return;
+
+        // Dùng sin wave để tạo effect nâng lên hạ xuống liên tục
+        float newY = arrowImageOriginalPos.y + Mathf.Sin(Time.time * bobSpeed) * bobHeight;
+        arrowImage.rectTransform.anchoredPosition = new Vector3(arrowImageOriginalPos.x, newY, arrowImageOriginalPos.z);
     }
 
     private void OnObjectiveSet(QuestObjectiveManager.ObjectiveLocation objective)
@@ -201,6 +224,7 @@ public class ObjectiveWaypointUI : MonoBehaviour
         {
             waypointCanvas.gameObject.SetActive(false);
         }
+        Debug.Log("[ObjectiveWaypointUI] Waypoint hidden - bobbing animation stopped");
     }
 
     private void OnDisable()

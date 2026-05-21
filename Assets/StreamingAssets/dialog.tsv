@@ -1,0 +1,37 @@
+NPCID	DialogStep	Text	DisplayDuration
+1	1	...Cuối cùng thì ngươi cũng tỉnh lại.	1
+1	2	Đã rất lâu rồi kể từ khi một Mầm Nấm mang linh hồn cổ xưa thức giấc trong vùng đất này...	1
+1	5	Thế giới này đang chờ ngươi nhớ lại mình là ai.	1
+
+2	1	Phù... cuối cùng cũng thoát được rồi...	2.5
+2	2	Tớ cứ nghĩ mình sẽ bị đám Nấm Ký Sinh đó nuốt chửng mãi mãi...	3
+2	3	Cậu là người đã cứu tớ đúng không?	2.5
+2	4	...Cảm ơn cậu.	2.5
+2	5	Khoan đã... năng lượng này...	2.5
+2	6	Cậu mang trong mình hơi thở của các nguyên tố cổ đại.	3
+2	7	Không thể nào... chẳng lẽ cậu chính là Mầm Nấm được tiên tri?	3
+2	8	Từ rất lâu trước đây, thế giới này từng tràn đầy sức sống.	3
+2	9	Nhưng rồi Hư Không xuất hiện... nó nuốt chửng ánh sáng, đất đai và cả linh hồn của các tinh linh.	3.5
+2	10	Bốn nguyên tố cũng bị phong ấn...	2.5
+2	11	Khi đó, Cổ Thụ Nấm đã để lại lời tiên tri rằng...	2.5
+2	12	Một ngày nào đó sẽ có một Mầm Nấm thức tỉnh từ lòng đại địa... mang theo hy vọng cuối cùng.	3.5
+2	13	Tớ không biết tương lai sẽ ra sao...	2.5
+2	14	Nhưng từ giờ... tớ muốn đồng hành cùng cậu.	2.5
+2	15	Chúng ta sẽ cứu lấy vùng đất này cùng nhau.	3
+
+2	16	Nhanh lên! Cổ Thụ Nấm chắc đang chờ chúng ta.	2.5
+2	17	Ngài ấy là linh hồn cổ xưa nhất của vùng đất này.	2.5
+3	1	Bóng tối mang tên Hư Không đã nuốt chửng thế giới...	3
+3	2	Bốn nguyên tố: Đất, Khí, Nước và Lửa đều đã bị phong ấn.	3
+3	3	Nếu các lõi nguyên tố không được giải phóng... vùng đất nấm sẽ dần biến mất.	3.5
+3	4	Hỡi Mầm Nấm được chọn...	2.5
+3	5	Hãy lên đường thu hồi lại bốn nguyên tố.	2.5
+3	6	Tương lai của thế giới giờ nằm trong tay ngươi.	3
+2	18	Đừng lo!	2.5
+2	19	Tớ sẽ đi cùng cậu đến tận cùng hành trình!	3
+
+4   1   Hành trình dài lắm đấy. Nhớ mang theo thuốc hồi phục.
+
+2   20  Có người mắc kẹt phía sâu trong hang! Nhanh lên!
+
+5   1   Sức mạnh nguyên tố Đất nằm ở sự bền bỉ. Hãy thử kỹ năng <color=#FFCCFF>Đập Đất</color>!
