@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections;
 
-    public class Log : Action
+    public class Log : ActionNode
     {
         public string Text;
         public Log(string text)

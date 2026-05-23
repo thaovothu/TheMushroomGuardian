@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using System.Collections;
-public class Idle : Action
+public class Idle : ActionNode
 {
     protected override TaskStatus OnUpdate()
     {

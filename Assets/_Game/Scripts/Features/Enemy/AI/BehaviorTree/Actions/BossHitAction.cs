@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BossHitAction : Action
+public class BossHitAction : ActionNode
 {
     private BossBlackboard bb;
     private float hitDuration = 0.35f;  // Duration of hit animation

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SwitchElement : Action
+public class SwitchElement : ActionNode
 {
     private BossBlackboard bb;
     private ElementType targetElement;

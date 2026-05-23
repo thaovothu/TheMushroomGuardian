@@ -48,7 +48,7 @@ public class EquipmentSystem : BaseSingleton<EquipmentSystem>
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
         // Listen khi player được spawn xong
-        PlayerSpawner.OnPlayerSpawned += OnPlayerSpawned;
+        GameEvent.Player.OnSpawned += OnPlayerSpawned;
         if (weaponBow != null) weaponBow.onClick.AddListener(() => OnClickButton(WeaponButton.BowButton));
         if (weaponSword != null) weaponSword.onClick.AddListener(() => OnClickButton(WeaponButton.SwordButton));
         if (weaponNone != null) weaponNone.onClick.AddListener(() => OnClickButton(WeaponButton.NoneButton));
@@ -57,7 +57,7 @@ public class EquipmentSystem : BaseSingleton<EquipmentSystem>
     void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
-        PlayerSpawner.OnPlayerSpawned -= OnPlayerSpawned;
+        GameEvent.Player.OnSpawned -= OnPlayerSpawned;
         if (weaponBow != null) weaponBow.onClick.RemoveAllListeners();
         if (weaponSword != null) weaponSword.onClick.RemoveAllListeners();
         if (weaponNone != null) weaponNone.onClick.RemoveAllListeners();

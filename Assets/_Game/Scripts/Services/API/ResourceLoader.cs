@@ -73,6 +73,8 @@ public class ResourceLoader : MonoBehaviour
         if (autoLoadNextScene && !string.IsNullOrEmpty(nextSceneName))
         {
             Debug.Log($"[ResourceLoader] Loading scene: {nextSceneName}");
+            // Subscribe static callback trước — tồn tại dù ResourceLoader bị destroy cùng loading scene
+            SceneManager.sceneLoaded += OnGameSceneLoaded;
             SceneManager.LoadScene(nextSceneName);
         }
     }
@@ -80,9 +82,7 @@ public class ResourceLoader : MonoBehaviour
     private void UpdateLoadingProgress(float progress)
     {
         if (uiLoading != null)
-        {
             uiLoading.UpdateProgress(progress);
-        }
 
         Debug.Log($"[ResourceLoader] Loading progress: {progress:P}");
     }
@@ -91,11 +91,17 @@ public class ResourceLoader : MonoBehaviour
     {
         resourceLoadComplete = true;
         if (uiLoading != null)
-        {
-            Debug.Log("[ResourceLoader] Calling uiLoading.CompleteLoading()");
-            uiLoading.CompleteLoading();
-        }
+            uiLoading.UpdateProgress(1f); // Cập nhật UI 100%, KHÔNG fire OnLoadingComplete ở đây
         Debug.Log("[ResourceLoader] Resource loading complete!");
+    }
+
+    // Static method — tồn tại dù ResourceLoader bị destroy khi loading scene unload.
+    // Fire OnLoadingComplete SAU KHI Map1 load xong và tất cả OnEnable() đã chạy.
+    private static void OnGameSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnGameSceneLoaded;
+        Debug.Log($"[ResourceLoader] Scene '{scene.name}' loaded — firing OnLoadingComplete");
+        UILoading.OnLoadingComplete?.Invoke();
     }
 
     private void OnDestroy()

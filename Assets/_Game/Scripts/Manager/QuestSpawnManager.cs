@@ -46,6 +46,9 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
 
     // Danh sách spawnPoints fallback theo index
     private List<Transform> spawnPointList = new List<Transform>();
+
+    private Dictionary<string, Transform[]> sceneSpawnPoints = new Dictionary<string, Transform[]>();
+
     private int linearIndex = 0;
 
     // ── Unity ──────────────────────────────────────────────────────────────────
@@ -61,20 +64,14 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
 
     private void OnEnable()
     {
-        if (QuestProgressManager.Instance != null)
-        {
-            QuestProgressManager.Instance.OnStepChanged += OnStepChanged;
-            QuestProgressManager.Instance.OnQuestChanged += OnQuestChanged;
-        }
+        GameEvent.Quest.OnStepChanged += OnStepChanged;
+        GameEvent.Quest.OnQuestChanged += OnQuestChanged;
     }
 
     private void OnDisable()
     {
-        if (QuestProgressManager.Instance != null)
-        {
-            QuestProgressManager.Instance.OnStepChanged -= OnStepChanged;
-            QuestProgressManager.Instance.OnQuestChanged -= OnQuestChanged;
-        }
+        GameEvent.Quest.OnStepChanged -= OnStepChanged;
+        GameEvent.Quest.OnQuestChanged -= OnQuestChanged;
     }
 
     // ── Event Handlers ─────────────────────────────────────────────────────────
@@ -141,20 +138,31 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
 
     private void SpawnGroup(int questId, int stepId, QuestSpawnConfig config)
     {
-        // Xác định danh sách spawn points cho group này
-        List<Transform> points = new List<Transform>();
-        if (config.spawnPoints != null && config.spawnPoints.Length > 0)
+        // Ưu tiên: scene points (dynamic) → config points (asset) → default fallback (Inspector)
+        var points = new List<Transform>();
+
+        if (sceneSpawnPoints.TryGetValue(config.spawnGroupId, out var scenePts))
+        {
+            points.AddRange(scenePts);
+            Debug.Log($"[QuestSpawnManager] Using {scenePts.Length} SCENE points for group '{config.spawnGroupId}'");
+        }
+        else if (config.spawnPoints != null && config.spawnPoints.Length > 0)
+        {
             points.AddRange(config.spawnPoints);
+            Debug.Log($"[QuestSpawnManager] Using {config.spawnPoints.Length} CONFIG points for group '{config.spawnGroupId}'");
+        }
         else
+        {
             points.AddRange(spawnPointList);
+            Debug.Log($"[QuestSpawnManager] Using {spawnPointList.Count} DEFAULT points for group '{config.spawnGroupId}'");
+        }
 
         if (points.Count == 0)
         {
-            Debug.LogError($"[QuestSpawnManager] No spawn points available for group '{config.spawnGroupId}'!");
+            Debug.LogError($"[QuestSpawnManager] No spawn points for group '{config.spawnGroupId}'!");
             return;
         }
 
-        // Warm-up pool trước
         WarmUpPools(config);
 
         int pointIndex = 0;
@@ -170,7 +178,6 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
                     ? cfg.level[i % cfg.level.Length]
                     : 1;
 
-                // Lấy spawn point theo vòng
                 Transform spawnPt = points[pointIndex % points.Count];
                 pointIndex++;
 
@@ -199,6 +206,12 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
                 }
             }
         }
+    }
+
+    public void RegisterSceneSpawnPoints(string groupId, Transform[] points)
+    {
+        sceneSpawnPoints[groupId] = points;
+        Debug.Log($"[QuestSpawnManager] Registered {points.Length} scene points for group '{groupId}'");
     }
 
     private bool SpawnOne(BaseEnemySO enemySOData, int level, Transform spawnPoint, int questId, int stepId, string groupId)

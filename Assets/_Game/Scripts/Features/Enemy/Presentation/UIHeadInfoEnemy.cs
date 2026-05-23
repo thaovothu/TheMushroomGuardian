@@ -12,7 +12,7 @@ public class UIHeadInfoEnemy : MonoBehaviour
 
     public void Awake()
     {
-        HealthSystem.OnHealthChanged += UpdateHealthBar;
+        GameEvent.Combat.OnHealthChanged += UpdateHealthBar;
 
         if(targetHealth == null)
         {
@@ -22,7 +22,7 @@ public class UIHeadInfoEnemy : MonoBehaviour
 
     void OnDestroy()
     {
-        HealthSystem.OnHealthChanged -= UpdateHealthBar;
+        GameEvent.Combat.OnHealthChanged -= UpdateHealthBar;
     }
 
     void UpdateHealthBar(HealthSystem healthSystem, float current, float max)

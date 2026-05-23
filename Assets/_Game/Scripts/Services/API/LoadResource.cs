@@ -478,8 +478,8 @@ public class LoadResource : BaseSingleton<LoadResource>
                     reward = columns.Length > 6 ? columns[6] : "",
                     shortDescription = columns.Length > 7 ? columns[7] : "",
                     mapId = columns.Length > 8 ? int.Parse(columns[8]) : 1,
-                    // Cột 9: SpawnGroupID — rỗng nếu step không cần spawn enemy
-                    spawnGroupId = columns.Length > 9 ? columns[9].Trim() : ""
+                    spawnGroupId = columns.Length > 9 ? columns[9].Trim() : "",
+                    lumiHint = columns.Length > 10 ? columns[10].Trim() : ""
                 };
 
                 questList.Add(questData);
@@ -576,7 +576,8 @@ public class LoadResource : BaseSingleton<LoadResource>
                     npcId = int.Parse(columns[0]),
                     dialogStep = int.Parse(columns[1]),
                     text = columns[2],
-                    displayDuration = columns.Length > 3 ? float.Parse(columns[3]) : 2f
+                    displayDuration = columns.Length > 3 ? float.Parse(columns[3]) : 2f,
+                    playerReply = columns.Length > 4 ? columns[4].Trim() : "" // ← thêm dòng này
                 };
 
                 dialogList.Add(dialogData);
@@ -608,7 +609,7 @@ public class QuestData
     public string reward;
     public string shortDescription;
     public int mapId;
-
+    public string lumiHint;
     /// <summary>
     /// ID nhóm spawn enemy cho step này.
     /// Rỗng = step không spawn enemy (waypoint, dialog, collect...).
@@ -633,6 +634,7 @@ public class DialogData
     public int dialogStep;
     public string text;
     public float displayDuration;
+    public string playerReply; // Câu trả lời của player — hiện trong button Next, trống = không hiện
 
     public override string ToString()
     {

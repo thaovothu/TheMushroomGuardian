@@ -156,8 +156,8 @@ public class UIHeadInfoStatus : MonoBehaviour
     {
         if (!isSubscribed && targetHealth != null)
         {
-            HealthSystem.OnHealthChanged += UpdateHealthBar;
-            HealthSystem.OnDeath += HandleDeath;
+            GameEvent.Combat.OnHealthChanged += UpdateHealthBar;
+            GameEvent.Combat.OnDeath += HandleDeath;
             isSubscribed = true;
             
             // Update ngay hiện tại health khi subscribe (không cần chờ event)
@@ -179,8 +179,8 @@ public class UIHeadInfoStatus : MonoBehaviour
     {
         if (isSubscribed)
         {
-            HealthSystem.OnHealthChanged -= UpdateHealthBar;
-            HealthSystem.OnDeath -= HandleDeath;
+            GameEvent.Combat.OnHealthChanged -= UpdateHealthBar;
+            GameEvent.Combat.OnDeath -= HandleDeath;
         }
     }
     

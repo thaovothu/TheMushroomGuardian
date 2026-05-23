@@ -312,7 +312,7 @@ public class PlayerController : MonoBehaviour
     public void ApplyGravity()
     {
         // // Nếu grounded, không apply gravity
-        Debug.Log("groundChecker.IsGrounded"+ groundChecker.IsGrounded);
+        // Debug.Log("groundChecker.IsGrounded"+ groundChecker.IsGrounded);
         if (groundChecker.IsGrounded)
             return;
 

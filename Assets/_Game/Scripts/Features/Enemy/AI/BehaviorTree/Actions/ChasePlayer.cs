@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class ChasePlayer : Action
+public class ChasePlayer : ActionNode
 {
     private BossBlackboard bb;
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BossDieAction : Action
+public class BossDieAction : ActionNode
 {
     private BossBlackboard bb;
     private float dieDuration = 2f;  // Time before boss is removed

@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 
 /// <summary>
 /// Spawn player dynamically khi scene load xong.
@@ -13,9 +12,6 @@ public class PlayerSpawner : MonoBehaviour
 
     private GameObject spawnedPlayer;
     
-    // Event trigger khi player được spawn xong
-    public static Action<GameObject> OnPlayerSpawned;
-
     void OnEnable()
     {
         Debug.Log("[PlayerSpawner] OnEnable - subscribing to UILoading.OnLoadingComplete");
@@ -31,6 +27,12 @@ public class PlayerSpawner : MonoBehaviour
 
     void SpawnPlayer()
     {
+        if (spawnedPlayer != null)
+        {
+            Debug.LogWarning("[PlayerSpawner] Player already spawned — skipping duplicate spawn");
+            return;
+        }
+
         Debug.Log("[PlayerSpawner] SpawnPlayer called!");
         if (playerPrefab == null)
         {
@@ -51,26 +53,8 @@ public class PlayerSpawner : MonoBehaviour
         
         Debug.Log($"[PlayerSpawner] Player spawned at {spawnPos} with tag 'Player'");
         
-        // Trigger event để các system khác biết player đã spawn
-        Debug.Log($"[PlayerSpawner] 🔥 Firing OnPlayerSpawned event with player: {spawnedPlayer.name}");
-        
-        // Debug: check how many subscribers
-        if (OnPlayerSpawned != null)
-        {
-            var delegates = OnPlayerSpawned.GetInvocationList();
-            Debug.Log($"[PlayerSpawner] OnPlayerSpawned has {delegates.Length} subscribers");
-            foreach (var d in delegates)
-            {
-                Debug.Log($"[PlayerSpawner]   - Subscriber: {d.Target?.GetType().Name}");
-            }
-        }
-        else
-        {
-            Debug.LogError("[PlayerSpawner] ❌ OnPlayerSpawned is NULL! No subscribers!");
-        }
-        
-        OnPlayerSpawned?.Invoke(spawnedPlayer);
-        Debug.Log($"[PlayerSpawner] ✅ OnPlayerSpawned event fired!");
+        GameEvent.Player.OnSpawned?.Invoke(spawnedPlayer);
+        Debug.Log($"[PlayerSpawner] Player spawned: {spawnedPlayer.name}");
     }
 
     /// <summary>

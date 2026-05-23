@@ -1,204 +1,67 @@
-using UnityEngine;
-using UnityEngine.Events;
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-namespace TheMushroomGuardian.Core.Events
+/// <summary>
+/// Centralized bus for all game features.
+/// Usage — subscribe:   GameEvent.Quest.OnStepChanged += MyHandler;
+/// Usage — fire:        GameEvent.Quest.OnStepChanged?.Invoke(questId, stepId);
+/// </summary>
+public static class GameEvent
 {
-    #region Event Enums
-    public enum PlayerEvent
+    // ── QUEST ──────────────────────────────────────────────────────────────────
+    public static class Quest
     {
-        Damaged,
-        Healed,
-        Died,
-        LevelUp,
-        ItemPickup
+        /// <summary>Intro cinematic completed — Quest 1 can start. (Fires at the end of UIIntroSequence.) </summary>
+        public static System.Action OnIntroComplete;
+
+        /// <summary>Quest TSV data loaded from StreamingAssets.</summary>
+        public static Action<List<QuestData>> OnDataLoaded;
+
+        /// <summary>New quest unlocked (currentQuestId advanced).</summary>
+        public static Action<int> OnQuestChanged;
+
+        /// <summary>New step unlocked within the same quest.</summary>
+        public static Action<int, int> OnStepChanged;
+
+        /// <summary>Step completed — fires BEFORE advancing to next step.</summary>
+        public static Action<int, int> OnStepCompleted;
+
+        /// <summary>Objective/waypoint set for current step.</summary>
+        public static Action<QuestObjectiveManager.ObjectiveLocation> OnObjectiveSet;
+
+        /// <summary>Player reached the objective — hide waypoint.</summary>
+        public static Action<QuestObjectiveManager.ObjectiveLocation> OnObjectiveReached;
     }
 
-    public enum BossEvent
+    // ── COMBAT ─────────────────────────────────────────────────────────────────
+    public static class Combat
     {
-        Spawned,
-        Defeated,
-        PhaseChange,
-        SpecialAttack
+        /// <summary>Any entity's health changed. Args: system, currentHP, maxHP.</summary>
+        public static Action<HealthSystem, float, float> OnHealthChanged;
+
+        /// <summary>Any entity died.</summary>
+        public static   Action<HealthSystem> OnDeath;
     }
 
-    public enum GameEvent_Enum
+    // ── PLAYER ─────────────────────────────────────────────────────────────────
+    public static class Player
     {
-        GameStart,
-        GameEnd,
-        GamePause,
-        GameResume,
-        LevelComplete,
-        LevelFailed
+        /// <summary>Player GameObject instantiated and ready.</summary>
+        public static   Action<GameObject> OnSpawned;
     }
 
-    public enum EnemyEvent
+    // ── INVENTORY ──────────────────────────────────────────────────────────────
+    public static class Inventory
     {
-        Spawned,
-        Defeated,
-        Damaged
+        public static InventoryChangedDelegate OnItemAdded;
+        public static InventoryChangedDelegate OnItemRemoved;
+        public static InventoryChangedDelegate OnSlotChanged;
     }
-    #endregion
 
-    /// <summary>
-    /// Global event system manager using enums.
-    /// Usage:
-    /// GameEvent.Instance.AddEventListener(PlayerEvent.Damaged, OnPlayerDamaged);
-    /// GameEvent.Instance.InvokeEvent(PlayerEvent.Damaged);
-    /// </summary>
-    public class GameEvent : BaseSingleton<GameEvent>
-    {
-        // Dictionary to store events for each enum type
-        private Dictionary<System.Enum, UnityEvent> _events = new();
-        private Dictionary<System.Enum, UnityEvent<int>> _eventsInt = new();
-
-        protected override void Awake()
-        {
-            base.Awake();
-            InitializeEvents();
-        }
-
-        /// <summary>
-        /// Initialize all events in the dictionaries.
-        /// </summary>
-        private void InitializeEvents()
-        {
-            // Initialize no-parameter events
-            foreach (PlayerEvent evt in System.Enum.GetValues(typeof(PlayerEvent)))
-                _events[evt] = new UnityEvent();
-
-            foreach (BossEvent evt in System.Enum.GetValues(typeof(BossEvent)))
-                _events[evt] = new UnityEvent();
-
-            foreach (GameEvent_Enum evt in System.Enum.GetValues(typeof(GameEvent_Enum)))
-                _events[evt] = new UnityEvent();
-
-            foreach (EnemyEvent evt in System.Enum.GetValues(typeof(EnemyEvent)))
-                _eventsInt[evt] = new UnityEvent<int>();
-        }
-
-        #region Invoke Methods
-        /// <summary>
-        /// Invoke an event without parameters.
-        /// Usage: GameEvent.Instance.InvokeEvent(PlayerEvent.Damaged);
-        /// </summary>
-        public void InvokeEvent(PlayerEvent evt)
-        {
-            if (_events.ContainsKey(evt))
-                _events[evt]?.Invoke();
-        }
-
-        public void InvokeEvent(BossEvent evt)
-        {
-            if (_events.ContainsKey(evt))
-                _events[evt]?.Invoke();
-        }
-
-        public void InvokeEvent(GameEvent_Enum evt)
-        {
-            if (_events.ContainsKey(evt))
-                _events[evt]?.Invoke();
-        }
-
-        /// <summary>
-        /// Invoke an event with int parameter.
-        /// </summary>
-        public void InvokeEvent(EnemyEvent evt, int parameter)
-        {
-            if (_eventsInt.ContainsKey(evt))
-                _eventsInt[evt]?.Invoke(parameter);
-        }
-        #endregion
-
-        #region AddListener Methods
-        /// <summary>
-        /// Add listener to an event.
-        /// Usage: GameEvent.Instance.AddEventListener(PlayerEvent.Damaged, OnDamage);
-        /// </summary>
-        public void AddEventListener(PlayerEvent evt, UnityAction callback)
-        {
-            if (_events.ContainsKey(evt))
-                _events[evt]?.AddListener(callback);
-        }
-
-        public void AddEventListener(BossEvent evt, UnityAction callback)
-        {
-            if (_events.ContainsKey(evt))
-                _events[evt]?.AddListener(callback);
-        }
-
-        public void AddEventListener(GameEvent_Enum evt, UnityAction callback)
-        {
-            if (_events.ContainsKey(evt))
-                _events[evt]?.AddListener(callback);
-        }
-
-        /// <summary>
-        /// Add listener to an event with int parameter.
-        /// </summary>
-        public void AddEventListener(EnemyEvent evt, UnityAction<int> callback)
-        {
-            if (_eventsInt.ContainsKey(evt))
-                _eventsInt[evt]?.AddListener(callback);
-        }
-        #endregion
-
-        #region RemoveListener Methods
-        /// <summary>
-        /// Remove listener from an event.
-        /// </summary>
-        public void RemoveEventListener(PlayerEvent evt, UnityAction callback)
-        {
-            if (_events.ContainsKey(evt))
-                _events[evt]?.RemoveListener(callback);
-        }
-
-        public void RemoveEventListener(BossEvent evt, UnityAction callback)
-        {
-            if (_events.ContainsKey(evt))
-                _events[evt]?.RemoveListener(callback);
-        }
-
-        public void RemoveEventListener(GameEvent_Enum evt, UnityAction callback)
-        {
-            if (_events.ContainsKey(evt))
-                _events[evt]?.RemoveListener(callback);
-        }
-
-        public void RemoveEventListener(EnemyEvent evt, UnityAction<int> callback)
-        {
-            if (_eventsInt.ContainsKey(evt))
-                _eventsInt[evt]?.RemoveListener(callback);
-        }
-        #endregion
-
-        #region Clear Methods
-        /// <summary>
-        /// Clear all listeners from an event.
-        /// </summary>
-        public void ClearEvent(PlayerEvent evt)
-        {
-            if (_events.ContainsKey(evt))
-                _events[evt]?.RemoveAllListeners();
-        }
-
-        public void ClearEvent(BossEvent evt)
-        {
-            if (_events.ContainsKey(evt))
-                _events[evt]?.RemoveAllListeners();
-        }
-
-        public void ClearEvent(GameEvent_Enum evt)
-        {
-            if (_events.ContainsKey(evt))
-                _events[evt]?.RemoveAllListeners();
-        }
-
-        public void ClearEvent(EnemyEvent evt)
-        {
-            if (_eventsInt.ContainsKey(evt))
-                _eventsInt[evt]?.RemoveAllListeners();
-        }
-        #endregion
-    }
+    // ── BOSS ───────────────────────────────────────────────────────────────────
+    // Boss events remain in BossEventBus.cs (Core/Events/Boss/).
 }
+
+/// <summary>Delegate for inventory slot change events.</summary>
+public delegate void InventoryChangedDelegate(int bagIndex, int slotIndex);
