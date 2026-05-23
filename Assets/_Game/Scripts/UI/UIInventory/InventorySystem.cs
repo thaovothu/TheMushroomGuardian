@@ -279,4 +279,61 @@ public class InventorySystem : MonoBehaviour
 
         return itemIconSO.GetIcon(itemId);
     }
+
+    /// <summary>
+    /// Lấy tổng số lượng item theo ItemType trong toàn bộ inventory.
+    /// </summary>
+    public int GetItemQuantity(ItemType type)
+    {
+        int total = 0;
+        foreach (var bag in bags)
+        {
+            for (int i = 0; i < bag.SlotCount; i++)
+            {
+                var slot = bag.GetSlot(i);
+                if (slot != null && !slot.IsEmpty && slot.ItemData.itemType == type)
+                    total += slot.Quantity;
+            }
+        }
+        return total;
+    }
+
+    /// <summary>
+    /// Lấy icon theo ItemType (dùng itemId đầu tiên tìm được).
+    /// </summary>
+    public Sprite GetItemIconByType(ItemType type)
+    {
+        if (itemIconSO == null) return null;
+
+        foreach (var bag in bags)
+        {
+            for (int i = 0; i < bag.SlotCount; i++)
+            {
+                var slot = bag.GetSlot(i);
+                if (slot != null && !slot.IsEmpty && slot.ItemData.itemType == type)
+                    return itemIconSO.GetIcon(slot.ItemData.itemId);
+            }
+        }
+
+        // Fallback: map type → itemId để lấy icon dù chưa có trong inventory
+        int fallbackId = (int)type;
+        return itemIconSO.GetIcon(fallbackId);
+    }
+
+    /// <summary>
+    /// Kiểm tra có item theo itemId không.
+    /// </summary>
+    public bool HasItem(int itemId)
+    {
+        foreach (var bag in bags)
+        {
+            for (int i = 0; i < bag.SlotCount; i++)
+            {
+                var slot = bag.GetSlot(i);
+                if (slot != null && !slot.IsEmpty && slot.ItemData.itemId == itemId)
+                    return true;
+            }
+        }
+        return false;
+    }
 }

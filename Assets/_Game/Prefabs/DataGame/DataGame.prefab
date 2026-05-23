@@ -1,5 +1,37 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &564001713251204602
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1526900568291708708}
+  m_Layer: 0
+  m_Name: NPC
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1526900568291708708
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 564001713251204602}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -3.8195128, y: 4.0732923, z: -6.0117483}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4377802279049911110}
+  m_Father: {fileID: 2473526856486626072}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &898055745554547324
 GameObject:
   m_ObjectHideFlags: 0
@@ -110,6 +142,7 @@ Transform:
   - {fileID: 5042571657568658913}
   - {fileID: 2120035289512596667}
   - {fileID: 8732981771330890815}
+  - {fileID: 1526900568291708708}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8809270800718206349
@@ -253,8 +286,53 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 4016301608865483912, guid: a20fc52e9a27b48a7a965c68da569164,
     type: 3}
-  playerSpawnPoint: {fileID: 2594775169646895753}
   content: {fileID: 4296378391702971424}
+--- !u!1 &2417813163985151684
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4377802279049911110}
+  - component: {fileID: 4990638462010385288}
+  m_Layer: 0
+  m_Name: NPCInteractionHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4377802279049911110
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2417813163985151684}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1526900568291708708}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4990638462010385288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2417813163985151684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f22bfec5a5c84daf9f9df54edc6869b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiDialog: {fileID: 0}
+  uiShop: {fileID: 0}
 --- !u!1 &2849924835697305376
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,8 +488,31 @@ MonoBehaviour:
     mapId: 1
   - name: "D\u1EA5u V\u1EBFt Ph\xE1t S\xE1ng"
     position: {x: 570, y: 7, z: 380}
-    triggerRadius: 5
+    triggerRadius: 4
     mapId: 1
+  - name: Tinh Linh Lumi
+    position: {x: 576.28, y: 6.34, z: 381.31}
+    triggerRadius: 3
+    mapId: 1
+  - name: "Tr\u01B0\u1EDFng l\xE0ng N\u1EA5m"
+    position: {x: 556.04, y: 8, z: 382.338}
+    triggerRadius: 3
+    mapId: 1
+  - name: "Hang \u0110\u1ED9ng Golem"
+    position: {x: 0.37, y: 0.32, z: 30.39}
+    triggerRadius: 4
+    mapId: 2
+  - name: "Th\u01B0\u01A1ng Nh\xE2n N\u1EA5m"
+    position: {x: -11.85, y: 2.043, z: 0}
+    triggerRadius: 2
+    mapId: 2
+  npcDialogEntries:
+  - npcName: Tinh Linh Lumi
+    npcId: 1
+  - npcName: "Tr\u01B0\u1EDFng l\xE0ng N\u1EA5m"
+    npcId: 2
+  - npcName: "Th\u01B0\u01A1ng Nh\xE2n N\u1EA5m"
+    npcId: 3
 --- !u!1 &3582862595820381165
 GameObject:
   m_ObjectHideFlags: 0
@@ -915,6 +1016,7 @@ MonoBehaviour:
   questSpawnConfigs:
   - {fileID: 11400000, guid: b85f897f69b2d4ae8a490ad16ba4491e, type: 2}
   - {fileID: 11400000, guid: 07de0c2e10f0c41e3871d3be61574863, type: 2}
+  - {fileID: 11400000, guid: f036aca9d7bf447bbaa01727ed8086ba, type: 2}
   defaultSpawnPoints: []
   enemyContainer: {fileID: 8196161697889788240}
   initialPoolSize: 5
@@ -1030,13 +1132,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trailPointPrefab: {fileID: 5800148741275645713, guid: 91d786d93e7151742a005f2f341a2a04,
     type: 3}
-  pointCount: 10
+  spacingPerPoint: 3
+  minPoints: 3
+  maxPoints: 20
   pointHeight: 0.1
   spawnDelay: 0.08
   updateInterval: 0.15
-  enableWave: 1
+  enableWave: 0
   waveSpeed: 2
   waveAmplitude: 0.15
+  fadeStartDistance: 12
 --- !u!1 &8665872412399304427
 GameObject:
   m_ObjectHideFlags: 0

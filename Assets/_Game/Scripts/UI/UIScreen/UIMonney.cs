@@ -93,4 +93,9 @@ public class UIMoney : BaseSingleton<UIMoney>
         RefreshUI();
         Debug.Log("[UIMoney] Money reset");
     }
+    public int GetCoin()
+    {
+        Debug.Log($"[UIMoney] Current coin: {totalCoins}");
+        return totalCoins;
+    }
 }

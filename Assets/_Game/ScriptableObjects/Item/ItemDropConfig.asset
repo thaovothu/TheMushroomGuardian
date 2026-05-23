@@ -52,6 +52,11 @@ MonoBehaviour:
     dropChance: 100
     itemId: 4
     dropAmount: 1
+  questItemDrops:
+  - itemType: 13
+    dropChance: 100
+    itemId: 13
+    dropAmount: 1
   itemPickupPrefabs:
   - itemType: 0
     prefab: {fileID: 3638065601350895908, guid: dc725c5b737fe41de90e4b461c0a0666,
@@ -91,6 +96,9 @@ MonoBehaviour:
       type: 3}
   - itemType: 12
     prefab: {fileID: 3638065601350895908, guid: 9f394fdd87eae4c0fa352cd26c7e78f2,
+      type: 3}
+  - itemType: 13
+    prefab: {fileID: 3638065601350895908, guid: dc725c5b737fe41de90e4b461c0a0666,
       type: 3}
   fallbackItemPickupPrefab: {fileID: 3638065601350895908, guid: dc725c5b737fe41de90e4b461c0a0666,
     type: 3}

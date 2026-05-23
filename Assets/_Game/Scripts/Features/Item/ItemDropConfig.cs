@@ -90,6 +90,13 @@ public class ItemDropConfig : ScriptableObject
         itemId = 4,
         dropAmount = 1
     };
+    [Header("Quest Items")]
+    [SerializeField] private List<ItemDropChance> questItemDrops = new List<ItemDropChance>();
+
+    public List<ItemDropChance> GetQuestDrops()
+    {
+        return questItemDrops;
+    }
 
     [Header("Spawning")]
     [SerializeField] private List<ItemPickupPrefabEntry> itemPickupPrefabs = new();
