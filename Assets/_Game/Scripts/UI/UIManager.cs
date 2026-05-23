@@ -120,4 +120,10 @@ public class UIManager : BaseSingleton<UIManager>
         public string panelName = "PanelName";
         public GameObject uiObject;
     }
+    public GameObject GetPanel(string panelName)
+    {
+        if (uiDictionary.ContainsKey(panelName))
+            return uiDictionary[panelName];
+        return null;
+    }
 }

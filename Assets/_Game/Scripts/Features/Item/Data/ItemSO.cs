@@ -18,7 +18,7 @@ public enum ItemType
     EarthCrystal = 9,      // Tinh thể đất
     WindCrystal = 10,      // Tinh thể khí
     WaterCrystal = 11,     // Tinh thể nước
-    FireCrystal = 12       // Tinh thể lửa
+    FireCrystal = 12,       // Tinh thể lửa
 }
 
 /// <summary>
@@ -74,6 +74,14 @@ public class ItemSO : ScriptableObject
     private Dictionary<ItemType, List<ItemData>> itemsByType;
     private bool isInitialized = false;
 
+    private void OnEnable()
+    {
+        // Reset để Init() chạy lại sau domain reload
+        isInitialized = false;
+        itemLookup = null;
+        itemNameLookup = null;
+        itemsByType = null;
+    }
     private void Init()
     {
         if (isInitialized) return;
@@ -90,7 +98,7 @@ public class ItemSO : ScriptableObject
 
         if (items == null || items.Count == 0)
         {
-            //Debug.LogWarning($"ItemSO '{name}': No item data configured!");
+            isInitialized = true; // ← thêm dòng này
             return;
         }
 
@@ -139,8 +147,8 @@ public class ItemSO : ScriptableObject
     public ItemData GetItem(int itemId)
     {
         Init();
-        
-        Debug.Log($"[ItemSO] GetItem called for ID: {itemId}, itemLookup count: {itemLookup.Count}");
+
+        Debug.Log($"[ItemSO] GetItem called for ID: {itemId}, itemLookup count: {itemLookup?.Count ?? 0}");
 
         if (itemLookup == null)
         {

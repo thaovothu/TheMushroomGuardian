@@ -141,4 +141,40 @@ public class ItemDetailUI : MonoBehaviour
     {
         ClearDetail();
     }
+    // Thêm vào ItemDetailUI.cs — method mới hiển thị theo ItemType:
+
+    public void ShowItemDetailByType(ItemType type, int quantity)
+    {
+        if (InventorySystem.Instance == null) return;
+
+        // Tìm ItemData đầu tiên theo type
+        ItemData itemData = null;
+        for (int b = 0; b < InventorySystem.Instance.GetBagCount(); b++)
+        {
+            var bag = InventorySystem.Instance.GetBag(b);
+            for (int s = 0; s < bag.SlotCount; s++)
+            {
+                var slot = bag.GetSlot(s);
+                if (slot != null && !slot.IsEmpty && slot.ItemData.itemType == type)
+                {
+                    itemData = slot.ItemData;
+                    break;
+                }
+            }
+            if (itemData != null) break;
+        }
+
+        if (itemData == null) return;
+
+        if (itemNameText != null) itemNameText.text = itemData.itemName;
+        if (itemTypeText != null) itemTypeText.text = itemData.itemType.ToString();
+        if (quantityText != null) quantityText.text = $"x{quantity}";
+        if (descriptionText != null) descriptionText.text = itemData.description;
+
+        if (itemImage != null)
+            itemImage.sprite = InventorySystem.Instance.GetItemIconByType(type);
+
+        if (useItemButton != null) useItemButton.interactable = true;
+        if (deleteItemButton != null) deleteItemButton.interactable = true;
+    }
 }

@@ -169,3 +169,15 @@ MonoBehaviour:
     expMin: 0
     expMax: 0
     element: 4
+  - itemId: 13
+    itemName: "N\u1EA5m \u0111\u1EA5t"
+    itemType: 13
+    description: "N\u1EA5m \u0110\u1EA5t"
+    healAmount: 0
+    isPercentage: 0
+    buffValue: 0
+    buffDuration: 0
+    damageBonus: 0
+    expMin: 0
+    expMax: 0
+    element: 0

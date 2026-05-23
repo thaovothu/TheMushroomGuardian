@@ -1,120 +1,116 @@
 using UnityEngine;
 
 /// <summary>
-/// Component cho item pickup (worldspace)
+/// Component cho item pickup (worldspace).
+/// Khi player nhặt → fire GameEvent.Item.OnItemPickedUp để QuestCollectTracker đếm.
 /// </summary>
 public class ItemPickup : MonoBehaviour
 {
     [SerializeField] private int itemId;
     [SerializeField] private int amount = 1;
-    
-    private float _pickupDelay = 0.5f;  // Delay trước khi có thể pick up
-    private float _pickupTimer;
-    private Collider _physicsCollider;
-    private Rigidbody _rb;
 
-    void Awake()
+    private float pickupDelay = 0.5f;
+    private float pickupTimer;
+    private Rigidbody rb;
+    private bool isPickedUp = false;
+
+    // ── Unity ─────────────────────────────────────────────────────────────────
+
+    private void Awake()
     {
         SetupPhysics();
     }
 
-    void Start()
+    private void Start()
     {
-        _pickupTimer = _pickupDelay;
+        pickupTimer = pickupDelay;
     }
 
-    void Update()
+    private void Update()
     {
-        if (_pickupTimer > 0)
-        {
-            _pickupTimer -= Time.deltaTime;
-        }
+        if (pickupTimer > 0)
+            pickupTimer -= Time.deltaTime;
     }
 
-    /// <summary>
-    /// Initialize item with ID và amount
-    /// </summary>
+    // ── Public API ────────────────────────────────────────────────────────────
+
     public void Initialize(int id, int amt)
     {
         itemId = id;
         amount = amt;
-        _pickupTimer = _pickupDelay;
-        SetupPhysics();
+        pickupTimer = pickupDelay;
+        isPickedUp = false;
     }
+
+    // ── Physics ───────────────────────────────────────────────────────────────
 
     private void SetupPhysics()
     {
-        if (_rb == null && !TryGetComponent(out _rb))
+        // Rigidbody
+        if (!TryGetComponent(out rb))
+            rb = gameObject.AddComponent<Rigidbody>();
+
+        rb.useGravity = true;
+        rb.isKinematic = false;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        rb.interpolation = RigidbodyInterpolation.Interpolate;
+
+        // Collider vật lý chính — KHÔNG trigger để item đứng trên mặt đất
+        var col = GetComponent<Collider>();
+        if (col != null)
         {
-            _rb = gameObject.AddComponent<Rigidbody>();
+            col.isTrigger = false;
+            // Ignore collision với player để không bị đẩy
+            var playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+            {
+                var playerCol = playerObj.GetComponent<Collider>();
+                if (playerCol != null)
+                    Physics.IgnoreCollision(col, playerCol);
+            }
         }
 
-        _rb.useGravity = true;
-        _rb.isKinematic = false;
-        _rb.constraints = RigidbodyConstraints.FreezeRotation;
-        _rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        _rb.interpolation = RigidbodyInterpolation.Interpolate;
+        // Pickup trigger — chỉ tạo 1 lần
+        if (transform.Find("PickupTrigger") != null) return;
 
-        if (_physicsCollider == null)
-        {
-            _physicsCollider = GetComponent<Collider>();
-        }
+        var triggerGO = new GameObject("PickupTrigger");
+        triggerGO.transform.SetParent(transform, false);
+        triggerGO.transform.localPosition = Vector3.zero;
+        triggerGO.layer = gameObject.layer;
 
-        if (_physicsCollider != null)
-        {
-            _physicsCollider.isTrigger = false;
-        }
+        var sphere = triggerGO.AddComponent<SphereCollider>();
+        sphere.isTrigger = true;
+        sphere.radius = 0.75f;
 
-        var trigger = transform.Find("PickupTrigger");
-        if (trigger == null)
-        {
-            var triggerObject = new GameObject("PickupTrigger");
-            triggerObject.transform.SetParent(transform, false);
-            triggerObject.transform.localPosition = Vector3.zero;
-            triggerObject.transform.localRotation = Quaternion.identity;
-            triggerObject.transform.localScale = Vector3.one;
-
-            var sphere = triggerObject.AddComponent<SphereCollider>();
-            sphere.isTrigger = true;
-            sphere.radius = 0.75f;
-        }
+        var handler = triggerGO.AddComponent<PickupTriggerHandler>();
+        handler.Setup(this);
     }
 
-    void OnTriggerEnter(Collider other)
+    // ── Pickup ────────────────────────────────────────────────────────────────
+
+    public void OnTriggerPickup(Collider other)
     {
-        if (_pickupTimer > 0) return;
-        
-        // Check nếu collider là player
-        if (other.CompareTag("Player"))
-        {
-            PickUp();
-        }
+        if (isPickedUp) return;
+        if (pickupTimer > 0) return;
+        if (!other.CompareTag("Player")) return;
+
+        isPickedUp = true;
+        PickUp();
     }
 
     private void PickUp()
     {
-        // Thêm vào inventory hoặc UI Money
-        if (InventorySystem.Instance != null)
-        {
-            InventorySystem.Instance.AddItem(itemId, amount);
-            Debug.Log($"[ItemPickup] Added to inventory - Item ID: {itemId}, Amount: {amount}");
-        }
+        // Thêm vào inventory
+        InventorySystem.Instance?.AddItem(itemId, amount);
 
-        // Cập nhật UI Money (nếu là coin hoặc exp)
+        // Cập nhật UI coin/exp
         if (UIMoney.Instance != null)
         {
-            // Item ID 8 = Coin, 7 = EXPGem
-            if (itemId == 8)  // Coin
-            {
-                UIMoney.Instance.AddCoin(amount);
-            }
-            else if (itemId == 7)  // EXP Gem
-            {
-                UIMoney.Instance.AddExp(amount);
-            }
+            if (itemId == 8) UIMoney.Instance.AddCoin(amount);
+            else if (itemId == 7) UIMoney.Instance.AddExp(amount);
         }
-
-        // Destroy item
+        Debug.Log($"[ItemPickup] Picked up itemId={itemId} x{amount}");
         Destroy(gameObject);
     }
 }

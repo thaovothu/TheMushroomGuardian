@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-
 /// <summary>
 /// Centralized bus for all game features.
 /// Usage — subscribe:   GameEvent.Quest.OnStepChanged += MyHandler;
@@ -58,7 +57,16 @@ public static class GameEvent
         public static InventoryChangedDelegate OnItemRemoved;
         public static InventoryChangedDelegate OnSlotChanged;
     }
+    public static class Item
+    {
+        public static Action<int, int> OnItemPickedUp;
+    }
 
+    public static class NPC
+    {
+        public static System.Action<int, InteractableNPC.InteractionType> OnInteract;
+        public static System.Action OnPopupButtonClicked; // ← thêm System.
+    }
     // ── BOSS ───────────────────────────────────────────────────────────────────
     // Boss events remain in BossEventBus.cs (Core/Events/Boss/).
 }
