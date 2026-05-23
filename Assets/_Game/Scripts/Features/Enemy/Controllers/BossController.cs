@@ -24,7 +24,7 @@ public class BossController : MonoBehaviour
 
     public void DieBoss()
     {
-        //Debug.Log($"[BossController] Boss died, releasing to pool");
+        QuestSpawnManager.Instance?.NotifySpawnedEnemyDied(gameObject);
         PoolSpawnManager.Instance.OnRelease?.Invoke(gameObject);
     }
 }

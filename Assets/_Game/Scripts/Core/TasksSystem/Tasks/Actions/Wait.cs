@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using System.Collections;
-    public class Wait : Action
+    public class Wait : ActionNode
     {
         public float Duration = 1f;
         public float DurationRandom = 0f;

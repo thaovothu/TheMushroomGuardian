@@ -1,5 +1,5 @@
-using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,63 +8,62 @@ public class UIDialog : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI dialogText;
     [SerializeField] private Image dialogPanel;
-    [SerializeField] private Button nextButton; // Nút để next dialog
-    [SerializeField] private CanvasGroup canvasGroup; // Để fade in/out
+    [SerializeField] private Button nextButton;
+    [SerializeField] private TextMeshProUGUI nextButtonText; // Text trong button Next
+    [SerializeField] private CanvasGroup canvasGroup;
 
     [SerializeField] private float fadeInDuration = 0.3f;
     [SerializeField] private float fadeOutDuration = 0.3f;
+    [SerializeField] private float textDisplaySpeed = 0.05f;
 
-    private DialogSO currentDialog;
-    private int currentLineIndex = 0;
+    [Header("Button Labels")]
+    [SerializeField] private string defaultNextLabel = "▶"; // Label mặc định khi không có playerReply
+
+    private List<DialogData> currentDialogSteps = new List<DialogData>();
+    private int currentStepIndex = 0;
     private bool isPlaying = false;
     private Coroutine displayCoroutine;
 
     void OnEnable()
     {
         if (nextButton != null)
-        {
             nextButton.onClick.AddListener(OnNextButtonClicked);
-        }
     }
 
     void OnDisable()
     {
         if (nextButton != null)
-        {
             nextButton.onClick.RemoveListener(OnNextButtonClicked);
-        }
 
         if (displayCoroutine != null)
-        {
             StopCoroutine(displayCoroutine);
-        }
     }
 
-    /// <summary>
-    /// Bắt đầu hiển thị dialog từ DialogSO
-    /// </summary>
-    public void PlayDialog(DialogSO dialogSO)
+    public void PlayDialog(int npcId)
     {
-        if (dialogSO == null)
+        if (DialogDataManager.Instance == null)
         {
-            //Debug.LogWarning("[UIDialog] DialogSO is null!");
+            Debug.LogWarning("[UIDialog] DialogDataManager not initialized!");
             return;
         }
 
-        currentDialog = dialogSO;
-        currentLineIndex = 0;
+        currentDialogSteps = DialogDataManager.Instance.GetDialogSteps(npcId);
+        if (currentDialogSteps.Count == 0)
+        {
+            Debug.LogWarning($"[UIDialog] No dialogs found for NPC {npcId}");
+            return;
+        }
+
+        currentStepIndex = 0;
         isPlaying = true;
 
-        // Fade in
-        if (canvasGroup != null)
-        {
-            StartCoroutine(FadeIn());
-        }
-        else
-        {
+        if (!gameObject.activeSelf)
             gameObject.SetActive(true);
-            DisplayCurrentLine();
-        }
+
+        if (canvasGroup != null)
+            StartCoroutine(FadeIn());
+        else
+            DisplayCurrentStep();
     }
 
     IEnumerator FadeIn()
@@ -81,102 +80,98 @@ public class UIDialog : MonoBehaviour
         }
 
         canvasGroup.alpha = 1f;
-        DisplayCurrentLine();
+        DisplayCurrentStep();
     }
 
-    void DisplayCurrentLine()
+    void DisplayCurrentStep()
     {
-        if (currentDialog == null)
-            return;
+        if (currentDialogSteps == null || currentDialogSteps.Count == 0) return;
 
-        if (currentLineIndex >= currentDialog.GetLineCount())
+        if (currentStepIndex >= currentDialogSteps.Count)
         {
-            // Dialog kết thúc
             EndDialog();
             return;
         }
 
-        DialogLine line = currentDialog.GetLine(currentLineIndex);
-        if (line != null)
-        {
-            if (displayCoroutine != null)
-            {
-                StopCoroutine(displayCoroutine);
-            }
+        // Ẩn button khi bắt đầu step mới
+        if (nextButton != null)
+            nextButton.gameObject.SetActive(false);
 
-            displayCoroutine = StartCoroutine(DisplayTextWithSpeed(line));
-        }
+        var currentDialog = currentDialogSteps[currentStepIndex];
+
+        if (displayCoroutine != null)
+            StopCoroutine(displayCoroutine);
+
+        displayCoroutine = StartCoroutine(DisplayTextWithDuration(currentDialog));
     }
 
-    IEnumerator DisplayTextWithSpeed(DialogLine line)
+    IEnumerator DisplayTextWithDuration(DialogData dialog)
     {
         dialogText.text = "";
-        float timeElapsed = 0f;
 
-        // Display từng ký tự
-        foreach (char c in line.text)
+        foreach (char c in dialog.text)
         {
             dialogText.text += c;
-            yield return new WaitForSeconds(currentDialog.textDisplaySpeed);
-            timeElapsed += currentDialog.textDisplaySpeed;
+            yield return new WaitForSeconds(textDisplaySpeed);
         }
 
-        // Chờ khoảng thời gian hiển thị
-        yield return new WaitForSeconds(line.displayDuration);
+        yield return new WaitForSeconds(dialog.displayDuration);
 
-        // Tự động next nếu còn dòng
-        if (currentLineIndex < currentDialog.GetLineCount() - 1)
+        bool isLastStep = currentStepIndex >= currentDialogSteps.Count - 1;
+
+        if (!isLastStep)
         {
-            currentLineIndex++;
-            DisplayCurrentLine();
+            // Hiện button với text phù hợp
+            ShowNextButton(dialog.playerReply);
         }
         else
         {
-            // Dòng cuối cùng - chờ người chơi click
-            if (nextButton != null)
-            {
-                nextButton.gameObject.SetActive(true);
-            }
+            EndDialog();
         }
+    }
+
+    /// <summary>
+    /// Hiện button Next — nếu có playerReply thì dùng text đó, không thì dùng label mặc định.
+    /// </summary>
+    void ShowNextButton(string playerReply)
+    {
+        if (nextButton == null) return;
+
+        bool hasReply = !string.IsNullOrEmpty(playerReply);
+
+        if (nextButtonText != null)
+            nextButtonText.text = hasReply ? playerReply : defaultNextLabel;
+
+        nextButton.gameObject.SetActive(true);
     }
 
     void OnNextButtonClicked()
     {
-        if (!isPlaying)
-            return;
+        if (!isPlaying) return;
 
-        currentLineIndex++;
-        DisplayCurrentLine();
-
-        // Ẩn next button
         if (nextButton != null)
-        {
             nextButton.gameObject.SetActive(false);
-        }
+
+        currentStepIndex++;
+        DisplayCurrentStep();
     }
 
     void EndDialog()
     {
         isPlaying = false;
-        currentDialog = null;
-        currentLineIndex = 0;
+        currentDialogSteps.Clear();
+        currentStepIndex = 0;
 
         if (nextButton != null)
-        {
             nextButton.gameObject.SetActive(false);
-        }
 
-        // Fade out
         if (canvasGroup != null)
-        {
             StartCoroutine(FadeOut());
-        }
         else
-        {
             gameObject.SetActive(false);
-        }
 
-        //Debug.Log("[UIDialog] Dialog ended");
+        Debug.Log("[UIDialog] Dialog ended");
+        QuestObjectiveManager.Instance?.OnDialogFinished();
     }
 
     IEnumerator FadeOut()
@@ -194,23 +189,12 @@ public class UIDialog : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    /// <summary>
-    /// Kiểm tra xem dialog có đang chạy không
-    /// </summary>
-    public bool IsPlaying()
-    {
-        return isPlaying;
-    }
+    public bool IsPlaying() => isPlaying;
 
-    /// <summary>
-    /// Dừng dialog hiện tại
-    /// </summary>
     public void StopDialog()
     {
         if (displayCoroutine != null)
-        {
             StopCoroutine(displayCoroutine);
-        }
         EndDialog();
     }
 }

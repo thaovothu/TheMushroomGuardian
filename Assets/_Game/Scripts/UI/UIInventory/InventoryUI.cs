@@ -41,18 +41,12 @@ public class InventoryUI : MonoBehaviour
         }
 
         // Subscribe to inventory changes
-        if (InventorySystem.Instance != null)
-        {
-            InventorySystem.Instance.OnSlotChanged += OnInventorySlotChanged;
-        }
+        GameEvent.Inventory.OnSlotChanged += OnInventorySlotChanged;
     }
 
     private void OnDestroy()
     {
-        if (InventorySystem.Instance != null)
-        {
-            InventorySystem.Instance.OnSlotChanged -= OnInventorySlotChanged;
-        }
+        GameEvent.Inventory.OnSlotChanged -= OnInventorySlotChanged;
     }
 
     void OnEnable()

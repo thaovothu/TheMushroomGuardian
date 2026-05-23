@@ -14,8 +14,6 @@ public class QuestDataManager : BaseSingleton<QuestDataManager>
     private List<QuestData> questDataList = new List<QuestData>();
     private Dictionary<int, List<QuestData>> questStepMap = new Dictionary<int, List<QuestData>>();
 
-    public event System.Action<List<QuestData>> OnQuestDataLoaded;
-
     /// <summary>
     /// Set dữ liệu quest từ LoadResource
     /// </summary>
@@ -23,7 +21,7 @@ public class QuestDataManager : BaseSingleton<QuestDataManager>
     {
         questDataList = data ?? new List<QuestData>();
         RebuildQuestMap();
-        OnQuestDataLoaded?.Invoke(questDataList);
+        GameEvent.Quest.OnDataLoaded?.Invoke(questDataList);
         Debug.Log($"[QuestDataManager] Quest data set: {questDataList.Count} entries");
     }
 
@@ -137,5 +135,16 @@ public class QuestDataManager : BaseSingleton<QuestDataManager>
         {
             Debug.Log($"  {quest}");
         }
+    }
+
+    /// <summary>
+    /// Lấy số step tối đa của một quest
+    /// </summary>
+    public int GetMaxStepId(int questId)
+    {
+        if (questStepMap.ContainsKey(questId) && questStepMap[questId].Count > 0)
+            return questStepMap[questId].Max(q => q.stepId);
+
+        return 1;
     }
 }

@@ -12,12 +12,6 @@ public class InventorySystem : MonoBehaviour
     [SerializeField] private ItemSO itemSO;              // Cấu hình tất cả items
     [SerializeField] private ItemIconSO itemIconSO;      // Icon 2D của items
 
-    // Event khi có thay đổi trong inventory
-    public delegate void InventoryChangedDelegate(int bagIndex, int slotIndex);
-    public event InventoryChangedDelegate OnItemAdded;
-    public event InventoryChangedDelegate OnItemRemoved;
-    public event InventoryChangedDelegate OnSlotChanged;
-
     private List<InventoryBag> bags = new();
     private const int BAG_COUNT = 3;
 
@@ -84,8 +78,8 @@ public class InventorySystem : MonoBehaviour
                     if (bags[bagIndex].GetSlot(i).IsEmpty)
                     {
                         bags[bagIndex].GetSlot(i).AddItem(itemData, quantity);
-                        OnItemAdded?.Invoke(bagIndex, i);
-                        OnSlotChanged?.Invoke(bagIndex, i);
+                        GameEvent.Inventory.OnItemAdded?.Invoke(bagIndex, i);
+                        GameEvent.Inventory.OnSlotChanged?.Invoke(bagIndex, i);
                         Debug.Log($"[InventorySystem] Item '{itemData.itemName}' added to bag {bagIndex} slot {i}");
                         return true;
                     }
@@ -119,8 +113,8 @@ public class InventorySystem : MonoBehaviour
             if (bags[bagIndex].GetSlot(i).IsEmpty)
             {
                 bags[bagIndex].GetSlot(i).AddItem(itemData, quantity);
-                OnItemAdded?.Invoke(bagIndex, i);
-                OnSlotChanged?.Invoke(bagIndex, i);
+                GameEvent.Inventory.OnItemAdded?.Invoke(bagIndex, i);
+                GameEvent.Inventory.OnSlotChanged?.Invoke(bagIndex, i);
                 Debug.Log($"[InventorySystem] Item '{itemData.itemName}' added to bag {bagIndex} slot {i}");
                 return true;
             }
@@ -148,8 +142,8 @@ public class InventorySystem : MonoBehaviour
         }
 
         slot.RemoveItem(quantity);
-        OnItemRemoved?.Invoke(bagIndex, slotIndex);
-        OnSlotChanged?.Invoke(bagIndex, slotIndex);
+        GameEvent.Inventory.OnItemRemoved?.Invoke(bagIndex, slotIndex);
+        GameEvent.Inventory.OnSlotChanged?.Invoke(bagIndex, slotIndex);
         Debug.Log($"[InventorySystem] Item removed from bag {bagIndex} slot {slotIndex}");
         return true;
     }
@@ -193,7 +187,7 @@ public class InventorySystem : MonoBehaviour
         }
 
         bags[bagIndex].ClearSlot(slotIndex);
-        OnSlotChanged?.Invoke(bagIndex, slotIndex);
+        GameEvent.Inventory.OnSlotChanged?.Invoke(bagIndex, slotIndex);
         Debug.Log($"[InventorySystem] Item deleted from bag {bagIndex} slot {slotIndex}");
     }
 

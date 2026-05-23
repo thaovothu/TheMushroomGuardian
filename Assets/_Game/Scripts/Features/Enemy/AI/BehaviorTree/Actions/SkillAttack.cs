@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SkillAttack : Action
+public class SkillAttack : ActionNode
 {
     private BossBlackboard bb;
     private float skillDamageMultiplier = 2.5f;  // Skill damage mạnh hơn để đánh đứng im

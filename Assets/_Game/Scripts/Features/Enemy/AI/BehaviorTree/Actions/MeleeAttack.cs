@@ -1,5 +1,5 @@
 using UnityEngine;
-public class MeleeAttack : Action
+public class MeleeAttack : ActionNode
 {
     private BossBlackboard bb;
 

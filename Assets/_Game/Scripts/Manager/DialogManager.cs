@@ -19,17 +19,17 @@ public class DialogManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Chơi dialog từ DialogSO
+    /// Chơi toàn bộ dialog conversation của NPC
     /// </summary>
-    public void PlayDialog(DialogSO dialogSO)
+    public void PlayDialog(int npcId)
     {
         if (uiDialog != null)
         {
-            uiDialog.PlayDialog(dialogSO);
+            uiDialog.PlayDialog(npcId);
         }
         else
         {
-            //Debug.LogWarning("[DialogManager] UIDialog is not assigned!");
+            Debug.LogWarning("[DialogManager] UIDialog is not assigned!");
         }
     }
 

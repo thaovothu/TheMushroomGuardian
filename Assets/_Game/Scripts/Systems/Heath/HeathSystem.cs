@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class HealthSystem : MonoBehaviour
@@ -21,10 +20,6 @@ public class HealthSystem : MonoBehaviour
     public float MaxHealth => maxHealth;
     public float DefenseBuffAmount => _defenseBuffAmount;
 
-    // Events — bất kỳ ai quan tâm đều subscribe, HealthSystem không biết UI tồn tại
-    public static Action<HealthSystem, float, float> OnHealthChanged;
-    public static Action<HealthSystem> OnDeath;
-
     void Start()
     {
         if (_currentHealth <= 0f) Init(maxHealth);
@@ -37,7 +32,7 @@ public class HealthSystem : MonoBehaviour
         _isHit = false;
         _isDead = false;
 
-        OnHealthChanged?.Invoke(this, _currentHealth, maxHealth);
+        GameEvent.Combat.OnHealthChanged?.Invoke(this, _currentHealth, maxHealth);
     }
 
     // Overload không element — dùng cho damage không tính nguyên tố
@@ -83,12 +78,12 @@ public class HealthSystem : MonoBehaviour
             }
         }
         
-        OnHealthChanged?.Invoke(this, _currentHealth, maxHealth);
+        GameEvent.Combat.OnHealthChanged?.Invoke(this, _currentHealth, maxHealth);
 
         if (_currentHealth <= 0f)
         {
             _isDead = true;
-            OnDeath?.Invoke(this);
+            GameEvent.Combat.OnDeath?.Invoke(this);
         }
     }
 
@@ -101,7 +96,7 @@ public class HealthSystem : MonoBehaviour
     {
         if (_isDead) return;
         _currentHealth = Mathf.Min(maxHealth, _currentHealth + amount);
-        OnHealthChanged?.Invoke(this, _currentHealth, maxHealth);
+        GameEvent.Combat.OnHealthChanged?.Invoke(this, _currentHealth, maxHealth);
     }
 
 

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BossRegenerate : Action
+public class BossRegenerate : ActionNode
 {
     private BossBlackboard bb;
     private float regenerationRate = 0.02f;  // Hồi 2% mỗi frame

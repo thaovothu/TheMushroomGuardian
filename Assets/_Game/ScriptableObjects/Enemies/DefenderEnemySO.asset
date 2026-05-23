@@ -28,8 +28,8 @@ MonoBehaviour:
   enemyData:
   - levelEnemy: 1
     moveSpeed: 2.5
-    hp: 150
-    damage: 10
+    hp: 30
+    damage: 3
     recover: 2
   - levelEnemy: 2
     moveSpeed: 2.7

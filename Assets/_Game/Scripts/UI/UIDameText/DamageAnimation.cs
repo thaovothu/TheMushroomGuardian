@@ -5,8 +5,8 @@ using TMPro;
 
 public class DamageAnimation : MonoBehaviour
 {
-   public AnimationCurve opacityCurve;
-   public AnimationCurve scaleCurve;
+    public AnimationCurve opacityCurve;
+    public AnimationCurve scaleCurve;
     public AnimationCurve heightCurve;
     private TextMeshProUGUI tmp;
     private float time = 0f;

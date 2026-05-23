@@ -33,9 +33,10 @@ public class UIQuestPanel : MonoBehaviour
     [SerializeField] private Button nextStepButton;
     [SerializeField] private Button prevStepButton;
     [SerializeField] private Button closeUIButton;
-    [SerializeField] private Button confirmUIButton;
     [SerializeField] private Image stateQuestImg;
     [SerializeField] private Sprite lockedSprite;
+    [SerializeField] private Sprite inProgressSprite;
+    [SerializeField] private Sprite completedSprite;
     private int currentQuestId = 1;
     private int currentStepId = 1;
     private int maxStepId = 1;
@@ -43,28 +44,16 @@ public class UIQuestPanel : MonoBehaviour
     private void Start()
     {
         // Subscribe vào event
-        if (QuestDataManager.Instance != null)
-        {
-            QuestDataManager.Instance.OnQuestDataLoaded += OnQuestDataLoaded;
-            
-            // Nếu data đã load rồi, hiển thị ngay
-            if (QuestDataManager.Instance.IsDataLoaded)
-            {
-                InitializeUI();
-            }
-        }
+        GameEvent.Quest.OnDataLoaded += OnQuestDataLoaded;
+        GameEvent.Quest.OnQuestChanged += OnQuestProgressChanged;
+        GameEvent.Quest.OnStepChanged += OnStepProgressChanged;
+        GameEvent.Quest.OnStepCompleted += OnQuestStepCompleted;
+        GameEvent.Quest.OnObjectiveReached += OnObjectiveReached;
 
-        // Subscribe vào quest progress change
-        if (QuestProgressManager.Instance != null)
+        // Nếu data đã load rồi, hiển thị ngay
+        if (QuestDataManager.Instance != null && QuestDataManager.Instance.IsDataLoaded)
         {
-            QuestProgressManager.Instance.OnQuestChanged += OnQuestProgressChanged;
-            QuestProgressManager.Instance.OnStepChanged += OnStepProgressChanged;
-        }
-
-        // Subscribe vào objective completion
-        if (QuestObjectiveManager.Instance != null)
-        {
-            QuestObjectiveManager.Instance.OnObjectiveReached += OnObjectiveReached;
+            InitializeUI();
         }
 
         // Setup toggles - ToggleGroup sẽ tự tắt toggle khác
@@ -93,11 +82,11 @@ public class UIQuestPanel : MonoBehaviour
 
         if (prevStepButton != null)
             prevStepButton.onClick.AddListener(PrevStep);
+
         if (closeUIButton != null)
             closeUIButton.onClick.AddListener(OnCloseUI);
-        if (confirmUIButton != null)
-            confirmUIButton.onClick.AddListener(OnConfirmUI);
     }
+
     void OnDisable()
     {
         if (nextStepButton != null)
@@ -105,10 +94,9 @@ public class UIQuestPanel : MonoBehaviour
 
         if (prevStepButton != null)
             prevStepButton.onClick.RemoveListener(PrevStep);
+
         if (closeUIButton != null)
             closeUIButton.onClick.RemoveListener(OnCloseUI);
-        if (confirmUIButton != null)
-            confirmUIButton.onClick.RemoveListener(OnConfirmUI);
     }
 
     private void OnQuestDataLoaded(System.Collections.Generic.List<QuestData> questList)
@@ -193,13 +181,6 @@ public class UIQuestPanel : MonoBehaviour
             return;
         }
 
-        // Update QuestInfoClickHandler with current quest ID
-        var clickHandler = questInfoText?.GetComponent<QuestInfoClickHandler>();
-        if (clickHandler != null)
-        {
-            clickHandler.SetCurrentQuestId(currentQuestId);
-        }
-
         // Lấy thông tin step state
         bool isStepActive = QuestProgressManager.Instance.IsStepActive(currentQuestId, currentStepId);
         bool isStepCompleted = QuestProgressManager.Instance.IsStepCompleted(currentQuestId, currentStepId);
@@ -208,12 +189,8 @@ public class UIQuestPanel : MonoBehaviour
         if (questTitleText != null)
             questTitleText.text = questData.titleQuest;
 
-        // Hiển thị info - Convert color tags thành clickable links
         if (questInfoText != null)
-        {
-            string formattedInfo = QuestInfoClickHandler.ConvertQuestTextToClickable(questData.infoQuest);
-            questInfoText.text = formattedInfo;
-        }
+            questInfoText.text = questData.infoQuest;
 
         // Hiển thị short description
         if (stepDescriptionText != null)
@@ -243,23 +220,24 @@ public class UIQuestPanel : MonoBehaviour
         if (nextStepButton != null)
             nextStepButton.interactable = (currentStepId < maxStepId);
 
-        // === Cập nhật UI dựa trên trạng thái step ===
-        
-        // Hiển thị/Ẩn lockedSprite
-        // - Ẩn nếu step active hoặc completed
-        // - Hiện nếu step chưa mở khóa (bị khóa)
+        // === 3 trạng thái step ===
+        // 1. Chưa mở khoá (!active && !completed) → lockedSprite
+        // 2. Mở khoá / đang làm (active && !completed) → ẩn sprite
+        // 3. Đã hoàn thành (completed) → completedSprite
         if (stateQuestImg != null)
         {
-            stateQuestImg.sprite = lockedSprite;
-            stateQuestImg.enabled = !isStepActive && !isStepCompleted;
-        }
-
-        // Hiển thị/Ẩn confirmUIButton
-        // - Chỉ hiện khi step active (hiện tại đang làm)
-        // - Ẩn khi step chưa mở hoặc đã hoàn thành
-        if (confirmUIButton != null)
-        {
-            confirmUIButton.gameObject.SetActive(isStepActive);
+            if (isStepCompleted)
+            {
+                stateQuestImg.sprite = completedSprite;
+            }
+            else if (isStepActive)
+            {
+                stateQuestImg.sprite = inProgressSprite;
+            }
+            else
+            {
+                stateQuestImg.sprite = lockedSprite;
+            }
         }
 
         Debug.Log($"[UIQuestPanel] Displaying Quest {currentQuestId} Step {currentStepId}/{maxStepId} | Active={isStepActive}, Completed={isStepCompleted}");
@@ -301,7 +279,7 @@ public class UIQuestPanel : MonoBehaviour
     }
 
     /// <summary>
-    /// Callback khi step của quest thay đổi
+    /// Callback khi step của quest thay đổi (advance sang step mới)
     /// </summary>
     private void OnStepProgressChanged(int questId, int stepId)
     {
@@ -314,39 +292,33 @@ public class UIQuestPanel : MonoBehaviour
     }
 
     /// <summary>
-    /// Callback khi player tới objective
-    /// Auto-complete step nếu là objective-type quest
+    /// Callback khi player tới objective — tự động hoàn thành step hiện tại
     /// </summary>
     private void OnObjectiveReached(QuestObjectiveManager.ObjectiveLocation objective)
     {
         Debug.Log($"[UIQuestPanel] Objective reached: {objective.name}");
-        
-        // Kiểm tra nếu là active step, tự động báo hoàn thành
-        if (QuestProgressManager.Instance.IsStepActive(currentQuestId, currentStepId))
-        {
-            Debug.Log($"[UIQuestPanel] Auto-completing step due to objective reach");
-            // Auto trigger confirm
-            OnConfirmUI();
-        }
+
+        int activeQuestId = QuestProgressManager.Instance.GetCurrentQuestId();
+        int activeStepId = QuestProgressManager.Instance.GetActiveStepForQuest(activeQuestId);
+
+        if (!QuestProgressManager.Instance.IsStepActive(activeQuestId, activeStepId))
+            return;
+
+        // Trigger dialog khi quest 1 step 1 tới objective
+        if (activeQuestId == 1 && activeStepId == 1)
+            DialogManager.Instance?.PlayDialog(1);
+
+        var questSteps = QuestDataManager.Instance.GetQuestSteps(activeQuestId);
+        QuestProgressManager.Instance.CompleteCurrentStep(activeQuestId, activeStepId, questSteps.Count);
     }
 
     private void OnDestroy()
     {
-        if (QuestDataManager.Instance != null)
-        {
-            QuestDataManager.Instance.OnQuestDataLoaded -= OnQuestDataLoaded;
-        }
-
-        if (QuestProgressManager.Instance != null)
-        {
-            QuestProgressManager.Instance.OnQuestChanged -= OnQuestProgressChanged;
-            QuestProgressManager.Instance.OnStepChanged -= OnStepProgressChanged;
-        }
-
-        if (QuestObjectiveManager.Instance != null)
-        {
-            QuestObjectiveManager.Instance.OnObjectiveReached -= OnObjectiveReached;
-        }
+        GameEvent.Quest.OnDataLoaded -= OnQuestDataLoaded;
+        GameEvent.Quest.OnQuestChanged -= OnQuestProgressChanged;
+        GameEvent.Quest.OnStepChanged -= OnStepProgressChanged;
+        GameEvent.Quest.OnStepCompleted -= OnQuestStepCompleted;
+        GameEvent.Quest.OnObjectiveReached -= OnObjectiveReached;
 
         if (nextStepButton != null)
             nextStepButton.onClick.RemoveListener(NextStep);
@@ -365,43 +337,33 @@ public class UIQuestPanel : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    private void OnConfirmUI()
+    /// <summary>
+    /// Nhận event khi step hoàn thành — tự động cấp thưởng và cập nhật UI sprite
+    /// </summary>
+    private void OnQuestStepCompleted(int questId, int stepId)
     {
-        // Kiểm tra step có active không
-        if (!QuestProgressManager.Instance.IsStepActive(currentQuestId, currentStepId))
-        {
-            Debug.LogWarning($"[UIQuestPanel] Cannot confirm. Step {currentStepId} is not active!");
-            return;
-        }
+        var questData = QuestDataManager.Instance.GetQuestStep(questId, stepId);
+        if (questData != null)
+            GiveRewards(questData);
 
-        // Lấy quest data để lấy reward
-        var questData = QuestDataManager.Instance.GetQuestStep(currentQuestId, currentStepId);
-        if (questData == null)
-        {
-            Debug.LogWarning($"[UIQuestPanel] Quest data not found!");
-            return;
-        }
-
-        // === Xử lý phần thưởng ===
-        Debug.Log($"[UIQuestPanel] Quest {currentQuestId} Step {currentStepId} completed!");
-        Debug.Log($"  Reward - Coin: {questData.coinReward}, Item: {questData.itemReward1}, Other: {questData.reward}");
-        // TODO: Thêm logic cấp phát reward cho player (coin, item, ...)
-
-        // === Hoàn thành step ===
-        var questSteps = QuestDataManager.Instance.GetQuestSteps(currentQuestId);
-        QuestProgressManager.Instance.CompleteCurrentStep(currentQuestId, currentStepId, questSteps.Count);
-
-        // Refresh UI
-        RefreshQuestToggles();
-        
-        // Nếu chưa hoàn thành tất cả step, hiển thị step tiếp theo
-        if (!QuestProgressManager.Instance.IsQuestActive(currentQuestId + 1))
-        {
-            int nextActiveStep = QuestProgressManager.Instance.GetActiveStepForQuest(currentQuestId);
-            currentStepId = nextActiveStep;
+        // Cập nhật UI nếu đang xem đúng quest này
+        if (questId == currentQuestId && stepId == currentStepId)
             DisplayQuestInfo();
+
+        RefreshQuestToggles();
+        Debug.Log($"[UIQuestPanel] Step {questId}-{stepId} completed, rewards given, UI refreshed.");
+    }
+
+    private void GiveRewards(QuestData questData)
+    {
+        if (questData.coinReward > 0)
+        {
+            // UIMonney.Instance?.AddCoin(questData.coinReward);
+            Debug.Log($"[UIQuestPanel] Reward: +{questData.coinReward} coin");
         }
-        // Nếu đã hoàn thành quest, quest tiếp theo sẽ tự động được kích hoạt
-        // OnQuestProgressChanged sẽ được gọi và cập nhật UI
+
+        // itemReward1 là tên string — cần map sang itemId nếu muốn thêm inventory
+        if (!string.IsNullOrEmpty(questData.itemReward1))
+            Debug.Log($"[UIQuestPanel] Reward item: {questData.itemReward1}");
     }
 }

@@ -8,12 +8,12 @@ public class BossEnemy : MonoBehaviour
     void Awake()
     {
         _health = GetComponent<HealthSystem>();
-        HealthSystem.OnDeath += OnBossDeath;
+        GameEvent.Combat.OnDeath += OnBossDeath;
     }
 
     void OnDestroy()
     {
-        HealthSystem.OnDeath -= OnBossDeath;
+        GameEvent.Combat.OnDeath -= OnBossDeath;
     }
 
     void OnBossDeath(HealthSystem hs)
