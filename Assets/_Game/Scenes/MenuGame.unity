@@ -435,97 +435,21 @@ PrefabInstance:
       objectReference: {fileID: 1112496632}
     - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
         type: 3}
-      propertyPath: npcUnlockNames.Array.size
-      value: 1
+      propertyPath: objectiveLocations.Array.data[2].position.x
+      value: 192.13
       objectReference: {fileID: 0}
     - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
         type: 3}
-      propertyPath: npcDialogEntries.Array.size
-      value: 4
+      propertyPath: objectiveLocations.Array.data[2].position.y
+      value: 2.93
       objectReference: {fileID: 0}
     - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
         type: 3}
-      propertyPath: npcUnlockNames.Array.data[0]
-      value: "Chi\u1EBFn Binh R\xEAu"
-      objectReference: {fileID: 0}
-    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
-        type: 3}
-      propertyPath: objectiveLocations.Array.size
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
-        type: 3}
-      propertyPath: npcDialogEntries.Array.data[3].npcId
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
-        type: 3}
-      propertyPath: objectiveLocations.Array.data[6].name
-      value: "Chi\u1EBFn Binh R\xEAu"
-      objectReference: {fileID: 0}
-    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
-        type: 3}
-      propertyPath: objectiveLocations.Array.data[7].name
-      value: "Chi\u1EBFn Binh"
-      objectReference: {fileID: 0}
-    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
-        type: 3}
-      propertyPath: npcDialogEntries.Array.data[3].npcName
-      value: "Chi\u1EBFn binh"
-      objectReference: {fileID: 0}
-    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
-        type: 3}
-      propertyPath: objectiveLocations.Array.data[6].mapId
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
-        type: 3}
-      propertyPath: objectiveLocations.Array.data[7].mapId
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
-        type: 3}
-      propertyPath: objectiveLocations.Array.data[6].position.x
-      value: 12.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
-        type: 3}
-      propertyPath: objectiveLocations.Array.data[6].position.y
-      value: 2.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
-        type: 3}
-      propertyPath: objectiveLocations.Array.data[6].position.z
-      value: 1.88
-      objectReference: {fileID: 0}
-    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
-        type: 3}
-      propertyPath: objectiveLocations.Array.data[7].position.x
-      value: 12.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
-        type: 3}
-      propertyPath: objectiveLocations.Array.data[7].position.y
-      value: 2.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
-        type: 3}
-      propertyPath: objectiveLocations.Array.data[7].position.z
-      value: -3.84
-      objectReference: {fileID: 0}
-    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
-        type: 3}
-      propertyPath: objectiveLocations.Array.data[6].triggerRadius
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
-        type: 3}
-      propertyPath: objectiveLocations.Array.data[7].triggerRadius
-      value: 2
+      propertyPath: objectiveLocations.Array.data[2].position.z
+      value: 126.99
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 5138041702533190588, guid: 8ed2475fb74494ed4b433f5f683fe074, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8ed2475fb74494ed4b433f5f683fe074, type: 3}
@@ -642,41 +566,6 @@ PrefabInstance:
       propertyPath: m_Lens.m_SensorSize.y
       value: 24
       objectReference: {fileID: 0}
-    - target: {fileID: 6421935226350217015, guid: 9bbfa3f92bbec4deabd885b807a3700b,
-        type: 3}
-      propertyPath: m_XAxis.m_InvertInput
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6421935226350217015, guid: 9bbfa3f92bbec4deabd885b807a3700b,
-        type: 3}
-      propertyPath: m_Orbits.Array.data[0].m_Height
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6421935226350217015, guid: 9bbfa3f92bbec4deabd885b807a3700b,
-        type: 3}
-      propertyPath: m_Orbits.Array.data[0].m_Radius
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6421935226350217015, guid: 9bbfa3f92bbec4deabd885b807a3700b,
-        type: 3}
-      propertyPath: m_Orbits.Array.data[1].m_Height
-      value: 2.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6421935226350217015, guid: 9bbfa3f92bbec4deabd885b807a3700b,
-        type: 3}
-      propertyPath: m_Orbits.Array.data[1].m_Radius
-      value: 5.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6421935226350217015, guid: 9bbfa3f92bbec4deabd885b807a3700b,
-        type: 3}
-      propertyPath: m_Orbits.Array.data[2].m_Height
-      value: 1.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6421935226350217015, guid: 9bbfa3f92bbec4deabd885b807a3700b,
-        type: 3}
-      propertyPath: m_Orbits.Array.data[2].m_Radius
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 8875205123851705575, guid: 9bbfa3f92bbec4deabd885b807a3700b,
         type: 3}
       propertyPath: m_FollowOffset.y
@@ -698,7 +587,8 @@ PrefabInstance:
       value: -6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 2382627084660300078, guid: 9bbfa3f92bbec4deabd885b807a3700b, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9bbfa3f92bbec4deabd885b807a3700b, type: 3}

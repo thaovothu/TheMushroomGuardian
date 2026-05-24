@@ -18,6 +18,7 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
     [SerializeField] float wanderRadius = 10f;
     [SerializeField] float timeBetweenAttacks = 1f;
     [SerializeField] float hitDuration = 2f;
+    [SerializeField] bool isExplosive = false;
 
     // ── Runtime ────────────────────────────────────
     BaseEnemyData _data;
@@ -88,21 +89,32 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
     {
         _stateMachine = new StateMachine();
 
-        var walkState = new EnemyWanderState(this, animator, agent, wanderRadius);
+        var walkState  = new EnemyWanderState(this, animator, agent, wanderRadius);
         var chaseState = new EnemyChaseState(this, animator, agent, playerDetector.Player);
-        var attackState = new EnemyAttackState(this, animator, agent, playerDetector.Player);
-        var hitState = new EnemyHitState(this, animator);
-        var dieState = new EnemyDieState(this, animator);
 
-        At(walkState, chaseState, new FuncPredicate(() => playerDetector.CanDetectPlayer()));
-        At(chaseState, walkState, new FuncPredicate(() => !playerDetector.CanDetectPlayer()));
-        At(chaseState, attackState, new FuncPredicate(() => playerDetector.CanAttackPlayer()));
-        At(attackState, chaseState, new FuncPredicate(() => !playerDetector.CanAttackPlayer()));
-        Any(hitState, new FuncPredicate(() => healthSystem.IsHit));
-        // Exit HitState khi timer kết thúc
-        At(hitState, chaseState, new FuncPredicate(() => !healthSystem.IsHit && playerDetector.CanDetectPlayer()));
-        At(hitState, walkState, new FuncPredicate(() => !healthSystem.IsHit && !playerDetector.CanDetectPlayer()));
-        Any(dieState, new FuncPredicate(() => healthSystem.IsDead));
+        if (isExplosive)
+        {
+            var explodeState = new EnemyExplodeState(this, animator);
+
+            At(walkState,  chaseState,   new FuncPredicate(() => playerDetector.CanDetectPlayer()));
+            At(chaseState, walkState,    new FuncPredicate(() => !playerDetector.CanDetectPlayer()));
+            At(chaseState, explodeState, new FuncPredicate(() => playerDetector.CanAttackPlayer()));
+        }
+        else
+        {
+            var attackState = new EnemyAttackState(this, animator, agent, playerDetector.Player);
+            var hitState    = new EnemyHitState(this, animator);
+            var dieState    = new EnemyDieState(this, animator);
+
+            At(walkState,   chaseState,  new FuncPredicate(() => playerDetector.CanDetectPlayer()));
+            At(chaseState,  walkState,   new FuncPredicate(() => !playerDetector.CanDetectPlayer()));
+            At(chaseState,  attackState, new FuncPredicate(() => playerDetector.CanAttackPlayer()));
+            At(attackState, chaseState,  new FuncPredicate(() => !playerDetector.CanAttackPlayer()));
+            Any(hitState, new FuncPredicate(() => healthSystem.IsHit));
+            At(hitState, chaseState, new FuncPredicate(() => !healthSystem.IsHit && playerDetector.CanDetectPlayer()));
+            At(hitState, walkState,  new FuncPredicate(() => !healthSystem.IsHit && !playerDetector.CanDetectPlayer()));
+            Any(dieState, new FuncPredicate(() => healthSystem.IsDead));
+        }
 
         _stateMachine.SetState(walkState);
     }
@@ -117,14 +129,22 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
         _attackTimer.Start();
 
         var health = playerDetector.Player?.GetComponent<HealthSystem>();
-        if (health == null)
-        {
-            //Debug.LogWarning($"[EnemyController] {name}: Player không có HealthSystem.");
-            return;
-        }
+        if (health == null) return;
 
         float damage = _data?.damage ?? 10;
         health.TakeDamage(damage);
+    }
+
+    public void Explode()
+    {
+        if (playerDetector.Player != null &&
+            playerDetector.Player.TryGetComponent(out HealthSystem health))
+            health.TakeDamage(_data?.damage ?? 10);
+
+        DropItems();
+        if (QuestSpawnManager.Instance != null)
+            QuestSpawnManager.Instance.NotifySpawnedEnemyDied(gameObject);
+        PoolSpawnManager.Instance.OnRelease?.Invoke(gameObject);
     }
 
     public void StartHitTimer() => _hitTimer.Start();

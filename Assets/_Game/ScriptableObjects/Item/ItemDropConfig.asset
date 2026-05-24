@@ -24,22 +24,22 @@ MonoBehaviour:
     dropAmount: 1
   earthCrystalDrop:
     itemType: 9
-    dropChance: 5
+    dropChance: 100
     itemId: 9
     dropAmount: 1
   windCrystalDrop:
     itemType: 10
-    dropChance: 5
+    dropChance: 100
     itemId: 10
     dropAmount: 1
   waterCrystalDrop:
     itemType: 11
-    dropChance: 5
+    dropChance: 100
     itemId: 11
     dropAmount: 1
   fireCrystalDrop:
     itemType: 12
-    dropChance: 5
+    dropChance: 100
     itemId: 12
     dropAmount: 1
   strengthBuffDrop:

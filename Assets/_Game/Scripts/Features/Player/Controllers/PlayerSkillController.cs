@@ -333,6 +333,9 @@ public class PlayerSkillController : MonoBehaviour
     public ElementType GetCurrentElement() => currentElement;
     public float GetManaPercentage() => currentMana / maxMana;
 
+    public bool HasMana(float amount) => currentMana >= amount;
+    public void ConsumeMana(float amount) => currentMana = Mathf.Max(0f, currentMana - amount);
+
     /// <summary>
     /// Lấy skill hiện tại (để hiển thị UI)
     /// </summary>

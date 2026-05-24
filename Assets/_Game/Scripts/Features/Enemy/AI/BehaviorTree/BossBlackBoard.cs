@@ -30,6 +30,8 @@ public class BossBlackboard : MonoBehaviour, IPoolSpawned
     [HideInInspector] public ElementType currentElement = ElementType.Earth;
     [HideInInspector] public BossAnimState currentAnimState = BossAnimState.Idle;
     [HideInInspector] public bool isHit = false;
+    [Header("Boss Identity")]
+    [SerializeField] public ElementType bossBaseElement = ElementType.Earth; // set cố định trong Inspector/Prefab
     private float lastHealthValue;
     private float hitTimeout = 0f;      // Timeout để reset isHit
     private const float HIT_DURATION = 0.35f; // Hit animation duration
@@ -135,6 +137,8 @@ public class BossBlackboard : MonoBehaviour, IPoolSpawned
         {
             Task.Restart(behaviorTree.Root);
         }
+        BossEventBus.OnBossSpawned?.Invoke(gameObject);
+        Debug.Log($"[BossBlackboard] OnBossSpawned fired: {gameObject.name}");
     }
 
     // void Update()

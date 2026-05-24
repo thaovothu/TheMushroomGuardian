@@ -28,21 +28,15 @@ public class ItemDropManager : BaseSingleton<ItemDropManager>
     /// <summary>
     /// Spawn item drop khi giết boss (bao gồm item hiếm)
     /// </summary>
-    public void DropItemsOnBossDeath(Vector3 dropPosition)
+    public void DropItemsOnBossDeath(Vector3 dropPosition, ElementType bossElement = ElementType.None)
     {
         if (dropConfig == null || itemSO == null) return;
 
-        // Drop main items
-        DropItemsOnEnemyDeath(dropPosition, false);
-
-        // Thêm boss-only drops
-        List<ItemDropChance> bossDrops = dropConfig.GetBossDrops();
-        foreach (var drop in bossDrops)
+        var drops = dropConfig.GetBossDrops(bossElement);
+        foreach (var drop in drops)
         {
             if (dropConfig.CheckDropChance(drop))
-            {
                 SpawnItem(drop, dropPosition);
-            }
         }
     }
 

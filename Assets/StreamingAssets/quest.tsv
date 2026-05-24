@@ -14,13 +14,13 @@ QuestID	StepID	Title Quest	Info Quest	ItemReward1	CointReward	Reward	Short Des_1
 2	6	Con Đường Chiến Đấu	Sử dụng <color=#FFCCFF>Đập Đất</color> để phá lớp giáp của <color=red>Golem Rễ Cây</color> — lớp giáp đá sẽ vỡ tung khi trúng đúng kỹ năng				Đánh bại Golem	2	4	
 2	7	Con Đường Chiến Đấu	Thu hồi <color=yellow>Lõi Nguyên Tố Đất</color> từ cơ thể Golem			Đất	Nhận nguyên tố Đất	2		
 										
-3	1	Hơi Thở Của Gió	"Sau khi khôi phục nguyên tố Đất, <color=green>Lumi</color> dẫn bạn đến <color=#00FFFF>Rừng Trên Mây</color>. Những luồng gió cổ xưa đang xáo trộn bất thường"				Đến Rừng Trên Mây	2		
-3	2	Hơi Thở Của Gió	<color=green>Lumi</color> phát hiện một luồng gió cổ trong rừng — dạy bạn kỹ năng <color=#FFCCFF>Lướt Gió</color> để có thể tiến sâu hơn			"WindAttack, WindDefend, Dash"	Học Lướt Gió	2		
-3	3	Hơi Thở Của Gió	Dùng <color=#FFCCFF>Lướt Gió</color> kích hoạt 3 cột gió theo đúng thứ tự để mở lối vào <color=#00FFFF>Đài Nấm Trôi</color>				Giải câu đố cột gió	2		
-3	4	Hơi Thở Của Gió	Tiêu diệt 12 <color=red>Dơi Bào Tử</color> đang truy đuổi và bao vây <color=green>Tinh Linh Gió</color>		480		Bảo vệ Tinh Linh Gió	2	5	
-3	5	Hơi Thở Của Gió	Giải cứu <color=green>Tinh Linh Gió</color> khỏi vòng phong ấn. Tinh Linh dạy bạn cách dùng gió xoáy trong chiến đấu		100		Giải cứu Tinh Linh Gió	2		
-3	6	Hơi Thở Của Gió	"Dụ <color=red>Harpy Bào Tử</color> vào vùng gió xoáy để suy yếu lớp giáp, rồi dùng <color=#FFCCFF>Lướt Gió</color> tấn công — không thể đánh trực tiếp"				Đánh bại Harpy	2	6	
-3	7	Hơi Thở Của Gió	Thu hồi <color=yellow>Lõi Nguyên Tố Khí</color> từ đỉnh Đài Nấm Trôi			Khí	Nhận nguyên tố Khí	2		
+3	1	Hơi Thở Của Gió	Đi đến <color=green>Cổng vô tận</color> để đến <color=#00FFFF>Rừng Trên Mây</color>				Đến Rừng Trên Mây	3		
+3	2	Hơi Thở Của Gió	<color=green>Lumi</color> phát hiện một luồng gió cổ trong rừng — dạy bạn kỹ năng <color=#FFCCFF>Lướt Gió</color> để có thể tiến sâu hơn			"WindAttack, WindDefend, Dash"	Học Lướt Gió	3		
+3	3	Hơi Thở Của Gió	Dùng <color=#FFCCFF>Lướt Gió</color> kích hoạt 3 cột gió theo đúng thứ tự để mở lối vào <color=#00FFFF>Đài Nấm Trôi</color>				Giải câu đố cột gió	3		
+3	4	Hơi Thở Của Gió	Tiêu diệt 10 <color=red>Dơi Bào Tử</color> đang truy đuổi và bao vây <color=green>Tinh Linh Gió</color>		480		Bảo vệ Tinh Linh Gió	3	5	
+3	5	Hơi Thở Của Gió	Giải cứu <color=green>Tinh Linh Gió</color> khỏi vòng phong ấn. Tinh Linh dạy bạn cách dùng gió xoáy trong chiến đấu		100		Giải cứu Tinh Linh Gió	3		
+3	6	Hơi Thở Của Gió	"Dụ <color=red>Harpy Bào Tử</color> vào vùng gió xoáy để suy yếu lớp giáp, rồi dùng <color=#FFCCFF>Lướt Gió</color> tấn công — không thể đánh trực tiếp"				Đánh bại Harpy	3	6	
+3	7	Hơi Thở Của Gió	Thu hồi <color=yellow>Lõi Nguyên Tố Khí</color> từ đỉnh Đài Nấm Trôi			Khí	Nhận nguyên tố Khí	3		
 										
 4	1	Dòng Nước Mục Nát	Nguồn nước của vùng đất đang bị ô nhiễm nặng nề. Theo <color=green>Lumi</color> đến <color=#00FFFF>Đầm Xanh</color> — tầm nhìn bị che khuất bởi mưa tro và sương độc				Đến Đầm Xanh	3		
 4	2	Dòng Nước Mục Nát	Tiêu diệt 15 <color=red>Cua Ký Sinh</color> đang bơm độc tố vào các hồ nước		600		Tiêu diệt Cua Ký Sinh	3	6	

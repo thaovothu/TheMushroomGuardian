@@ -196,14 +196,11 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
         foreach (var cfg in config.enemyConfigs)
         {
             if (!ValidateConfig(cfg)) continue;
-            foreach (var variant in cfg.baseEnemySO.enemyVariants)
+            var variant = cfg.baseEnemySO.enemyVariants;
+            if (variant?.enemyPrefab != null && !poolMap.ContainsKey(variant.enemyPrefab))
             {
-                if (variant?.enemyPrefab == null) continue;
-                if (!poolMap.ContainsKey(variant.enemyPrefab))
-                {
-                    poolMap[variant.enemyPrefab] = new SimpleObjectPool(variant.enemyPrefab, initialPoolSize, parent);
-                    Debug.Log($"[QuestSpawnManager] Pool created: {variant.enemyPrefab.name} x{initialPoolSize}");
-                }
+                poolMap[variant.enemyPrefab] = new SimpleObjectPool(variant.enemyPrefab, initialPoolSize, parent);
+                Debug.Log($"[QuestSpawnManager] Pool created: {variant.enemyPrefab.name} x{initialPoolSize}");
             }
         }
     }
