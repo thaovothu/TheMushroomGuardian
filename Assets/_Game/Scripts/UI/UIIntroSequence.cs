@@ -38,7 +38,6 @@ public class UIIntroSequence : MonoBehaviour
 
     private void OnEnable() => UILoading.OnLoadingComplete += OnLoadingComplete;
     private void OnDisable() => UILoading.OnLoadingComplete -= OnLoadingComplete;
-    private void Awake() => PlayerPrefs.SetInt("IntroPlayed", 0);
     private void Update()
     {
         if (!isSkipped && isPlaying && (Input.GetKeyDown(skipKey) || Input.GetKeyDown(skipKeyAlt)))

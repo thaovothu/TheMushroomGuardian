@@ -208,4 +208,24 @@ public class QuestProgressManager : BaseSingleton<QuestProgressManager>
             }
         }
     }
+    //HACK
+    /// <summary>Debug only — force complete step không check active.</summary>
+    public void ForceCompleteStep(int questId, int stepId, int maxStepId)
+    {
+        if (!completedStepsByQuest.ContainsKey(questId))
+            completedStepsByQuest[questId] = new List<int>();
+
+        if (!completedStepsByQuest[questId].Contains(stepId))
+            completedStepsByQuest[questId].Add(stepId);
+
+        int next = stepId + 1;
+        if (next <= maxStepId)
+            activeStepByQuest[questId] = next;
+    }
+
+    /// <summary>Debug only — force set active step.</summary>
+    public void ForceSetActiveStep(int questId, int stepId)
+    {
+        activeStepByQuest[questId] = stepId;
+    }
 }

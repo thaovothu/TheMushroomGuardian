@@ -172,6 +172,7 @@ public class UIDialog : MonoBehaviour
 
         Debug.Log("[UIDialog] Dialog ended");
         QuestObjectiveManager.Instance?.OnDialogFinished();
+        GameEvent.Quest.OnDialogFinished?.Invoke();
     }
 
     IEnumerator FadeOut()

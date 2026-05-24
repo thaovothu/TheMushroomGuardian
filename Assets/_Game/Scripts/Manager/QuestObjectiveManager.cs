@@ -4,9 +4,11 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 
 /// <summary>
-/// Quản lý các mục tiêu của quest (locations, NPCs, ...)
-/// Mapping giữa objective name và in-game position
-/// Tracking khi player đến gần mục tiêu
+/// Quản lý các mục tiêu của quest.
+/// 3 loại khi objective reached:
+///   1. Không có gì đặc biệt → complete step thẳng
+///   2. NPC Dialog → mở UIDialog → complete sau khi dialog xong
+///   3. NPC Unlock → KHÔNG complete — chờ InteractableNPC xử lý
 /// </summary>
 public class QuestObjectiveManager : BaseSingleton<QuestObjectiveManager>
 {
@@ -19,28 +21,31 @@ public class QuestObjectiveManager : BaseSingleton<QuestObjectiveManager>
         public int mapId;
     }
 
-    /// <summary>
-    /// Mapping tên NPC → NpcID để tra cứu dialog.
-    /// Khớp với tên trong color tag của InfoQuest.
-    /// </summary>
     [System.Serializable]
     public struct NPCDialogEntry
     {
-        public string npcName;   // "Tinh Linh Lumi", "Cổ Thụ Nấm"
-        public int npcId;        // 1, 2, 3...
+        public string npcName;
+        public int npcId;
     }
 
     [Header("Objective Locations")]
     [SerializeField] private List<ObjectiveLocation> objectiveLocations = new List<ObjectiveLocation>();
 
-    [Header("NPC Dialog Mapping — tên NPC → NpcID")]
+    [Header("NPC Dialog Mapping — đến gần → mở dialog → complete step")]
     [SerializeField] private List<NPCDialogEntry> npcDialogEntries = new List<NPCDialogEntry>();
+
+    [Header("NPC Unlock Mapping — đến gần → hiện UIPopup khoá → player tự interact")]
+    [Tooltip("Tên NPC trong color tag của InfoQuest")]
+    [SerializeField] private List<string> npcUnlockNames = new List<string>();
 
     private Dictionary<string, ObjectiveLocation> locationMap = new Dictionary<string, ObjectiveLocation>();
     private Dictionary<string, int> npcDialogMap = new Dictionary<string, int>();
+    private HashSet<string> npcUnlockSet = new HashSet<string>();
     private ObjectiveLocation? currentObjective = null;
+    private Dictionary<string, QuestNPCMover> npcMoverMap = new Dictionary<string, QuestNPCMover>();
 
-    // Quest/step đang chờ dialog hoàn thành
+    public void RegisterNPCMover(string name, QuestNPCMover mover) => npcMoverMap[name] = mover;
+    public void UnregisterNPCMover(string name) => npcMoverMap.Remove(name);
     private int pendingQuestId = -1;
     private int pendingStepId = -1;
     private int pendingMaxStepId = -1;
@@ -49,7 +54,7 @@ public class QuestObjectiveManager : BaseSingleton<QuestObjectiveManager>
     {
         base.Awake();
         RebuildLocationMap();
-        RebuildNPCDialogMap();
+        RebuildNPCMaps();
     }
 
     private void RebuildLocationMap()
@@ -65,14 +70,17 @@ public class QuestObjectiveManager : BaseSingleton<QuestObjectiveManager>
         }
     }
 
-    private void RebuildNPCDialogMap()
+    private void RebuildNPCMaps()
     {
         npcDialogMap.Clear();
         foreach (var entry in npcDialogEntries)
-        {
             if (!string.IsNullOrEmpty(entry.npcName))
                 npcDialogMap[entry.npcName] = entry.npcId;
-        }
+
+        npcUnlockSet.Clear();
+        foreach (var name in npcUnlockNames)
+            if (!string.IsNullOrEmpty(name))
+                npcUnlockSet.Add(name);
     }
 
     // ── Public API ────────────────────────────────────────────────────────────
@@ -125,19 +133,8 @@ public class QuestObjectiveManager : BaseSingleton<QuestObjectiveManager>
         return null;
     }
 
-    public void DebugPrintAllLocations()
-    {
-        Debug.Log($"[QuestObjectiveManager] Total locations: {locationMap.Count}");
-        foreach (var loc in locationMap)
-            Debug.Log($"  {loc.Key}: {loc.Value.position} (Radius: {loc.Value.triggerRadius}, Map: {loc.Value.mapId})");
-    }
-
     // ── Dialog callback ───────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Gọi bởi UIDialog khi dialog kết thúc.
-    /// Nếu đang có pending step → complete step đó.
-    /// </summary>
     public void OnDialogFinished()
     {
         if (pendingQuestId == -1) return;
@@ -208,39 +205,51 @@ public class QuestObjectiveManager : BaseSingleton<QuestObjectiveManager>
 
     /// <summary>
     /// Khi player đến gần objective:
-    /// - Nếu objective là NPC có dialog → mở dialog, complete step sau khi dialog xong
-    /// - Nếu không có dialog → complete step ngay
+    ///   1. NPC Unlock  → KHÔNG complete, waypoint đã clear — InteractableNPC lo tiếp
+    ///   2. NPC Dialog  → mở dialog → complete sau khi dialog xong
+    ///   3. Không có gì → complete thẳng
     /// </summary>
     private void OnObjectiveReached(ObjectiveLocation objective)
     {
         if (QuestProgressManager.Instance == null || QuestDataManager.Instance == null) return;
 
+        Debug.Log($"[QuestObjectiveManager] objective.name='{objective.name}'");
+        Debug.Log($"[QuestObjectiveManager] npcDialogMap keys: {string.Join(", ", npcDialogMap.Keys)}");
+        Debug.Log($"[QuestObjectiveManager] npcUnlockSet: {string.Join(", ", npcUnlockSet)}");
         int questId = QuestProgressManager.Instance.GetCurrentQuestId();
         int stepId = QuestProgressManager.Instance.GetActiveStepForQuest(questId);
         int maxStepId = QuestDataManager.Instance.GetMaxStepId(questId);
 
-        // Kiểm tra objective có phải NPC có dialog không
+        // 1. NPC Unlock — không complete, InteractableNPC sẽ xử lý khi player bấm T
+        if (npcUnlockSet.Contains(objective.name))
+        {
+            Debug.Log($"[QuestObjectiveManager] NPC Unlock '{objective.name}' — chờ player interact");
+            return;
+        }
+
+        // 2. NPC Dialog
         if (npcDialogMap.TryGetValue(objective.name, out int npcId))
         {
-            // Lưu pending step — sẽ complete sau khi dialog xong
             pendingQuestId = questId;
             pendingStepId = stepId;
             pendingMaxStepId = maxStepId;
 
-            Debug.Log($"[QuestObjectiveManager] NPC dialog → opening NpcID={npcId}, pending Quest {questId} Step {stepId}");
+            // ← Thêm vào đây
+            if (npcMoverMap.TryGetValue(objective.name, out var mover))
+                mover.MoveToTarget();
 
-            // Mở dialog
+            Debug.Log($"[QuestObjectiveManager] NPC dialog → NpcID={npcId}, pending Quest {questId} Step {stepId}");
+
             var uiDialog = FindObjectOfType<UIDialog>(true);
             if (uiDialog != null)
                 uiDialog.PlayDialog(npcId);
             else
-                Debug.LogWarning("[QuestObjectiveManager] UIDialog không tìm thấy trên scene!");
+                Debug.LogWarning("[QuestObjectiveManager] UIDialog không tìm thấy!");
+            return;
         }
-        else
-        {
-            // Không có dialog → complete thẳng
-            Debug.Log($"[QuestObjectiveManager] No dialog → completing Quest {questId} Step {stepId}");
-            QuestProgressManager.Instance.CompleteCurrentStep(questId, stepId, maxStepId);
-        }
+
+        // 3. Không có gì đặc biệt → complete thẳng
+        Debug.Log($"[QuestObjectiveManager] No special action → completing Quest {questId} Step {stepId}");
+        QuestProgressManager.Instance.CompleteCurrentStep(questId, stepId, maxStepId);
     }
 }
