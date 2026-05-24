@@ -31,6 +31,7 @@ public static class GameEvent
 
         /// <summary>Player reached the objective — hide waypoint.</summary>
         public static Action<QuestObjectiveManager.ObjectiveLocation> OnObjectiveReached;
+        public static System.Action OnDialogFinished;
     }
 
     // ── COMBAT ─────────────────────────────────────────────────────────────────
@@ -47,7 +48,7 @@ public static class GameEvent
     public static class Player
     {
         /// <summary>Player GameObject instantiated and ready.</summary>
-        public static   Action<GameObject> OnSpawned;
+        public static Action<GameObject> OnSpawned;
     }
 
     // ── INVENTORY ──────────────────────────────────────────────────────────────
@@ -65,7 +66,8 @@ public static class GameEvent
     public static class NPC
     {
         public static System.Action<int, InteractableNPC.InteractionType> OnInteract;
-        public static System.Action OnPopupButtonClicked; // ← thêm System.
+        public static System.Action OnPopupButtonClicked;
+        public static System.Action<int> OnUnlocked; // ← thêm dòng này
     }
     // ── BOSS ───────────────────────────────────────────────────────────────────
     // Boss events remain in BossEventBus.cs (Core/Events/Boss/).

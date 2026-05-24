@@ -14,7 +14,7 @@ public class InventorySlotUI : MonoBehaviour
     [SerializeField] private Image slotBackground;
 
     private ItemType itemType;
-    private InventoryUI inventoryUI;
+    private UIInventory inventoryUI;
 
     private Color emptyColor = new Color(0.3f, 0.3f, 0.3f, 0.5f);
     private Color filledColor = Color.white;
@@ -27,7 +27,7 @@ public class InventorySlotUI : MonoBehaviour
 
     // ── API ───────────────────────────────────────────────────────────────────
 
-    public void InitializeByType(ItemType type, InventoryUI parent)
+    public void InitializeByType(ItemType type, UIInventory parent)
     {
         itemType = type;
         inventoryUI = parent;
@@ -39,21 +39,22 @@ public class InventorySlotUI : MonoBehaviour
         if (InventorySystem.Instance == null) return;
 
         int qty = InventorySystem.Instance.GetItemQuantity(type);
+        var icon = InventorySystem.Instance.GetItemIconByType(type);
+
+        Debug.Log($"[InventorySlotUI] RefreshByType {type} → qty={qty}, icon={icon?.name ?? "NULL"}");
 
         if (qty <= 0)
         {
-            // Slot trống — ẩn icon, xám nền
             if (itemIcon != null) { itemIcon.sprite = null; itemIcon.enabled = false; }
             if (quantityText != null) quantityText.text = "";
             if (slotBackground != null) slotBackground.color = emptyColor;
         }
         else
         {
-            // Có item — hiện icon + số lượng
             if (itemIcon != null)
             {
                 itemIcon.enabled = true;
-                itemIcon.sprite = InventorySystem.Instance.GetItemIconByType(type);
+                itemIcon.sprite = icon;
             }
             if (quantityText != null)
                 quantityText.text = qty > 1 ? qty.ToString() : "";
@@ -68,7 +69,7 @@ public class InventorySlotUI : MonoBehaviour
     }
 
     // Legacy support — giữ để không break code cũ
-    public void Initialize(int index, InventoryUI parent) { }
+    public void Initialize(int index, UIInventory parent) { }
     public void SetSlotData(int bag, int slot) { }
     public void SetSelected(bool selected) { }
 }

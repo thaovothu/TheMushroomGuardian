@@ -3,178 +3,115 @@ using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
-/// Hiển thị chi tiết của item được chọn
-/// Tên, hình ảnh, thuộc tính, số lượng
+/// Hiển thị chi tiết item được chọn.
+/// SetActive(true) khi click slot, SetActive(false) khi đóng/clear.
 /// </summary>
 public class ItemDetailUI : MonoBehaviour
 {
-    [SerializeField] private Image itemImage;           // Hình ảnh item
-    [SerializeField] private TextMeshProUGUI itemNameText;    // Tên item
-    [SerializeField] private TextMeshProUGUI itemTypeText;    // Loại item
-    [SerializeField] private TextMeshProUGUI quantityText;    // Số lượng
-    [SerializeField] private TextMeshProUGUI descriptionText; // Mô tả
-    
-    [SerializeField] private Button useItemButton;     // Nút sử dụng
-    [SerializeField] private Button deleteItemButton;  // Nút xoá
+    [Header("UI References")]
+    [SerializeField] private Image itemImage;
+    [SerializeField] private TextMeshProUGUI itemNameText;
+    [SerializeField] private TextMeshProUGUI itemTypeText;
+    [SerializeField] private TextMeshProUGUI quantityText;
+    [SerializeField] private TextMeshProUGUI descriptionText;
+    [SerializeField] private TextMeshProUGUI statsText;
+    [SerializeField] private Button useItemButton;
+    [SerializeField] private Button deleteItemButton;
+    [SerializeField] private Button closeButton;
 
-    private int currentBagIndex = -1;
-    private int currentSlotIndex = -1;
-    private InventorySlot currentSlotData;
+    private ItemType currentItemType = ItemType.None;
+
+    // ── Unity ─────────────────────────────────────────────────────────────────
 
     private void Start()
     {
-        // Setup buttons
         if (useItemButton != null)
             useItemButton.onClick.AddListener(OnUseItemClicked);
         if (deleteItemButton != null)
             deleteItemButton.onClick.AddListener(OnDeleteItemClicked);
+        if (closeButton != null)
+            closeButton.onClick.AddListener(Hide);
 
-        // Clear detail on start
-        ClearDetail();
+        gameObject.SetActive(false);
     }
 
-    /// <summary>
-    /// Hiển thị chi tiết của item
-    /// Gọi từ InventorySlotUI khi click vào slot
-    /// </summary>
-    public void ShowItemDetail(int bagIndex, int slotIndex, InventorySlot slotData)
-    {
-        if (slotData == null || slotData.IsEmpty)
-        {
-            ClearDetail();
-            return;
-        }
-
-        currentBagIndex = bagIndex;
-        currentSlotIndex = slotIndex;
-        currentSlotData = slotData;
-
-        ItemData itemData = slotData.ItemData;
-
-        // Cập nhật các text fields
-        if (itemNameText != null)
-            itemNameText.text = itemData.itemName;
-
-        if (itemTypeText != null)
-            itemTypeText.text = $"Type: {itemData.itemType}";
-
-        if (quantityText != null)
-            quantityText.text = $"Quantity: {slotData.Quantity}";
-
-        if (descriptionText != null)
-            descriptionText.text = itemData.description;
-
-        // Thiết lập icon từ ItemIconSO
-        if (itemImage != null)
-        {
-            Sprite icon = InventorySystem.Instance.GetItemIcon(itemData.itemId);
-            itemImage.sprite = icon;
-        }
-
-        // Enable buttons
-        if (useItemButton != null)
-            useItemButton.interactable = true;
-        if (deleteItemButton != null)
-            deleteItemButton.interactable = true;
-
-        Debug.Log($"[ItemDetailUI] Showing detail for item: {itemData.itemName}");
-    }
-
-    /// <summary>
-    /// Xoá chi tiết hiển thị
-    /// </summary>
-    public void ClearDetail()
-    {
-        currentBagIndex = -1;
-        currentSlotIndex = -1;
-        currentSlotData = null;
-
-        if (itemNameText != null)
-            itemNameText.text = "No Item Selected";
-
-        if (itemTypeText != null)
-            itemTypeText.text = "";
-
-        if (quantityText != null)
-            quantityText.text = "";
-
-        if (descriptionText != null)
-            descriptionText.text = "Select an item to view details";
-
-        if (itemImage != null)
-            itemImage.sprite = null;
-
-        if (useItemButton != null)
-            useItemButton.interactable = false;
-        if (deleteItemButton != null)
-            deleteItemButton.interactable = false;
-    }
-
-    /// <summary>
-    /// Nút sử dụng item
-    /// </summary>
-    private void OnUseItemClicked()
-    {
-        if (currentBagIndex >= 0 && currentSlotIndex >= 0)
-        {
-            InventorySystem.Instance.UseItem(currentBagIndex, currentSlotIndex);
-            ClearDetail();
-        }
-    }
-
-    /// <summary>
-    /// Nút xoá item
-    /// </summary>
-    private void OnDeleteItemClicked()
-    {
-        if (currentBagIndex >= 0 && currentSlotIndex >= 0)
-        {
-            InventorySystem.Instance.DeleteItem(currentBagIndex, currentSlotIndex);
-            ClearDetail();
-        }
-    }
-
-    /// <summary>
-    /// Ẩn detail panel
-    /// </summary>
-    public void Hide()
-    {
-        ClearDetail();
-    }
-    // Thêm vào ItemDetailUI.cs — method mới hiển thị theo ItemType:
+    // ── Public API ────────────────────────────────────────────────────────────
 
     public void ShowItemDetailByType(ItemType type, int quantity)
     {
         if (InventorySystem.Instance == null) return;
 
-        // Tìm ItemData đầu tiên theo type
-        ItemData itemData = null;
-        for (int b = 0; b < InventorySystem.Instance.GetBagCount(); b++)
+        currentItemType = type;
+
+        var icon = InventorySystem.Instance.GetItemIconByType(type);
+        var data = InventorySystem.Instance.GetItemDataByType(type);
+
+        if (itemImage != null) itemImage.sprite = icon;
+        if (itemTypeText != null) itemTypeText.text = type.ToString();
+        if (quantityText != null) quantityText.text = $"x{quantity}";
+
+        if (data != null)
         {
-            var bag = InventorySystem.Instance.GetBag(b);
-            for (int s = 0; s < bag.SlotCount; s++)
-            {
-                var slot = bag.GetSlot(s);
-                if (slot != null && !slot.IsEmpty && slot.ItemData.itemType == type)
-                {
-                    itemData = slot.ItemData;
-                    break;
-                }
-            }
-            if (itemData != null) break;
+            if (itemNameText != null) itemNameText.text = data.itemName;
+            if (descriptionText != null) descriptionText.text = data.description;
+            if (statsText != null) statsText.text = BuildStatsText(data);
         }
 
-        if (itemData == null) return;
-
-        if (itemNameText != null) itemNameText.text = itemData.itemName;
-        if (itemTypeText != null) itemTypeText.text = itemData.itemType.ToString();
-        if (quantityText != null) quantityText.text = $"x{quantity}";
-        if (descriptionText != null) descriptionText.text = itemData.description;
-
-        if (itemImage != null)
-            itemImage.sprite = InventorySystem.Instance.GetItemIconByType(type);
-
-        if (useItemButton != null) useItemButton.interactable = true;
+        if (useItemButton != null) useItemButton.interactable = IsUsable(type);
         if (deleteItemButton != null) deleteItemButton.interactable = true;
+
+        gameObject.SetActive(true);
+    }
+
+    public void ClearDetail()
+    {
+        currentItemType = ItemType.None;
+        gameObject.SetActive(false);
+    }
+
+    public void Hide() => ClearDetail();
+
+    // ── Internal ──────────────────────────────────────────────────────────────
+
+    private string BuildStatsText(ItemData data)
+    {
+        return data.itemType switch
+        {
+            ItemType.HealthPotion =>
+                data.isPercentage ? $"Hồi {data.healAmount}% HP" : $"Hồi {data.healAmount} HP",
+            ItemType.ManaPotion =>
+                data.isPercentage ? $"Hồi {data.healAmount}% Mana" : $"Hồi {data.healAmount} Mana",
+            ItemType.StrengthBuff =>
+                $"Tăng tấn công {data.buffValue}%\nThời gian: {data.buffDuration}s",
+            ItemType.DefenseBuff =>
+                $"Tăng phòng thủ {data.buffValue}%\nThời gian: {data.buffDuration}s",
+            ItemType.Sword or ItemType.Bow =>
+                $"Sát thương +{data.damageBonus}%",
+            ItemType.EarthCrystal => "Nguyên tố: Đất",
+            ItemType.WindCrystal => "Nguyên tố: Khí",
+            ItemType.WaterCrystal => "Nguyên tố: Nước",
+            ItemType.FireCrystal => "Nguyên tố: Lửa",
+            _ => ""
+        };
+    }
+
+    private bool IsUsable(ItemType type) =>
+        type == ItemType.HealthPotion ||
+        type == ItemType.ManaPotion ||
+        type == ItemType.StrengthBuff ||
+        type == ItemType.DefenseBuff;
+
+    private void OnUseItemClicked()
+    {
+        if (currentItemType == ItemType.None) return;
+        InventorySystem.Instance?.UseItem(currentItemType);
+        Hide();
+    }
+
+    private void OnDeleteItemClicked()
+    {
+        if (currentItemType == ItemType.None) return;
+        InventorySystem.Instance?.RemoveItem(currentItemType);
+        Hide();
     }
 }

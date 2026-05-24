@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,14 +7,14 @@ using UnityEngine.UI;
 ///   Row 1 — Vũ Khí:     Sword, Bow
 ///   Row 2 — Bình Thuốc: HealthPotion, ManaPotion, StrengthBuff, DefenseBuff
 ///   Row 3 — Nguyên Tố:  EarthCrystal, WindCrystal, WaterCrystal, FireCrystal
-/// Mỗi slot gắn cố định với 1 ItemType — hiện số lượng khi có item.
+/// Subscribe event trong Awake/OnDestroy — không dùng CanvasGroup.
 /// </summary>
-public class InventoryUI : MonoBehaviour
+public class UIInventory : MonoBehaviour
 {
     [Header("Row containers")]
-    [SerializeField] private Transform rowWeapon;    // Parent chứa slots vũ khí
-    [SerializeField] private Transform rowPotion;    // Parent chứa slots bình
-    [SerializeField] private Transform rowElement;   // Parent chứa slots nguyên tố
+    [SerializeField] private Transform rowWeapon;
+    [SerializeField] private Transform rowPotion;
+    [SerializeField] private Transform rowElement;
 
     [Header("Slot Prefab")]
     [SerializeField] private InventorySlotUI slotPrefab;
@@ -26,23 +25,19 @@ public class InventoryUI : MonoBehaviour
     [Header("Close Button")]
     [SerializeField] private Button closeButton;
 
-    // Item types cho mỗi row — thứ tự = thứ tự slot trong row
     private static readonly ItemType[] WeaponTypes = { ItemType.Sword, ItemType.Bow };
     private static readonly ItemType[] PotionTypes = { ItemType.HealthPotion, ItemType.ManaPotion, ItemType.StrengthBuff, ItemType.DefenseBuff };
     private static readonly ItemType[] ElementTypes = { ItemType.EarthCrystal, ItemType.WindCrystal, ItemType.WaterCrystal, ItemType.FireCrystal };
 
-    // Lookup: ItemType → slot UI
     private Dictionary<ItemType, InventorySlotUI> slotByType = new Dictionary<ItemType, InventorySlotUI>();
-
-    private CanvasGroup canvasGroup;
+    private bool isBuilt = false;
 
     // ── Unity ─────────────────────────────────────────────────────────────────
 
     private void Awake()
     {
-        canvasGroup = GetComponent<CanvasGroup>();
-        if (canvasGroup == null)
-            canvasGroup = gameObject.AddComponent<CanvasGroup>();
+        GameEvent.Inventory.OnSlotChanged += OnInventoryChanged;
+        GameEvent.Item.OnItemPickedUp += OnItemPickedUp;
     }
 
     private void Start()
@@ -54,13 +49,7 @@ public class InventoryUI : MonoBehaviour
             closeButton.onClick.AddListener(Hide);
     }
 
-    private void OnEnable()
-    {
-        GameEvent.Inventory.OnSlotChanged += OnInventoryChanged;
-        GameEvent.Item.OnItemPickedUp += OnItemPickedUp;
-    }
-
-    private void OnDisable()
+    private void OnDestroy()
     {
         GameEvent.Inventory.OnSlotChanged -= OnInventoryChanged;
         GameEvent.Item.OnItemPickedUp -= OnItemPickedUp;
@@ -71,38 +60,41 @@ public class InventoryUI : MonoBehaviour
     public void Show()
     {
         gameObject.SetActive(true);
-        canvasGroup.alpha = 1f;
-        canvasGroup.blocksRaycasts = true;
         RefreshAll();
     }
 
     public void Hide()
     {
-        canvasGroup.alpha = 0f;
-        canvasGroup.blocksRaycasts = false;
         if (itemDetailUI != null) itemDetailUI.Hide();
+        gameObject.SetActive(false);
     }
 
     public void Toggle()
     {
-        if (canvasGroup.alpha > 0) Hide();
+        if (gameObject.activeSelf) Hide();
         else Show();
     }
+
+    public bool IsOpen => gameObject.activeSelf;
 
     // ── Build ─────────────────────────────────────────────────────────────────
 
     private void BuildRows()
     {
+        if (isBuilt) return;
+
         BuildRow(rowWeapon, WeaponTypes);
         BuildRow(rowPotion, PotionTypes);
         BuildRow(rowElement, ElementTypes);
+
+        isBuilt = true;
+        Debug.Log($"[InventoryUI] Built rows — slotByType count={slotByType.Count}");
     }
 
     private void BuildRow(Transform parent, ItemType[] types)
     {
         if (parent == null || slotPrefab == null) return;
 
-        // Xóa slot cũ
         foreach (Transform child in parent)
             Destroy(child.gameObject);
 
@@ -124,12 +116,14 @@ public class InventoryUI : MonoBehaviour
 
     private void OnInventoryChanged(int bagIndex, int slotIndex)
     {
-        RefreshAll();
+        // Chỉ refresh khi đang mở
+        if (gameObject.activeSelf) RefreshAll();
     }
 
     private void OnItemPickedUp(int itemId, int amount)
     {
-        RefreshAll();
+        // Chỉ refresh khi đang mở
+        if (gameObject.activeSelf) RefreshAll();
     }
 
     public void OnSlotClicked(ItemType type)

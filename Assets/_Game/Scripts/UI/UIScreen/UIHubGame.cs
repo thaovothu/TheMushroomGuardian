@@ -8,7 +8,7 @@ public class UIHubGame : MonoBehaviour
 {
     [SerializeField] private Button inventoryBtn;
     [SerializeField] private Button questBtn;
-    [SerializeField] private InventoryUI inventoryUI;
+    [SerializeField] private UIInventory uIInventory;
     [SerializeField] private UIQuestPanel questUI;
 
     void OnEnable()
@@ -24,7 +24,7 @@ public class UIHubGame : MonoBehaviour
 
     private void OnInventoryBtnClicked()
     {
-        inventoryUI.Show();
+        uIInventory.Show();
     }
     private void OnQuestBtnClicked()
     {
