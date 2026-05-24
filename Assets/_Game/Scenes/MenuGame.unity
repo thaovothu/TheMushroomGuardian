@@ -433,6 +433,21 @@ PrefabInstance:
       propertyPath: uiDialog
       value: 
       objectReference: {fileID: 1112496632}
+    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: objectiveLocations.Array.data[2].position.x
+      value: 192.13
+      objectReference: {fileID: 0}
+    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: objectiveLocations.Array.data[2].position.y
+      value: 2.93
+      objectReference: {fileID: 0}
+    - target: {fileID: 6482398444246568314, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: objectiveLocations.Array.data[2].position.z
+      value: 126.99
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -551,41 +566,6 @@ PrefabInstance:
       propertyPath: m_Lens.m_SensorSize.y
       value: 24
       objectReference: {fileID: 0}
-    - target: {fileID: 6421935226350217015, guid: 9bbfa3f92bbec4deabd885b807a3700b,
-        type: 3}
-      propertyPath: m_XAxis.m_InvertInput
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6421935226350217015, guid: 9bbfa3f92bbec4deabd885b807a3700b,
-        type: 3}
-      propertyPath: m_Orbits.Array.data[0].m_Height
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6421935226350217015, guid: 9bbfa3f92bbec4deabd885b807a3700b,
-        type: 3}
-      propertyPath: m_Orbits.Array.data[0].m_Radius
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6421935226350217015, guid: 9bbfa3f92bbec4deabd885b807a3700b,
-        type: 3}
-      propertyPath: m_Orbits.Array.data[1].m_Height
-      value: 2.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6421935226350217015, guid: 9bbfa3f92bbec4deabd885b807a3700b,
-        type: 3}
-      propertyPath: m_Orbits.Array.data[1].m_Radius
-      value: 5.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6421935226350217015, guid: 9bbfa3f92bbec4deabd885b807a3700b,
-        type: 3}
-      propertyPath: m_Orbits.Array.data[2].m_Height
-      value: 1.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6421935226350217015, guid: 9bbfa3f92bbec4deabd885b807a3700b,
-        type: 3}
-      propertyPath: m_Orbits.Array.data[2].m_Radius
-      value: 6
-      objectReference: {fileID: 0}
     - target: {fileID: 8875205123851705575, guid: 9bbfa3f92bbec4deabd885b807a3700b,
         type: 3}
       propertyPath: m_FollowOffset.y
@@ -607,7 +587,8 @@ PrefabInstance:
       value: -6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 2382627084660300078, guid: 9bbfa3f92bbec4deabd885b807a3700b, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9bbfa3f92bbec4deabd885b807a3700b, type: 3}

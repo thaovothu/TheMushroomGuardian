@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BossEarth
   m_EditorClassIdentifier: 
   enemyVariants:
-  - enemyName: BossEarth
+    enemyName: BossEarth
     enemyPrefab: {fileID: 2869362887871855709, guid: a7b27a3e48a37424a9c48caa13db768d,
       type: 3}
   enemyData:

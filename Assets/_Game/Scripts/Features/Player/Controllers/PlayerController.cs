@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
         [SerializeField] float dashForce = 8f;
         [SerializeField] float dashDuration = 0.3f;
         [SerializeField] float dashCooldown = 0f;
+        [SerializeField] float dashManaCost = 20f;
 
         [Header("Attack Settings")]
         [SerializeField] float attackCooldown = 0.3f;
@@ -68,6 +69,7 @@ public class PlayerController : MonoBehaviour
         CountdownTimer skillDefendTimer;
 
         StateMachine stateMachine;
+        PlayerSkillController skillController;
 
         // Animator parameters
         static readonly int Speed = Animator.StringToHash("Speed");
@@ -89,6 +91,7 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         mainCam = Camera.main.transform;
+        skillController = GetComponent<PlayerSkillController>();
 
         CameraManager.Instance.SetTarget(transform);
 
@@ -259,8 +262,10 @@ public class PlayerController : MonoBehaviour
 
         void OnDash(bool performed)
         {
-            if (performed && !dashTimer.IsRunning && !dashCooldownTimer.IsRunning)
+            if (performed && !dashTimer.IsRunning && !dashCooldownTimer.IsRunning
+                && skillController != null && skillController.HasMana(dashManaCost))
             {
+                skillController.ConsumeMana(dashManaCost);
                 dashTimer.Start();
             }
             // else if (!performed && dashTimer.IsRunning)
@@ -371,10 +376,16 @@ public class PlayerController : MonoBehaviour
         if (!dashTimer.IsRunning) return;
 
         // Chỉ apply force ở frame đầu tiên của dash
-        if (dashTimer.progress >= 0.95f) // gần 1f = vừa mới start
+        if (dashTimer.progress >= 0.95f)
         {
             rb.AddForce(transform.forward * dashForce, ForceMode.Impulse);
+            return;
         }
+
+        // Thoát dash ngay khi đã dừng lại
+        Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        if (horizontalVelocity.magnitude < 0.5f)
+            dashTimer.Stop();
     }
 
     public void Attack()
@@ -421,6 +432,19 @@ public class PlayerController : MonoBehaviour
         EquipmentSystem.Instance.EndDealDamage();
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log($"[PlayerController] OnCollisionEnter: {collision.gameObject.name} | Tag: {collision.gameObject.tag} | Layer: {LayerMask.LayerToName(collision.gameObject.layer)}");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"[PlayerController] OnTriggerEnter: {other.gameObject.name} | Tag: {other.gameObject.tag} | Layer: {LayerMask.LayerToName(other.gameObject.layer)}");
+    }
+    private void OnCollisionStay(Collision collision)
+    {
+        Debug.Log($"[PlayerController] Touching: {collision.gameObject.name}");
+    }
 }
 
     

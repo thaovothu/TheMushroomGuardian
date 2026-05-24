@@ -13,19 +13,7 @@ MonoBehaviour:
   m_Name: BossSO
   m_EditorClassIdentifier: 
   enemyVariants:
-  - enemyName: Boss1
-    enemyPrefab: {fileID: 2869362887871855709, guid: a7b27a3e48a37424a9c48caa13db768d,
-      type: 3}
-  - enemyName: Boss2
-    enemyPrefab: {fileID: 2869362887871855709, guid: a7b27a3e48a37424a9c48caa13db768d,
-      type: 3}
-  - enemyName: Boss3
-    enemyPrefab: {fileID: 2869362887871855709, guid: a7b27a3e48a37424a9c48caa13db768d,
-      type: 3}
-  - enemyName: Boss3
-    enemyPrefab: {fileID: 2869362887871855709, guid: a7b27a3e48a37424a9c48caa13db768d,
-      type: 3}
-  - enemyName: Boss3
+    enemyName: BossEarth
     enemyPrefab: {fileID: 2869362887871855709, guid: a7b27a3e48a37424a9c48caa13db768d,
       type: 3}
   enemyData:

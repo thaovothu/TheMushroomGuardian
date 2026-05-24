@@ -107,18 +107,11 @@ public class PoolSpawnManager : BaseSingleton<PoolSpawnManager>
         foreach (var cfg in mapData.enemyConfigs)
         {
             if (!ValidateConfig(cfg)) continue;
-            foreach (var variant in cfg.baseEnemySO.enemyVariants)
+            var variant = cfg.baseEnemySO.enemyVariants;
+            if (variant?.enemyPrefab != null && !_poolMap.ContainsKey(variant.enemyPrefab))
             {
-                if (variant?.enemyPrefab == null) continue;
-                if (!_poolMap.ContainsKey(variant.enemyPrefab))
-                {
-                    // Tạo pool với parent là DataEnemy (hoặc PoolSpawnManager nếu DataEnemy chưa gán)
-                    Transform poolParent = DataEnemy != null ? DataEnemy.transform : transform;
-                    _poolMap[variant.enemyPrefab] =
-                        new SimpleObjectPool(variant.enemyPrefab, initialSize, poolParent);
-
-                    //Debug.Log($"[PoolSpawnManager] Pool created: {variant.enemyPrefab.name} x{initialSize}");
-                }
+                Transform poolParent = DataEnemy != null ? DataEnemy.transform : transform;
+                _poolMap[variant.enemyPrefab] = new SimpleObjectPool(variant.enemyPrefab, initialSize, poolParent);
             }
         }
     }
