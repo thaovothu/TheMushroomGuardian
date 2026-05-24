@@ -30,13 +30,14 @@ public class QuestCollectTracker : BaseSingleton<QuestCollectTracker>
     private void OnEnable()
     {
         GameEvent.Quest.OnStepChanged += OnStepChanged;
+        GameEvent.Item.OnItemPickedUp += OnItemPickedUp; // ← đang thiếu dòng này
     }
 
     private void OnDisable()
     {
         GameEvent.Quest.OnStepChanged -= OnStepChanged;
+        GameEvent.Item.OnItemPickedUp -= OnItemPickedUp; // ← và dòng này
     }
-
     // ── Event Handlers ────────────────────────────────────────────────────────
 
     private void OnItemPickedUp(int itemId, int amount)

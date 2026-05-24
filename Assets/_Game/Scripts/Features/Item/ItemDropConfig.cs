@@ -20,155 +20,127 @@ public class ItemPickupPrefabEntry
     public ItemType itemType;
     public GameObject prefab;
 }
-
 [CreateAssetMenu(fileName = "ItemDropConfig", menuName = "EntityData/ItemDropConfig")]
 public class ItemDropConfig : ScriptableObject
 {
     [Header("Always drop")]
-    [SerializeField] private ItemDropChance coinDrop = new() 
-    { 
-        itemType = ItemType.Coin, 
+    [SerializeField]
+    private ItemDropChance coinDrop = new()
+    {
+        itemType = ItemType.Coin,
         dropChance = 80f,
         itemId = 8,
         dropAmount = 10
     };
-    
-    [SerializeField] private ItemDropChance expGemDrop = new() 
-    { 
-        itemType = ItemType.EXPGem, 
+
+    [SerializeField]
+    private ItemDropChance expGemDrop = new()
+    {
+        itemType = ItemType.EXPGem,
         dropChance = 50f,
         itemId = 7,
         dropAmount = 1
     };
 
-    [Header("Boss only")]
-    [SerializeField] private ItemDropChance earthCrystalDrop = new() 
-    { 
-        itemType = ItemType.EarthCrystal, 
-        dropChance = 5f,
+    [Header("Element Crystals — mỗi element 1 entry")]
+    [SerializeField]
+    private ItemDropChance earthCrystalDrop = new()
+    {
+        itemType = ItemType.EarthCrystal,
+        dropChance = 100f,
         itemId = 9,
         dropAmount = 1
     };
 
-    [SerializeField] private ItemDropChance windCrystalDrop = new() 
-    { 
-        itemType = ItemType.WindCrystal, 
-        dropChance = 5f,
+    [SerializeField]
+    private ItemDropChance windCrystalDrop = new()
+    {
+        itemType = ItemType.WindCrystal,
+        dropChance = 100f,
         itemId = 10,
         dropAmount = 1
     };
 
-    [SerializeField] private ItemDropChance waterCrystalDrop = new() 
-    { 
-        itemType = ItemType.WaterCrystal, 
-        dropChance = 5f,
+    [SerializeField]
+    private ItemDropChance waterCrystalDrop = new()
+    {
+        itemType = ItemType.WaterCrystal,
+        dropChance = 100f,
         itemId = 11,
         dropAmount = 1
     };
 
-    [SerializeField] private ItemDropChance fireCrystalDrop = new() 
-    { 
-        itemType = ItemType.FireCrystal, 
-        dropChance = 5f,
+    [SerializeField]
+    private ItemDropChance fireCrystalDrop = new()
+    {
+        itemType = ItemType.FireCrystal,
+        dropChance = 100f,
         itemId = 12,
         dropAmount = 1
     };
 
     [Header("Buff")]
-    [SerializeField] private ItemDropChance strengthBuffDrop = new() 
-    { 
-        itemType = ItemType.StrengthBuff, 
+    [SerializeField]
+    private ItemDropChance strengthBuffDrop = new()
+    {
+        itemType = ItemType.StrengthBuff,
         dropChance = 3f,
         itemId = 3,
         dropAmount = 1
     };
 
-    [SerializeField] private ItemDropChance defenseBuffDrop = new() 
-    { 
-        itemType = ItemType.DefenseBuff, 
+    [SerializeField]
+    private ItemDropChance defenseBuffDrop = new()
+    {
+        itemType = ItemType.DefenseBuff,
         dropChance = 3f,
         itemId = 4,
         dropAmount = 1
     };
+
     [Header("Quest Items")]
     [SerializeField] private List<ItemDropChance> questItemDrops = new List<ItemDropChance>();
-
-    public List<ItemDropChance> GetQuestDrops()
-    {
-        return questItemDrops;
-    }
 
     [Header("Spawning")]
     [SerializeField] private List<ItemPickupPrefabEntry> itemPickupPrefabs = new();
     [SerializeField] private GameObject fallbackItemPickupPrefab;
     [SerializeField] public float dropForce = 5f;
 
+    public List<ItemDropChance> GetQuestDrops() => questItemDrops;
+
     public GameObject GetPickupPrefab(ItemType itemType)
     {
         foreach (var entry in itemPickupPrefabs)
-        {
             if (entry != null && entry.itemType == itemType && entry.prefab != null)
-            {
                 return entry.prefab;
-            }
-        }
-
         return fallbackItemPickupPrefab;
     }
 
-    /// <summary>
-    /// Lấy main drop items cho enemy thường (không bao gồm crystals)
-    /// </summary>
     public List<ItemDropChance> GetMainDrops()
     {
-        return new List<ItemDropChance> 
-        { 
-            coinDrop, 
-            expGemDrop,
-            defenseBuffDrop, 
-            strengthBuffDrop
-        };
+        return new List<ItemDropChance> { coinDrop, expGemDrop, defenseBuffDrop, strengthBuffDrop };
     }
 
     /// <summary>
-    /// Lấy tất cả drop items (chỉ cho boss, bao gồm cả crystals)
+    /// Drop crystal đúng theo element của boss + coin/exp thường
     /// </summary>
-    public List<ItemDropChance> GetAllDrops()
+    public List<ItemDropChance> GetBossDrops(ElementType bossElement)
     {
-        return new List<ItemDropChance> 
-        { 
-            coinDrop, 
-            expGemDrop, 
-            earthCrystalDrop,
-            windCrystalDrop,
-            waterCrystalDrop,
-            fireCrystalDrop,
-            strengthBuffDrop,
-            defenseBuffDrop
-        };
+        Debug.Log($"[ItemDropConfig] GetBossDrops called with element: {bossElement}");
+        var drops = new List<ItemDropChance> { coinDrop, expGemDrop };
+
+        switch (bossElement)
+        {
+            case ElementType.Earth: drops.Add(earthCrystalDrop); break;
+            case ElementType.Fire: drops.Add(fireCrystalDrop); break;
+            case ElementType.Water: drops.Add(waterCrystalDrop); break;
+            case ElementType.Wind: drops.Add(windCrystalDrop); break;
+            default: Debug.LogWarning($"[ItemDropConfig] Không có crystal cho element: {bossElement}"); break;
+        }
+
+        return drops;
     }
 
-    /// <summary>
-    /// Lấy boss-only drops (crystals + buff)
-    /// </summary>
-    public List<ItemDropChance> GetBossDrops()
-    {
-        return new List<ItemDropChance> 
-        { 
-            coinDrop,
-            expGemDrop,
-            earthCrystalDrop,
-            windCrystalDrop,
-            waterCrystalDrop,
-            fireCrystalDrop,
-            strengthBuffDrop,
-            defenseBuffDrop
-        };
-    }
-
-    /// <summary>
-    /// Check drop theo tỷ lệ
-    /// </summary>
     public bool CheckDropChance(ItemDropChance drop)
     {
         return Random.value * 100f <= drop.dropChance;

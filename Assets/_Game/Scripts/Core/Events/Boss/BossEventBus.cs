@@ -1,9 +1,9 @@
 using System;
-
+using UnityEngine;
 public static class BossEventBus
 {
-    public static System.Action<ElementType> OnElementChanged;
-    public static System.Action<float> OnPhaseChanged;
-    public static System.Action OnBossDeath;
+    public static Action<GameObject> OnBossSpawned; // ← thêm dòng này
+    public static Action<ElementType> OnElementChanged;
+    public static Action<float> OnPhaseChanged;
+    public static Action OnBossDeath;
 }
-

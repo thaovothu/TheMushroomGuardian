@@ -57,8 +57,18 @@ public class ItemDetailUI : MonoBehaviour
             if (statsText != null) statsText.text = BuildStatsText(data);
         }
 
-        if (useItemButton != null) useItemButton.interactable = IsUsable(type);
-        if (deleteItemButton != null) deleteItemButton.interactable = true;
+        bool isElement = type == ItemType.EarthCrystal || type == ItemType.WindCrystal
+                      || type == ItemType.WaterCrystal || type == ItemType.FireCrystal;
+
+        if (useItemButton != null)
+        {
+            useItemButton.gameObject.SetActive(!isElement); // ẩn hẳn với crystal
+        }
+
+        if (deleteItemButton != null)
+        {
+            deleteItemButton.gameObject.SetActive(!isElement); // crystal cũng không xóa được
+        }
 
         gameObject.SetActive(true);
     }

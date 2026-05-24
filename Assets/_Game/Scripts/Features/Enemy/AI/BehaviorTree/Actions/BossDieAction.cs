@@ -21,13 +21,12 @@ public class BossDieAction : ActionNode
     protected override TaskStatus OnUpdate()
     {
         timer += Time.deltaTime;
-        //Debug.Log($"[BossDieAction] Timer: {timer:F2}/{dieDuration}s");
-        
-        // After die duration, boss is removed (or respawned)
+
         if (timer >= dieDuration)
         {
-            //Debug.Log($"[BossDieAction] Die animation finished! Removing boss");
-            // Call death handler (e.g., PoolSpawnManager.OnRelease)
+            // Dùng bossBaseElement thay vì currentElement
+            ItemDropManager.Instance?.DropItemsOnBossDeath(bb.transform.position, bb.bossBaseElement);
+            QuestSpawnManager.Instance?.NotifySpawnedEnemyDied(bb.gameObject);
             PoolSpawnManager.Instance.OnRelease?.Invoke(bb.gameObject);
             return TaskStatus.Success;
         }
@@ -37,7 +36,7 @@ public class BossDieAction : ActionNode
 
     protected override void OnExit()
     {
-        bb.agent.isStopped = false;
-        //Debug.Log("[BossDieAction] Die action exited");
+        // Bỏ agent.Resume() vì boss đã chết, agent không còn active
+        // bb.agent.isStopped = false; ← đây là nguyên nhân warning "Resume on inactive agent"
     }
 }

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd8b75bb3c7d243b7b11bd5ca5969b2f, type: 3}
+  m_Name: QuestSpawnConfig (ID=4)
+  m_EditorClassIdentifier: 
+  spawnGroupId: 4
+  enemyConfigs:
+  - baseEnemySO: {fileID: 11400000, guid: 654cb2947f495496abf228b173a287c4, type: 2}
+    count: 1
+    level: 01000000
+  spawnPoints:
+  - {fileID: 5055696700553513324, guid: 03ca0b411c0d9428ebd84e135acb0dbc, type: 3}
