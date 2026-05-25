@@ -47,8 +47,10 @@ public static class GameEvent
     // ── PLAYER ─────────────────────────────────────────────────────────────────
     public static class Player
     {
-        /// <summary>Player GameObject instantiated and ready.</summary>
-        public static Action<GameObject> OnSpawned;
+        public static System.Action<GameObject> OnSpawned;
+        public static System.Action<ElementType> OnSkillAttackCast; // ← thêm
+        public static System.Action<ElementType> OnSkillDefendCast; // ← thêm
+        public static System.Action OnDashUsed;                     // ← thêm
     }
 
     // ── INVENTORY ──────────────────────────────────────────────────────────────

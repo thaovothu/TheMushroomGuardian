@@ -19,6 +19,7 @@ public class EnemyChaseState : EnemyBaseState
 
     public override void Update()
     {
+        if (!agent.isActiveAndEnabled || !agent.isOnNavMesh) return;
         agent.SetDestination(player.position);
     }
 }

@@ -38,6 +38,11 @@ public class QuestObjectiveManager : BaseSingleton<QuestObjectiveManager>
     [Tooltip("Tên NPC trong color tag của InfoQuest")]
     [SerializeField] private List<string> npcUnlockNames = new List<string>();
 
+    [Header("Puzzle Locations — đến nơi nhưng KHÔNG complete, chờ puzzle xử lý")]
+    [SerializeField] private List<string> puzzleLocationNames = new List<string>();
+
+    private HashSet<string> puzzleLocationSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
     private Dictionary<string, ObjectiveLocation> locationMap = new Dictionary<string, ObjectiveLocation>();
     private Dictionary<string, int> npcDialogMap = new Dictionary<string, int>();
     private HashSet<string> npcUnlockSet = new HashSet<string>();
@@ -67,7 +72,7 @@ public class QuestObjectiveManager : BaseSingleton<QuestObjectiveManager>
                 locationMap[location.name] = location;
                 Debug.Log($"[QuestObjectiveManager] Registered location: {location.name} at {location.position}");
             }
-        }
+        }   
     }
 
     private void RebuildNPCMaps()
@@ -81,6 +86,11 @@ public class QuestObjectiveManager : BaseSingleton<QuestObjectiveManager>
         foreach (var name in npcUnlockNames)
             if (!string.IsNullOrEmpty(name))
                 npcUnlockSet.Add(name);
+
+        puzzleLocationSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var name in puzzleLocationNames)
+            if (!string.IsNullOrEmpty(name))
+                puzzleLocationSet.Add(name);
     }
 
     // ── Public API ────────────────────────────────────────────────────────────
@@ -245,6 +255,13 @@ public class QuestObjectiveManager : BaseSingleton<QuestObjectiveManager>
                 uiDialog.PlayDialog(npcId);
             else
                 Debug.LogWarning("[QuestObjectiveManager] UIDialog không tìm thấy!");
+            return;
+        }
+        // 3. Puzzle Location — không complete, chờ puzzle xử lý
+        if (puzzleLocationSet.Contains(objective.name))
+        {
+            Debug.Log($"[QuestObjectiveManager] Puzzle location '{objective.name}' — chờ puzzle complete");
+            ClearObjective(); // ẩn waypoint nhưng KHÔNG complete step
             return;
         }
 

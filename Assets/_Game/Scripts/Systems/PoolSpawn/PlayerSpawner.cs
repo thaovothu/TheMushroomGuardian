@@ -1,28 +1,43 @@
 using UnityEngine;
 
-/// <summary>
-/// Singleton nằm trong DataGame (DontDestroyOnLoad).
-/// Nhận spawn point từ SceneRegistry — spawn hoặc teleport player ngay khi nhận được point.
-/// </summary>
 public class PlayerSpawner : BaseSingleton<PlayerSpawner>
 {
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject content;
 
     private GameObject spawnedPlayer;
+    private string lastScene = "";
 
     public GameObject GetSpawnedPlayer() => spawnedPlayer;
 
-    public void RegisterSpawnPoint(Transform spawnPoint)
+    public void RegisterSpawnPoint(Transform point)
     {
-        if (spawnPoint == null)
+        if (point == null)
         {
             Debug.LogWarning("[PlayerSpawner] spawnPoint là null!");
             return;
         }
 
-        Debug.Log($"[PlayerSpawner] Spawn point registered: {spawnPoint.position}");
-        SpawnPlayer(spawnPoint);
+        string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+
+        if (spawnedPlayer == null)
+        {
+            // Chưa có player → spawn mới
+            lastScene = currentScene;
+            SpawnPlayer(point);
+        }
+        else if (currentScene != lastScene)
+        {
+            // Chuyển sang scene mới → teleport
+            lastScene = currentScene;
+            TeleportPlayer(spawnedPlayer, point.position, point.rotation);
+            GameEvent.Player.OnSpawned?.Invoke(spawnedPlayer);
+        }
+        else
+        {
+            // Cùng scene reload → bỏ qua
+            Debug.Log($"[PlayerSpawner] Same scene reload — skipping teleport");
+        }
     }
 
     private void SpawnPlayer(Transform spawnPoint)
@@ -30,7 +45,7 @@ public class PlayerSpawner : BaseSingleton<PlayerSpawner>
         Vector3 spawnPos = spawnPoint.position;
         Quaternion spawnRot = spawnPoint.rotation;
 
-        // Player đã tồn tại → teleport
+        // Player đã tồn tại trong scene (DontDestroyOnLoad) → teleport
         var existingPlayer = GameObject.FindGameObjectWithTag("Player");
         if (existingPlayer != null)
         {
@@ -57,23 +72,17 @@ public class PlayerSpawner : BaseSingleton<PlayerSpawner>
         GameEvent.Player.OnSpawned?.Invoke(spawnedPlayer);
     }
 
-    /// <summary>
-    /// Teleport player đến vị trí mới — xử lý cả Rigidbody lẫn CharacterController.
-    /// </summary>
     private void TeleportPlayer(GameObject player, Vector3 position, Quaternion rotation)
     {
-        // Xử lý CharacterController trước (phải disable mới set position được)
         var cc = player.GetComponent<CharacterController>();
         if (cc != null) cc.enabled = false;
 
-        // Set transform
         Transform parent = player.transform.parent;
         player.transform.SetParent(null);
         player.transform.position = position;
         player.transform.rotation = rotation;
         player.transform.SetParent(parent);
 
-        // Reset Rigidbody velocity + set position qua rb.position để physics sync
         var rb = player.GetComponent<Rigidbody>();
         if (rb != null)
         {
@@ -83,7 +92,6 @@ public class PlayerSpawner : BaseSingleton<PlayerSpawner>
             rb.rotation = rotation;
         }
 
-        // Enable lại CharacterController
         if (cc != null) cc.enabled = true;
 
         Debug.Log($"[PlayerSpawner] TeleportPlayer → {position}");

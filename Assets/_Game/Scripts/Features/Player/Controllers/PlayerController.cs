@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour
         [SerializeField] float skillAttackDuration = 1f;
         [SerializeField] float skillDefendDuration = 1f;
 
+        public bool IsInWindZone { get; set; } = false;
         const float ZeroF = 0f;
 
         Transform mainCam;
@@ -267,14 +268,11 @@ public class PlayerController : MonoBehaviour
             {
                 skillController.ConsumeMana(dashManaCost);
                 dashTimer.Start();
+                GameEvent.Player.OnDashUsed?.Invoke(); // ← thêm dòng này
             }
-            // else if (!performed && dashTimer.IsRunning)
-            // {
-            //     dashTimer.Stop();
-            // }
         }
 
-        void OnAttack()
+    void OnAttack()
         {   
             if (!attackCooldownTimer.IsRunning)
             {
@@ -330,19 +328,38 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
     }
 
+    // public void HandleMovement()
+    // {
+    //     // if (dashTimer.IsRunning) return;
+    //     var adjustedDirection = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * movement;
+
+    //     if (adjustedDirection.magnitude > ZeroF)
+    //     {
+    //         // Xoay player snap theo hướng di chuyển
+    //         HandleRotation(adjustedDirection);
+    //         SmoothSpeed(adjustedDirection.magnitude);
+
+    //         // Di chuyển theo hướng player đang nhìn, không theo camera
+    //         HandleHorizontalMovement(transform.forward);
+    //     }
+    //     else
+    //     {
+    //         SmoothSpeed(ZeroF);
+    //         rb.velocity = new Vector3(ZeroF, rb.velocity.y, ZeroF);
+    //     }
+    // }
     public void HandleMovement()
     {
-        // if (dashTimer.IsRunning) return;
         var adjustedDirection = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * movement;
 
         if (adjustedDirection.magnitude > ZeroF)
         {
-            // Xoay player snap theo hướng di chuyển
             HandleRotation(adjustedDirection);
             SmoothSpeed(adjustedDirection.magnitude);
 
-            // Di chuyển theo hướng player đang nhìn, không theo camera
-            HandleHorizontalMovement(transform.forward);
+            // Nếu trong wind zone, không override velocity — để WindZone tự xử lý
+            if (!IsInWindZone)
+                HandleHorizontalMovement(transform.forward);
         }
         else
         {
@@ -384,6 +401,7 @@ public class PlayerController : MonoBehaviour
 
         // Thoát dash ngay khi đã dừng lại
         Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        Debug.Log($"[PlayerController] Dash speed: {horizontalVelocity.magnitude:F2}"); // ← thêm dòng này
         if (horizontalVelocity.magnitude < 0.5f)
             dashTimer.Stop();
     }
@@ -432,19 +450,6 @@ public class PlayerController : MonoBehaviour
         EquipmentSystem.Instance.EndDealDamage();
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log($"[PlayerController] OnCollisionEnter: {collision.gameObject.name} | Tag: {collision.gameObject.tag} | Layer: {LayerMask.LayerToName(collision.gameObject.layer)}");
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log($"[PlayerController] OnTriggerEnter: {other.gameObject.name} | Tag: {other.gameObject.tag} | Layer: {LayerMask.LayerToName(other.gameObject.layer)}");
-    }
-    private void OnCollisionStay(Collision collision)
-    {
-        Debug.Log($"[PlayerController] Touching: {collision.gameObject.name}");
-    }
 }
 
     
