@@ -12,31 +12,25 @@ public class SimpleObjectPool
         this.prefab = prefab;
         this.parent = parent;
         for (int i = 0; i < initialSize; i++)
-        {
-            var go = GameObject.Instantiate(prefab, parent);
-            go.SetActive(false);
-            var p = go.GetComponent<SimplePoolable>();
-            if (p == null) p = go.AddComponent<SimplePoolable>();
-            p.SetPool(this);
-            pool.Enqueue(go);
-        }
+            pool.Enqueue(CreateInstance());
+    }
+
+    // Instantiate luôn inactive để NavMeshAgent không đăng ký tại vị trí sai
+    private GameObject CreateInstance()
+    {
+        bool wasActive = prefab.activeSelf;
+        prefab.SetActive(false);
+        var go = GameObject.Instantiate(prefab, parent);
+        prefab.SetActive(wasActive);
+        var p = go.GetComponent<SimplePoolable>();
+        if (p == null) p = go.AddComponent<SimplePoolable>();
+        p.SetPool(this);
+        return go;
     }
 
     public GameObject Get(Transform spawnPoint)
     {
-        GameObject go;
-        if (pool.Count > 0)
-        {
-            go = pool.Dequeue();
-        }
-        else
-        {
-            go = GameObject.Instantiate(prefab, parent);
-            var p = go.GetComponent<SimplePoolable>();
-            if (p == null) p = go.AddComponent<SimplePoolable>();
-            p.SetPool(this);
-        }
-
+        var go = pool.Count > 0 ? pool.Dequeue() : CreateInstance();
         go.transform.position = spawnPoint.position;
         go.transform.rotation = spawnPoint.rotation;
         go.SetActive(true);

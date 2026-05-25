@@ -15,20 +15,17 @@ QuestID	StepID	Title Quest	Info Quest	ItemReward1	CointReward	Reward	Short Des_1
 2	7	Con Đường Chiến Đấu	Thu hồi <color=yellow>Lõi Nguyên Tố Đất</color> từ cơ thể Golem			Đất	Nhận nguyên tố Đất	2		
 										
 3	1	Hơi Thở Của Gió	Đi đến <color=green>Cổng vô tận</color> để đến <color=#00FFFF>Rừng Trên Mây</color>				Đến Rừng Trên Mây	3		
-3	2	Hơi Thở Của Gió	<color=green>Lumi</color> phát hiện một luồng gió cổ trong rừng — dạy bạn kỹ năng <color=#FFCCFF>Lướt Gió</color> để có thể tiến sâu hơn			"WindAttack, WindDefend, Dash"	Học Lướt Gió	3		
-3	3	Hơi Thở Của Gió	Dùng <color=#FFCCFF>Lướt Gió</color> kích hoạt 3 cột gió theo đúng thứ tự để mở lối vào <color=#00FFFF>Đài Nấm Trôi</color>				Giải câu đố cột gió	3		
-3	4	Hơi Thở Của Gió	Tiêu diệt 10 <color=red>Dơi Bào Tử</color> đang truy đuổi và bao vây <color=green>Tinh Linh Gió</color>		480		Bảo vệ Tinh Linh Gió	3	5	
-3	5	Hơi Thở Của Gió	Giải cứu <color=green>Tinh Linh Gió</color> khỏi vòng phong ấn. Tinh Linh dạy bạn cách dùng gió xoáy trong chiến đấu		100		Giải cứu Tinh Linh Gió	3		
-3	6	Hơi Thở Của Gió	"Dụ <color=red>Harpy Bào Tử</color> vào vùng gió xoáy để suy yếu lớp giáp, rồi dùng <color=#FFCCFF>Lướt Gió</color> tấn công — không thể đánh trực tiếp"				Đánh bại Harpy	3	6	
+3	2	Hơi Thở Của Gió	Phát hiện một<color=green>Luồng gió cổ</color> hãy dùng kỹ năng <color=#FFCCFF>Lướt</color> bằng phím "Tab" để có thể tiến sâu hơn			"WindAttack, WindDefend, Dash"	Học Lướt Gió	3		
+3	3	Hơi Thở Của Gió	"Tránh xa các <color=red>Hành Bào Tử</color> lao thẳng vào người, khi chết chúng nổ tung tại chỗ. Đứng gần lúc nổ mất máu nặng. Dùng <color=#FFCCFF>Lướt Gió</color> (Tab) để dash ra xa đúng lúc — hoặc hạ chúng từ xa bằng kỹ năng."				Áp dụng chiêu lướt	3	5	
+3	4	Hơi Thở Của Gió	4 viên đá phong ấn <color=green>Tinh Linh Gió</color> — mỗi viên chỉ vỡ khi <color=#FFCCFF>Lướt</color> đúng hướng		480		Giải cứu Tinh Linh Gió	3		
+3	5	Hơi Thở Của Gió	Tinh Linh dạy bạn cách dùng gió xoáy trong chiến đấu		100		Giải cứu Tinh Linh Gió	3		
+3	6	Hơi Thở Của Gió	"ElementTrial — hiện Đất/Khí, dùng đúng nguyên tố phản công"				Đánh bại Harpy	3	6	
 3	7	Hơi Thở Của Gió	Thu hồi <color=yellow>Lõi Nguyên Tố Khí</color> từ đỉnh Đài Nấm Trôi			Khí	Nhận nguyên tố Khí	3		
 										
-4	1	Dòng Nước Mục Nát	Nguồn nước của vùng đất đang bị ô nhiễm nặng nề. Theo <color=green>Lumi</color> đến <color=#00FFFF>Đầm Xanh</color> — tầm nhìn bị che khuất bởi mưa tro và sương độc				Đến Đầm Xanh	3		
-4	2	Dòng Nước Mục Nát	Tiêu diệt 15 <color=red>Cua Ký Sinh</color> đang bơm độc tố vào các hồ nước		600		Tiêu diệt Cua Ký Sinh	3	6	
-4	3	Dòng Nước Mục Nát	Thu thập 5 <color=yellow>Giọt Nước Tinh Khiết</color> và dùng chúng làm sạch 3 hồ nước ô nhiễm — mỗi hồ được thanh tẩy sẽ mở thêm một lối đi mới				Làm sạch hồ nước	3		
-4	4	Dòng Nước Mục Nát	"Khám phá <color=#00FFFF>Hồ Nước Bí Mật</color> ẩn trong hang đá — không nằm trong nhiệm vụ chính, nhưng làm sạch nó sẽ có phần thưởng đặc biệt"	GiotNuocCo		BonusItem	Tìm hồ bí mật	3		
-4	5	Dòng Nước Mục Nát	<color=green>Tư Tế Nấm Nước</color> cảm nhận được sự thay đổi của dòng nước và tự bước ra khỏi nơi ẩn náu — dạy bạn kỹ năng <color=#FFCCFF>Hồi Phục</color>			"WaterAttack, WaterDefend"	Học Hồi Phục	3		
-4	6	Dòng Nước Mục Nát	"Đối mặt với <color=red>Rắn Nấm Độc</color> — nó liên tục tích lũy độc tô, buộc bạn phải dùng <color=#FFCCFF>Hồi Phục</color> chủ động thay vì chỉ tấn công"				Đánh bại Rắn Nấm Độc	3	7	
-4	7	Dòng Nước Mục Nát	Thu hồi <color=yellow>Lõi Nguyên Tố Nước</color> từ vực sâu đầm lầy			Nước	Nhận nguyên tố Nước	3		
+4	1	Dòng Nước Mục Nát	Tiêu diệt 15 <color=red>Cua Ký Sinh</color> đang bơm độc vào các hồ nước				Tiêu diệt Cua Ký Sinh	3	7	
+4	2	Dòng Nước Mục Nát	Kích hoạt 4 máy bơm cổ đại		600		Làm sạch hồ nước	3		
+4	3	Dòng Nước Mục Nát	<color=green>Tư Tế Nấm Nước</color> cảm nhận được sự thay đổi của dòng nước và tự bước ra khỏi nơi ẩn náu — dạy bạn kỹ năng <color=#FFCCFF>Hồi Phục</color>					3		
+4	4	Dòng Nước Mục Nát	Thu hồi <color=yellow>Lõi Nguyên Tố Nước</color> từ vực sâu đầm lầy	GiotNuocCo		BonusItem		3		
 										
 5	1	Ngọn Lửa Sau Cùng	Nguyên tố cuối cùng đang nằm sâu trong <color=#00FFFF>Núi Lửa Tro</color>. Núi lửa đang hoạt động — các khu vực sẽ bị đóng lại theo từng đợt phun trào. Phải hành động nhanh				Đến Núi Lửa Tro	4		
 5	2	Ngọn Lửa Sau Cùng	Tiêu diệt 20 <color=red>Bọ Lửa</color> canh giữ lối vào lõi dung nham trước khi đợt phun trào đầu tiên bịt lối		1000		Tiêu diệt Bọ Lửa	4	7	

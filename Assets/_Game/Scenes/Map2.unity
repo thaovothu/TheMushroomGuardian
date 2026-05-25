@@ -10324,7 +10324,7 @@ Transform:
   m_GameObject: {fileID: 213715084}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.572, y: 0.31, z: -28.49}
+  m_LocalPosition: {x: -0.572, y: -0.699, z: -28.49}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11093,8 +11093,6 @@ Transform:
   m_Children:
   - {fileID: 787936735}
   - {fileID: 676979854}
-  - {fileID: 1078865517}
-  - {fileID: 939234651}
   - {fileID: 1486694377}
   - {fileID: 879238646}
   - {fileID: 862315439}
@@ -28309,7 +28307,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 579607648}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: stairs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32979,7 +32977,7 @@ PrefabInstance:
     - target: {fileID: 8222194366535969717, guid: 82ff7500c2017644a8f89796a7de7976,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8222194366535969718, guid: 82ff7500c2017644a8f89796a7de7976,
         type: 3}
@@ -33313,7 +33311,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 684082179}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47313,100 +47311,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 938485718}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &939234650
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 231818737}
-    m_Modifications:
-    - target: {fileID: 5602187059510439727, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_Name
-      value: P_pointlight_fire_anim_dungeon (4)
-      objectReference: {fileID: 0}
-    - target: {fileID: 5602187059510439727, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5602187059510439727, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
-    - target: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 9.418
-      objectReference: {fileID: 0}
-    - target: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -2.34
-      objectReference: {fileID: 0}
-    - target: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.30498883
-      objectReference: {fileID: 0}
-    - target: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.952356
-      objectReference: {fileID: 0}
-    - target: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043935959653546660, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.27
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043935959653546663, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_Range
-      value: 4.74
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043935959653546663, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_Intensity
-      value: 11.84
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043935959653546663, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_Lightmapping
-      value: 2
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 6ae50922505306c4eaccb0809233bc08, type: 3}
---- !u!4 &939234651 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-    type: 3}
-  m_PrefabInstance: {fileID: 939234650}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &939593057
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54230,100 +54134,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1058761279090510325, guid: b8c168abc31ca5547b1e15160ab8b2ab,
     type: 3}
   m_PrefabInstance: {fileID: 1076169775}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &1078865516
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 231818737}
-    m_Modifications:
-    - target: {fileID: 5602187059510439727, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_Name
-      value: P_pointlight_fire_anim_dungeon (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 5602187059510439727, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5602187059510439727, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 4294967295
-      objectReference: {fileID: 0}
-    - target: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 9.418
-      objectReference: {fileID: 0}
-    - target: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.30498883
-      objectReference: {fileID: 0}
-    - target: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.952356
-      objectReference: {fileID: 0}
-    - target: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043935959653546660, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.27
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043935959653546663, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_Range
-      value: 4.74
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043935959653546663, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_Intensity
-      value: 11.84
-      objectReference: {fileID: 0}
-    - target: {fileID: 9043935959653546663, guid: 6ae50922505306c4eaccb0809233bc08,
-        type: 3}
-      propertyPath: m_Lightmapping
-      value: 2
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 6ae50922505306c4eaccb0809233bc08, type: 3}
---- !u!4 &1078865517 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7986183954586947255, guid: 6ae50922505306c4eaccb0809233bc08,
-    type: 3}
-  m_PrefabInstance: {fileID: 1078865516}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1080467081
 PrefabInstance:
@@ -74629,6 +74439,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: P_FX_fog_door_dungeon
       objectReference: {fileID: 0}
+    - target: {fileID: 2240058670605697093, guid: 476acdf83b7c55840b1ea36d3a417a26,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2240058671495941226, guid: 476acdf83b7c55840b1ea36d3a417a26,
         type: 3}
       propertyPath: ShapeModule.m_Scale.x
@@ -78781,7 +78596,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1568436937}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MOD_level_left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102137,7 +101952,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2043293520}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: MOD_level_right
   m_TagString: Untagged
   m_Icon: {fileID: 0}

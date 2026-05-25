@@ -29,13 +29,14 @@ public class EnemyWanderState : EnemyBaseState
 
     public override void Update ()
     {
+        if (!agent.isActiveAndEnabled || !agent.isOnNavMesh) return;
         if (HasReachedDestination())
         {
             Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
             randomDirection += wanderPoint;
             NavMeshHit hit;
             NavMesh.SamplePosition(randomDirection, out hit, wanderRadius, 1);
-            
+
             var finalPosition = hit.position;
             agent.SetDestination(finalPosition);
         }
@@ -43,6 +44,7 @@ public class EnemyWanderState : EnemyBaseState
 
     private bool HasReachedDestination()
     {
+        if (!agent.isActiveAndEnabled || !agent.isOnNavMesh) return true;
         return !agent.pathPending
             && agent.remainingDistance <= agent.stoppingDistance
             && (!agent.hasPath || agent.velocity.sqrMagnitude == 0f);

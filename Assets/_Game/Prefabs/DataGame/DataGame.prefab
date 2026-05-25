@@ -537,11 +537,11 @@ MonoBehaviour:
     triggerRadius: 5
     mapId: 1
   - name: "D\u1EA5u V\u1EBFt Ph\xE1t S\xE1ng"
-    position: {x: 570, y: 7, z: 380}
+    position: {x: 570, y: 6.4, z: 380}
     triggerRadius: 4
     mapId: 1
   - name: Tinh Linh Lumi
-    position: {x: 576.28, y: 6.34, z: 381.31}
+    position: {x: 575.16, y: 6, z: 380.86}
     triggerRadius: 3
     mapId: 1
   - name: "Tr\u01B0\u1EDFng l\xE0ng N\u1EA5m"
@@ -565,9 +565,9 @@ MonoBehaviour:
     triggerRadius: 2
     mapId: 2
   - name: "C\u1ED5ng v\xF4 t\u1EADn"
-    position: {x: 3.89, y: -2.61, z: 2.6}
-    triggerRadius: 2
-    mapId: 2
+    position: {x: 81.74, y: 15.99, z: -10.3}
+    triggerRadius: 10
+    mapId: 3
   npcDialogEntries:
   - npcName: Tinh Linh Lumi
     npcId: 1
@@ -1130,6 +1130,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 07de0c2e10f0c41e3871d3be61574863, type: 2}
   - {fileID: 11400000, guid: f036aca9d7bf447bbaa01727ed8086ba, type: 2}
   - {fileID: 11400000, guid: fe400127c0c2448eea0d282e1c63b202, type: 2}
+  - {fileID: 11400000, guid: 027d0dd569ca54f47bbbfe24183adc15, type: 2}
   defaultSpawnPoints: []
   enemyContainer: {fileID: 8196161697889788240}
   initialPoolSize: 5
