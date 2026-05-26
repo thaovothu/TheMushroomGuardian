@@ -235,6 +235,14 @@ public class PlayerSkillController : MonoBehaviour
             if (hit.collider.gameObject == gameObject)
                 continue;
 
+            var pump = hit.collider.GetComponent<AncientPump>()
+        ?? hit.collider.GetComponentInParent<AncientPump>();
+            if (pump != null)
+            {
+                pump.ReceiveElementHit(skill.element);
+                continue;
+            }
+
             HealthSystem enemyHealth = hit.collider.GetComponent<HealthSystem>();
             if (enemyHealth != null && !enemyHealth.IsDead)
             {

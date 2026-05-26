@@ -568,6 +568,46 @@ MonoBehaviour:
     position: {x: 81.74, y: 15.99, z: -10.3}
     triggerRadius: 10
     mapId: 3
+  - name: "Tinh Linh Gi\xF3"
+    position: {x: 179.5, y: 16.28, z: -28.86}
+    triggerRadius: 10
+    mapId: 3
+  - name: Tinh Linh
+    position: {x: 184.46, y: 16.76, z: -29.04}
+    triggerRadius: 4
+    mapId: 3
+  - name: "L\xF5i Nguy\xEAn T\u1ED1 Kh\xED"
+    position: {x: 206.27, y: 19.15, z: -49}
+    triggerRadius: 4
+    mapId: 3
+  - name: "M\xE1y B\u01A1m 1"
+    position: {x: 23.75, y: 2.03, z: -20}
+    triggerRadius: 4
+    mapId: 3
+  - name: "M\xE1y B\u01A1m 2"
+    position: {x: -0.48, y: 0.459, z: -0.6}
+    triggerRadius: 4
+    mapId: 3
+  - name: "M\xE1y B\u01A1m 3"
+    position: {x: -25.17, y: 5.95, z: -15.34}
+    triggerRadius: 4
+    mapId: 3
+  - name: "M\xE1y B\u01A1m 4"
+    position: {x: -33.2, y: 7.69, z: -49.51}
+    triggerRadius: 4
+    mapId: 3
+  - name: "T\u01B0 T\u1EBF N\u1EA5m N\u01B0\u1EDBc"
+    position: {x: 158.99, y: 21.659, z: -46.65}
+    triggerRadius: 4
+    mapId: 3
+  - name: "L\xF5i Nguy\xEAn T\u1ED1 N\u01B0\u1EDBc"
+    position: {x: 149.75, y: 25.29, z: -18.23}
+    triggerRadius: 5
+    mapId: 3
+  - name: "N\xFAi L\u1EEDa Tro"
+    position: {x: 0.05, y: 1, z: 0.07}
+    triggerRadius: 10
+    mapId: 4
   npcDialogEntries:
   - npcName: Tinh Linh Lumi
     npcId: 1
@@ -577,8 +617,14 @@ MonoBehaviour:
     npcId: 3
   - npcName: "Chi\u1EBFn Binh"
     npcId: 4
+  - npcName: Tinh Linh
+    npcId: 6
+  - npcName: "T\u01B0 T\u1EBF N\u1EA5m N\u01B0\u1EDBc"
+    npcId: 7
   npcUnlockNames:
   - "Chi\u1EBFn Binh R\xEAu"
+  puzzleLocationNames:
+  - "Tinh Linh Gi\xF3"
 --- !u!1 &3582862595820381165
 GameObject:
   m_ObjectHideFlags: 0
@@ -1131,6 +1177,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f036aca9d7bf447bbaa01727ed8086ba, type: 2}
   - {fileID: 11400000, guid: fe400127c0c2448eea0d282e1c63b202, type: 2}
   - {fileID: 11400000, guid: 027d0dd569ca54f47bbbfe24183adc15, type: 2}
+  - {fileID: 11400000, guid: fa7906d10d6ac4260b006822ad2b0eb2, type: 2}
   defaultSpawnPoints: []
   enemyContainer: {fileID: 8196161697889788240}
   initialPoolSize: 5

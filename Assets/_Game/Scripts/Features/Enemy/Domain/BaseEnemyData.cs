@@ -8,4 +8,9 @@ public class BaseEnemyData
     public float hp;
     public int damage;
     public float recover;
+
+    public EnemyAttackType enemyType;       // Melee hoặc Ranged
+    public GameObject bulletPrefab;   // Chỉ dùng khi Ranged
 }
+
+public enum EnemyAttackType { Melee, Ranged }

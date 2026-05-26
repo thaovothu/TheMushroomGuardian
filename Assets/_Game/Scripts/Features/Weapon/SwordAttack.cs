@@ -9,6 +9,7 @@ public class SwordAttack : MonoBehaviour
     
     [SerializeField] float weaponLength;
     [SerializeField] float weaponDamage;
+    [SerializeField] ParticleSystem slashVFX;
     void Start()
     {
         canDealDamage = false;
@@ -47,6 +48,7 @@ public class SwordAttack : MonoBehaviour
     {
         canDealDamage = true;
         hasDealtDamage.Clear();
+        if (slashVFX != null) slashVFX.Play();
     }
     public void EndDealDamage()
     {

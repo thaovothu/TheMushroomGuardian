@@ -26,6 +26,10 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
     CountdownTimer _attackTimer;
     CountdownTimer _hitTimer;
 
+    // EnemyController.cs — thêm 2 property
+    public float AttackRange => playerDetector.AttackRange; // hoặc lấy từ _data
+    public EnemyAttackType EnemyType => _data?.enemyType ?? EnemyAttackType.Melee;
+
     // ── Unity ──────────────────────────────────────
     void OnValidate() => this.ValidateRefs();
 
@@ -50,10 +54,10 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
         _stateMachine.FixedUpdate();
     }
 
-    void LateUpdate()
-    {
-        Debug.Log($"[EnemyController.LateUpdate] {name} at {transform.position}");
-    }
+    // void LateUpdate()
+    // {
+    //     Debug.Log($"[EnemyController.LateUpdate] {name} at {transform.position}");
+    // }
 
     // ── IPoolSpawned ───────────────────────────────
     // Gọi bởi PoolSpawnManager mỗi lần enemy được lấy ra khỏi pool
@@ -123,16 +127,61 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
     void Any(IState to, IPredicate c) => _stateMachine.AddAnyTransition(to, c);
 
     // ── Public API ─────────────────────────────────
-    public void Attack()
+    // public void Attack()
+    // {
+    //     if (_attackTimer.IsRunning) return;
+    //     _attackTimer.Start();
+
+    //     var health = playerDetector.Player?.GetComponent<HealthSystem>();
+    //     if (health == null) return;
+
+    //     float damage = _data?.damage ?? 10;
+    //     health.TakeDamage(damage);
+    // }
+
+    public void OnAttack()
     {
+        Attack();
+    }
+    public void Attack()
+    {   
+        Debug.Log($"[EnemyController.Attack] {name} at {transform.position} is attacking. Player: {playerDetector.Player?.name}");
         if (_attackTimer.IsRunning) return;
         _attackTimer.Start();
 
-        var health = playerDetector.Player?.GetComponent<HealthSystem>();
-        if (health == null) return;
+        switch (_data?.enemyType)
+        {
+            case EnemyAttackType.Ranged:
+                RangeAttack();
+                break;
+            default: // Melee — giữ nguyên logic cũ
+                var health = playerDetector.Player?.GetComponent<HealthSystem>();
+                if (health != null)
+                    health.TakeDamage(_data?.damage ?? 10);
+                break;
+        }
+    }
 
-        float damage = _data?.damage ?? 10;
-        health.TakeDamage(damage);
+    void RangeAttack()
+    {
+        Debug.Log($"[EnemyController.RangeAttack] {name} at {transform.position} is attacking. Player: {playerDetector.Player?.name}");
+        if (_data?.bulletPrefab == null || playerDetector.Player == null) return;
+        Debug.Log($"[EnemyController.RangeAttack] {name} at {transform.position} is attacking. Player: {playerDetector.Player?.name}");
+
+        GameObject bulletGO = Instantiate(
+            _data.bulletPrefab,
+            transform.position + Vector3.up,
+            Quaternion.identity
+        );
+        Debug.Log($"hihihihi Spawned bullet at {bulletGO.transform.position} targeting {playerDetector.Player.name}");
+        // Dùng EnemyBullet từ code tham khảo
+        var bullet = bulletGO.GetComponent<EnemyBullet>();
+        if (bullet != null)
+        {
+            bullet.damage = _data?.damage ?? 1;
+            bullet.SetTarget(playerDetector.Player);
+        }
+        Debug.Log($"hihihihi Spawned bullet at {bulletGO.transform.position} targeting {playerDetector.Player.name}");
     }
 
     public void Explode()
