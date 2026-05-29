@@ -1,5 +1,3 @@
-// Features/Enemy/Controllers/EnemyController.cs
-using KBCore.Refs;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
@@ -31,7 +29,7 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
     public EnemyAttackType EnemyType => _data?.enemyType ?? EnemyAttackType.Melee;
 
     // ── Unity ──────────────────────────────────────
-    void OnValidate() => this.ValidateRefs();
+    // void OnValidate() => this.ValidateRefs();
 
     void Awake()
     {
@@ -143,18 +141,29 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
     {
         Attack();
     }
+    // Hash của animation tấn công — dùng để re-trigger ở mỗi đòn melee, tránh case
+    // animation chạy 1 lần ở OnEnter rồi dừng ở frame cuối.
+    static readonly int AttackAnimHash = Animator.StringToHash("Attack01");
+
     public void Attack()
-    {   
-        Debug.Log($"[EnemyController.Attack] {name} at {transform.position} is attacking. Player: {playerDetector.Player?.name}");
+    {
+        // Attack() bị gọi MỖI FRAME từ EnemyAttackState (melee). Phải return sớm TRƯỚC mọi
+        // Debug.Log, nếu không log + nội suy chuỗi sẽ chạy mỗi frame -> tụt FPS lúc combat.
         if (_attackTimer.IsRunning) return;
         _attackTimer.Start();
 
         switch (_data?.enemyType)
         {
             case EnemyAttackType.Ranged:
+                // Ranged: animation play 1 lần ở OnEnter + Animation Event spawn đạn.
                 RangeAttack();
                 break;
-            default: // Melee — giữ nguyên logic cũ
+            default: // Melee
+                // Re-trigger animation cho MỖI đòn (đòn 2, 3, ... ) — nếu không, sau lần
+                // CrossFade ở OnEnter, animation kết thúc và quái đứng yên ở frame cuối.
+                if (animator != null)
+                    animator.CrossFade(AttackAnimHash, 0.05f);
+
                 var health = playerDetector.Player?.GetComponent<HealthSystem>();
                 if (health != null)
                     health.TakeDamage(_data?.damage ?? 10);
@@ -164,16 +173,13 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
 
     void RangeAttack()
     {
-        Debug.Log($"[EnemyController.RangeAttack] {name} at {transform.position} is attacking. Player: {playerDetector.Player?.name}");
         if (_data?.bulletPrefab == null || playerDetector.Player == null) return;
-        Debug.Log($"[EnemyController.RangeAttack] {name} at {transform.position} is attacking. Player: {playerDetector.Player?.name}");
 
         GameObject bulletGO = Instantiate(
             _data.bulletPrefab,
             transform.position + Vector3.up,
             Quaternion.identity
         );
-        Debug.Log($"hihihihi Spawned bullet at {bulletGO.transform.position} targeting {playerDetector.Player.name}");
         // Dùng EnemyBullet từ code tham khảo
         var bullet = bulletGO.GetComponent<EnemyBullet>();
         if (bullet != null)
@@ -181,7 +187,6 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
             bullet.damage = _data?.damage ?? 1;
             bullet.SetTarget(playerDetector.Player);
         }
-        Debug.Log($"hihihihi Spawned bullet at {bulletGO.transform.position} targeting {playerDetector.Player.name}");
     }
 
     public void Explode()

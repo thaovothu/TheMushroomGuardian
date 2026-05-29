@@ -39,23 +39,26 @@ public class BossBlackboard : MonoBehaviour, IPoolSpawned
 
     void Awake()
     {
-        if (player == null) player = GameObject.FindGameObjectWithTag("Player")?.transform;
         if (agent == null) agent = GetComponent<NavMeshAgent>();
         if (animator == null) animator = GetComponentInChildren<Animator>();
         if (healthSystem == null) healthSystem = GetComponent<HealthSystem>();
         if (behaviorTree == null) behaviorTree = GetComponent<BehaviorTree>();
-        
-        //Debug.Log($"[BossBlackboard.Awake] Initialized - HealthSystem: {(healthSystem != null ? "✓" : "✗ NULL")}, Agent: {(agent != null ? "✓" : "✗ NULL")}, BehaviorTree: {(behaviorTree != null ? "✓" : "✗ NULL")}");
+
+        // Try ngay 1 lần — phòng trường hợp player đã spawn trước
+        if (player == null)
+        {
+            var playerGO = GameObject.FindGameObjectWithTag("Player");
+            if (playerGO != null) player = playerGO.transform;
+        }
     }
 
-    void Start()
-    {
-        // Don't initialize health here - HealthSystem might not be ready yet
-        // Will initialize lazily in Update()
-    }
 
+    void OnEnable() { GameEvent.Player.OnSpawned += SetPlayer; }
+    void OnDisable() { GameEvent.Player.OnSpawned -= SetPlayer; }
+    void SetPlayer(GameObject p) { player = p.transform; }
     void Update()
     {
+        // Debug.Log("PositionBoss: " + transform.position);
         // Skip if not initialized yet
         if (!healthInitialized)
             return;
@@ -112,86 +115,59 @@ public class BossBlackboard : MonoBehaviour, IPoolSpawned
     /// </summary>
     void IPoolSpawned.OnSpawned() { }
 
+    // public void OnSpawn(BaseEnemyData data)
+    // {
+    //     _data = data ?? new BaseEnemyData { hp = 100, damage = 10, moveSpeed = 3.5f };
+
+    //     // Apply stats từ data
+    //     agent.speed = moveSpeed;
+    //     runSpeed = _data.moveSpeed;
+    //     healthSystem.Init(_data.hp);
+    //     damageBoss = _data.damage;
+
+    //     // Initialize health tracking ngay sau Init()
+    //     lastHealthValue = healthSystem.CurrentHealth;
+    //     healthInitialized = true;
+    //     Debug.Log($"[BossBlackboard.OnSpawn] ✓ Health tracking initialized: {lastHealthValue}");
+
+    //     // Restart BehaviorTree - retry nếu không ready
+    //     if (behaviorTree == null)
+    //     {
+    //         behaviorTree = GetComponent<BehaviorTree>();
+    //     }
+
+    //     if (behaviorTree != null && behaviorTree.Root != null)
+    //     {
+    //         Task.Restart(behaviorTree.Root);
+    //     }
+    //     BossEventBus.OnBossSpawned?.Invoke(gameObject);
+    //     Debug.Log($"[BossBlackboard] OnBossSpawned fired: {gameObject.name}");
+    // }
+
     public void OnSpawn(BaseEnemyData data)
     {
         _data = data ?? new BaseEnemyData { hp = 100, damage = 10, moveSpeed = 3.5f };
 
-        // Apply stats từ data
         agent.speed = moveSpeed;
         runSpeed = _data.moveSpeed;
         healthSystem.Init(_data.hp);
         damageBoss = _data.damage;
 
-        // Initialize health tracking ngay sau Init()
         lastHealthValue = healthSystem.CurrentHealth;
         healthInitialized = true;
-        Debug.Log($"[BossBlackboard.OnSpawn] ✓ Health tracking initialized: {lastHealthValue}");
 
-        // Restart BehaviorTree - retry nếu không ready
         if (behaviorTree == null)
-        {
             behaviorTree = GetComponent<BehaviorTree>();
-        }
 
         if (behaviorTree != null && behaviorTree.Root != null)
-        {
             Task.Restart(behaviorTree.Root);
-        }
+
         BossEventBus.OnBossSpawned?.Invoke(gameObject);
-        Debug.Log($"[BossBlackboard] OnBossSpawned fired: {gameObject.name}");
+
+#if UNITY_EDITOR
+        Debug.Log($"[BossBlackboard] OnSpawn complete: {gameObject.name} | HP: {lastHealthValue}");
+#endif
     }
-
-    // void Update()
-    // {
-    //     // Lazy initialization: wait until HealthSystem has valid health value
-    //     if (!healthInitialized && healthSystem != null && healthSystem.CurrentHealth > 0)
-    //     {
-    //         lastHealthValue = healthSystem.CurrentHealth;
-    //         healthInitialized = true;
-    //         //Debug.Log($"[BossBlackboard] ✓ LAZY INIT! lastHealthValue initialized to: {lastHealthValue}");
-    //     }
-
-    //     // Skip if not initialized yet
-    //     if (!healthInitialized)
-    //         return;
-
-    //     // Safety check: verify BossBlackboard is active
-    //     if (healthSystem == null)
-    //     {
-    //         //Debug.LogError("[BossBlackboard.Update] ✗✗✗ HealthSystem is NULL! Not tracking damage this frame!");
-    //         return;
-    //     }
-
-    //     if (player == null)
-    //         //Debug.LogWarning("[BossBlackboard] Player not found! Tag 'Player'?");
-        
-    //     // Cập nhật distance mỗi frame — dùng chung cho mọi node
-    //     if (player != null)
-    //         distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        
-    //     // Phase check
-    //     isPhase2 = healthSystem.GetHPPercent() < 0.5f;
-        
-    //     // Detect if Boss took damage
-    //     if (healthSystem.CurrentHealth < lastHealthValue)
-    //     {
-    //         isHit = true;
-    //         hitTimeout = HIT_DURATION;
-    //         lastHealthValue = healthSystem.CurrentHealth;
-    //         //Debug.Log($"[BossBlackboard] ✓✓✓ DAMAGE DETECTED! NewHealth: {healthSystem.CurrentHealth}, isHit = TRUE");
-    //     }
-
-    //     // Reset isHit sau HIT_DURATION
-    //     if (isHit && hitTimeout > 0)
-    //     {
-    //         hitTimeout -= Time.deltaTime;
-    //         if (hitTimeout <= 0)
-    //         {
-    //             isHit = false;
-    //             //Debug.Log($"[BossBlackboard] ✓ Hit timeout! isHit = false");
-    //         }
-    //     }
-    // }
 
     /// <summary>
     /// Centralized animation state management - prevent redundant SetTrigger calls

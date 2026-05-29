@@ -40,8 +40,7 @@ public class EnemyBullet : MonoBehaviour
     }
 
     private void OnTriggerEnter(Collider other)
-    {   
-        Debug.Log("hihihihi" + other.gameObject.name);
+    {
         if (other.CompareTag("Player"))
         {
             var playerHealth = other.GetComponent<HealthSystem>();

@@ -438,17 +438,21 @@ PrefabInstance:
       propertyPath: uiDialog
       value: 
       objectReference: {fileID: 1112496632}
-    - target: {fileID: 7415072114872134716, guid: 8ed2475fb74494ed4b433f5f683fe074,
+    - target: {fileID: 8732981771330890815, guid: 8ed2475fb74494ed4b433f5f683fe074,
         type: 3}
-      propertyPath: questSpawnConfigs.Array.size
-      value: 7
+      propertyPath: m_LocalPosition.x
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7415072114872134716, guid: 8ed2475fb74494ed4b433f5f683fe074,
+    - target: {fileID: 8732981771330890815, guid: 8ed2475fb74494ed4b433f5f683fe074,
         type: 3}
-      propertyPath: questSpawnConfigs.Array.data[6]
-      value: 
-      objectReference: {fileID: 11400000, guid: 1294ee1c86dd042dd8bba4b406f23dda,
-        type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8732981771330890815, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -557,6 +561,11 @@ PrefabInstance:
       propertyPath: m_Lens.m_SensorSize.y
       value: 24
       objectReference: {fileID: 0}
+    - target: {fileID: 5380269464698321623, guid: 9bbfa3f92bbec4deabd885b807a3700b,
+        type: 3}
+      propertyPath: speedMultiplier
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 6421935226350217015, guid: 9bbfa3f92bbec4deabd885b807a3700b,
         type: 3}
       propertyPath: m_Lens.m_SensorSize.x
@@ -588,8 +597,7 @@ PrefabInstance:
       value: -6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 2382627084660300078, guid: 9bbfa3f92bbec4deabd885b807a3700b, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9bbfa3f92bbec4deabd885b807a3700b, type: 3}

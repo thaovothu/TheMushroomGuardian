@@ -10,6 +10,6 @@ public class DataGame : BaseSingleton<DataGame>
     {
         base.Awake();
         // Persist this object and all children across scene loads
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(transform.root.gameObject);
     }
 }

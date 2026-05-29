@@ -91,6 +91,9 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
+    #if !UNITY_EDITOR
+        Debug.unityLogger.logEnabled = false;
+    #endif
         mainCam = Camera.main.transform;
         skillController = GetComponent<PlayerSkillController>();
 
@@ -401,20 +404,20 @@ public class PlayerController : MonoBehaviour
 
         // Thoát dash ngay khi đã dừng lại
         Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-        Debug.Log($"[PlayerController] Dash speed: {horizontalVelocity.magnitude:F2}"); // ← thêm dòng này
         if (horizontalVelocity.magnitude < 0.5f)
             dashTimer.Stop();
     }
 
+    readonly Collider[] attackHitBuffer = new Collider[16];
+
     public void Attack()
     {
         Vector3 attackPos = transform.position + transform.forward;
-        Collider[] hitEnemies = Physics.OverlapSphere(attackPos, attackDistance);
-        //Debug.Log($"[Player.Attack] Sphere at {attackPos}, radius {attackDistance}, found {hitEnemies.Length} colliders");
-        
-        foreach (var enemy in hitEnemies)
+        int count = Physics.OverlapSphereNonAlloc(attackPos, attackDistance, attackHitBuffer);
+
+        for (int i = 0; i < count; i++)
         {
-            //Debug.Log($"[Player.Attack] Hit {enemy.name}, tag: {enemy.tag}");
+            var enemy = attackHitBuffer[i];
             if (enemy.CompareTag("Enemy") || enemy.CompareTag("Boss"))
             {
                 //Debug.Log($"[Player.Attack] ✓ Hit ENEMY/BOSS {enemy.name}");

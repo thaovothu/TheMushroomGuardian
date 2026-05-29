@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4745559025643850}
   - component: {fileID: 198214355223119676}
   - component: {fileID: 199750740393983864}
-  - component: {fileID: 1894958575341021555}
   m_Layer: 0
   m_Name: WayPoint
   m_TagString: Untagged
@@ -4905,18 +4904,6 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!114 &1894958575341021555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1091141867756082}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71e885d21c1694d47bab4ba1ce87d016, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1104532464727046
 GameObject:
   m_ObjectHideFlags: 0

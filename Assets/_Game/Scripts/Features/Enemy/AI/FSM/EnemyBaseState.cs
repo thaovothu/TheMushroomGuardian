@@ -15,7 +15,8 @@ public abstract class EnemyBaseState : IState
     protected static readonly int DieHash = Animator.StringToHash("Die");
     protected static readonly int HitHash = Animator.StringToHash("Hit");
 
-    protected const float crossFadeDuration = 0.01f;
+    // 0.01s gần như snap → trông khựng. 0.15s đủ blend mượt giữa các state.
+    protected const float crossFadeDuration = 0.15f;
     protected EnemyBaseState(EnemyController enemyController, Animator animator)
     {
         this._enemyController = enemyController;

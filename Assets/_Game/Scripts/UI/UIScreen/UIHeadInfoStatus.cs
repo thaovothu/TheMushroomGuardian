@@ -27,6 +27,11 @@ public class UIHeadInfoStatus : MonoBehaviour
     private int findRetry = 0;
     private const int MAX_RETRY = 100;
 
+    // Cache giá trị mana đã hiển thị để tránh tạo string mới mỗi frame
+    private float lastManaPercent = -1f;
+    private int lastCurrentMana = -1;
+    private int lastMaxMana = -1;
+
     void Awake()
     {
         if (entityType == EntityType.Boss)
@@ -181,8 +186,21 @@ public class UIHeadInfoStatus : MonoBehaviour
         if (manaBar == null || manaBarText == null || playerSkillController == null) return;
 
         float manaPercent = playerSkillController.GetManaPercentage();
-        manaBar.value = manaPercent;
-        manaBarText.text = $"{playerSkillController.GetCurrentMana()} / {playerSkillController.GetMaxMana()}";
+        if (!Mathf.Approximately(manaPercent, lastManaPercent))
+        {
+            manaBar.value = manaPercent;
+            lastManaPercent = manaPercent;
+        }
+
+        // Chỉ build lại string (và rebuild mesh TMP) khi số mana thực sự đổi
+        int current = playerSkillController.GetCurrentMana();
+        int max = playerSkillController.GetMaxMana();
+        if (current != lastCurrentMana || max != lastMaxMana)
+        {
+            manaBarText.text = $"{current} / {max}";
+            lastCurrentMana = current;
+            lastMaxMana = max;
+        }
     }
 
     private void SetManaVisible(bool visible)

@@ -23,7 +23,7 @@ public class DialogDataManager : BaseSingleton<DialogDataManager>
         
         if (dontDestroyOnLoad)
         {
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(transform.root.gameObject);
         }
     }
 

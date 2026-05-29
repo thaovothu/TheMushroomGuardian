@@ -26,6 +26,7 @@ public class WaypointMarker : MonoBehaviour
     private GameObject markerInstance;
     private Vector3 basePosition;
     private Transform playerTransform;
+    private Transform camTransform;
     private bool isActive = false;
     private float lastCheckTime = 0f;
 
@@ -122,8 +123,12 @@ public class WaypointMarker : MonoBehaviour
     {
         if (!isActive || markerInstance == null) return;
 
-        if (Camera.main != null)
-            markerInstance.transform.rotation = Camera.main.transform.rotation;
+        // Cache Camera.main (mỗi lần gọi = FindGameObjectWithTag, tốn nếu chạy mỗi frame)
+        if (camTransform == null && Camera.main != null)
+            camTransform = Camera.main.transform;
+
+        if (camTransform != null)
+            markerInstance.transform.rotation = camTransform.rotation;
 
         if (playerTransform != null && Time.time - lastCheckTime >= checkInterval)
         {

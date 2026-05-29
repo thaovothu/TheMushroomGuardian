@@ -51,6 +51,9 @@ public class QuestTrailVFX : MonoBehaviour
     private float lastUpdateTime = 0f;
     private Coroutine spawnCoroutine;
 
+    // Objective được set trước khi Player kịp spawn → buffer lại, spawn khi Player xuất hiện.
+    private QuestObjectiveManager.ObjectiveLocation? pendingObjective = null;
+
     /// <summary>Số điểm đang dùng trong pool hiện tại.</summary>
     private int pointCount = 0;
 
@@ -66,6 +69,7 @@ public class QuestTrailVFX : MonoBehaviour
     {
         GameEvent.Quest.OnObjectiveSet += OnObjectiveSet;
         GameEvent.Quest.OnObjectiveReached += OnObjectiveReached;
+        GameEvent.Player.OnSpawned += OnPlayerSpawned;
 
         // Re-enable fix: nếu đã có objective đang active
         var existing = QuestObjectiveManager.Instance?.GetCurrentObjective();
@@ -77,7 +81,22 @@ public class QuestTrailVFX : MonoBehaviour
     {
         GameEvent.Quest.OnObjectiveSet -= OnObjectiveSet;
         GameEvent.Quest.OnObjectiveReached -= OnObjectiveReached;
+        GameEvent.Player.OnSpawned -= OnPlayerSpawned;
         HideTrail();
+    }
+
+    private void OnPlayerSpawned(GameObject player)
+    {
+        if (player != null)
+            playerTransform = player.transform;
+
+        // Có objective đang chờ Player → spawn trail ngay bây giờ
+        if (pendingObjective.HasValue && playerTransform != null)
+        {
+            var objective = pendingObjective.Value;
+            pendingObjective = null;
+            OnObjectiveSet(objective);
+        }
     }
 
     private void Update()
@@ -118,7 +137,8 @@ public class QuestTrailVFX : MonoBehaviour
 
         if (playerTransform == null)
         {
-            Debug.LogWarning("[QuestTrailVFX] Không tìm thấy Player — trail không thể spawn.");
+            // Player chưa spawn — buffer lại, OnPlayerSpawned sẽ spawn trail sau.
+            pendingObjective = objective;
             return;
         }
 

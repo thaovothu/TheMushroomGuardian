@@ -131,7 +131,7 @@ public class QuestObjectiveManager : BaseSingleton<QuestObjectiveManager>
             Debug.Log($"[QuestObjectiveManager] Objective reached: {currentObjective.Value.name}");
             var reached = currentObjective.Value;
             currentObjective = null;
-            OnObjectiveReached(reached);
+            GameEvent.Quest.OnObjectiveReached?.Invoke(reached);
         }
     }
 
