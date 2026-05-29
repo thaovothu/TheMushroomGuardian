@@ -9,6 +9,7 @@ public class PlayerDetector : MonoBehaviour
     [SerializeField] float innerDetectionRadius = 5f;
     [SerializeField] float detectionCooldown = 1f;
     [SerializeField] float attackRange = 2f;
+    public float AttackRange => attackRange;
 
     public Transform Player { get; private set; }
     CountdownTimer detectionTimer;

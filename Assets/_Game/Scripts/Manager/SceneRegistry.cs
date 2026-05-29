@@ -71,7 +71,26 @@ public class SceneRegistry : MonoBehaviour
 
             case RegistryType.QuestSpawnGroup:
                 foreach (var group in spawnGroups)
+                {
+                    // [DEBUG SPAWN POS] Log vị trí thực tế (world) của từng spawnPoint trước khi đăng ký
+                    Debug.Log($"[SceneRegistry] Registering group '{group.spawnGroupId}' with {group.spawnPoints?.Length ?? 0} points (host '{name}' at {transform.position}):");
+                    if (group.spawnPoints != null)
+                    {
+                        for (int i = 0; i < group.spawnPoints.Length; i++)
+                        {
+                            var pt = group.spawnPoints[i];
+                            if (pt == null)
+                            {
+                                Debug.LogWarning($"  └─ [{i}] NULL Transform!");
+                            }
+                            else
+                            {
+                                Debug.Log($"  └─ [{i}] '{pt.name}' world={pt.position}  parent='{(pt.parent != null ? pt.parent.name : "<root>")}'");
+                            }
+                        }
+                    }
                     QuestSpawnManager.Instance?.RegisterSceneSpawnPoints(group.spawnGroupId, group.spawnPoints);
+                }
                 break;
 
             case RegistryType.NPCSpawnPoint:
@@ -114,8 +133,9 @@ public class SceneRegistry : MonoBehaviour
         if (entry.npcPrefab == null || entry.spawnPoint == null) return;
 
         var npc = Instantiate(entry.npcPrefab, entry.spawnPoint.position, entry.spawnPoint.rotation);
+        npc.transform.position = entry.spawnPoint.position; // đảm bảo vị trí chính xác nếu spawnPoint có parent
         spawnedNPCs[index] = npc;
-        Debug.Log($"[SceneRegistry] Spawned NPC '{entry.npcPrefab.name}' (index={index})");
+        Debug.Log($"[SceneRegistry] Spawned NPC '{entry.npcPrefab.name}' npc.transform.position {npc.transform.position})");
     }
 
     private void TryDespawn(int index)

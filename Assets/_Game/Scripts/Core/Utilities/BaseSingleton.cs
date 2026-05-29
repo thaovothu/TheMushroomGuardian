@@ -36,7 +36,9 @@ public class BaseSingleton<T> : MonoBehaviour where T : MonoBehaviour
         if (_instance == null)
         {
             _instance = GetComponent<T>();
-            DontDestroyOnLoad(gameObject);
+            // DontDestroyOnLoad chỉ chấp nhận GameObject gốc. Nếu singleton là con của
+            // object khác, dùng root để tránh cảnh báo và đảm bảo nó thật sự persist.
+            DontDestroyOnLoad(transform.root.gameObject);
             Debug.Log($"[Singleton] {typeof(T).Name} initialized");
         }
         else if (_instance != this)

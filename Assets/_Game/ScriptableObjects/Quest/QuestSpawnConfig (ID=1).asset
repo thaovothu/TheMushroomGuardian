@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnGroupId: 1
   enemyConfigs:
-  - baseEnemySO: {fileID: 11400000, guid: 415a105deab424bd7a82652afe3ca38a, type: 2}
+  - baseEnemySO: {fileID: 11400000, guid: 327156cc3b5fe4569a410d5367c6f1f5, type: 2}
     count: 3
     level: 010000000100000001000000
   spawnPoints:

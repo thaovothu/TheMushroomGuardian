@@ -146,23 +146,23 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
             points.AddRange(scenePts);
             Debug.Log($"[QuestSpawnManager] Using {scenePts.Length} SCENE points for group '{config.spawnGroupId}'");
         }
-        else if (config.spawnPoints != null && config.spawnPoints.Length > 0)
-        {
-            points.AddRange(config.spawnPoints);
-            Debug.Log($"[QuestSpawnManager] Using {config.spawnPoints.Length} CONFIG points for group '{config.spawnGroupId}'");
-        }
-        else
-        {
-            points.AddRange(spawnPointList);
-            Debug.Log($"[QuestSpawnManager] Using {spawnPointList.Count} DEFAULT points for group '{config.spawnGroupId}'");
-        }
+        // else if (config.spawnPoints != null && config.spawnPoints.Length > 0)
+        // {
+        //     points.AddRange(config.spawnPoints);
+        //     Debug.Log($"[QuestSpawnManager] Using {config.spawnPoints.Length} CONFIG points for group '{config.spawnGroupId}'");
+        // }
+        // else
+        // {
+        //     points.AddRange(spawnPointList);
+        //     Debug.Log($"[QuestSpawnManager] Using {spawnPointList.Count} DEFAULT points for group '{config.spawnGroupId}'");
+        // }
 
         if (points.Count == 0)
         {
             Debug.LogError($"[QuestSpawnManager] No spawn points for group '{config.spawnGroupId}'!");
             return;
         }
-
+        
         WarmUpPools(config);
 
         int pointIndex = 0;
@@ -208,7 +208,16 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
     public void RegisterSceneSpawnPoints(string groupId, Transform[] points)
     {
         sceneSpawnPoints[groupId] = points;
-        Debug.Log($"[QuestSpawnManager] Registered {points.Length} scene points for group '{groupId}'");
+        // [DEBUG SPAWN POS] Xác nhận đã nhận đúng vị trí từ SceneRegistry
+        Debug.Log($"[QuestSpawnManager] Registered {points?.Length ?? 0} scene points for group '{groupId}':");
+        if (points != null)
+        {
+            for (int i = 0; i < points.Length; i++)
+            {
+                var pt = points[i];
+                Debug.Log($"  └─ [{i}] {(pt == null ? "NULL" : $"'{pt.name}' world={pt.position}")}");
+            }
+        }
     }
 
     private bool SpawnOne(BaseEnemySO enemySOData, int level, Transform spawnPoint, int questId, int stepId, string groupId)
@@ -226,13 +235,20 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
             return false;
         }
 
+        // [DEBUG SPAWN POS] vị trí spawnPoint truyền vào
+        Debug.Log($"[QuestSpawnManager.SpawnOne] group='{groupId}' spawnPoint='{spawnPoint.name}' world={spawnPoint.position}  parent='{(spawnPoint.parent != null ? spawnPoint.parent.name : "<root>")}'");
+
         var go = pool.Get(spawnPoint);
-        
+
+        // [DEBUG SPAWN POS] sau pool.Get (đã set position bên trong pool)
+        Debug.Log($"  └─ after pool.Get: {go.name} at {go.transform.position}  parent='{(go.transform.parent != null ? go.transform.parent.name : "<root>")}'");
+
         // Force set position & rotation để chắc chắn spawn đúng vị trí
         go.transform.position = spawnPoint.position;
         go.transform.rotation = spawnPoint.rotation;
-        
-        Debug.Log($"[QuestSpawnManager] Before OnSpawn: {go.name} at {go.transform.position}");
+
+        // [DEBUG SPAWN POS] sau khi force set
+        Debug.Log($"  └─ after force-set: {go.name} at {go.transform.position}  (expected={spawnPoint.position})  match={(go.transform.position == spawnPoint.position)}");
         
         var data = enemySOData.GetEnemyData(level);
         RegisterSpawnedEnemy(go, questId, stepId, groupId);
@@ -240,7 +256,7 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
         if (go.TryGetComponent<EnemyController>(out var ec))
         {
             ec.OnSpawn(data);
-            Debug.Log($"[QuestSpawnManager] After OnSpawn (EnemyController): {go.name} at {go.transform.position}");
+            // Debug.Log($"[QuestSpawnManager] After OnSpawn (EnemyController): {go.name} at {go.transform.position}");
             return true;
         }
 

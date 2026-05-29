@@ -35,7 +35,7 @@ public class QuestProgressManager : BaseSingleton<QuestProgressManager>
         }
 
         if (dontDestroyOnLoad)
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(transform.root.gameObject);
     }
 
     private void OnEnable()

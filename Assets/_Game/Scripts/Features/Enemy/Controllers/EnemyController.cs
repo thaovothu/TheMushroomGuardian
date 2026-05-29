@@ -1,5 +1,3 @@
-// Features/Enemy/Controllers/EnemyController.cs
-using KBCore.Refs;
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections.Generic;
@@ -26,8 +24,12 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
     CountdownTimer _attackTimer;
     CountdownTimer _hitTimer;
 
+    // EnemyController.cs — thêm 2 property
+    public float AttackRange => playerDetector.AttackRange; // hoặc lấy từ _data
+    public EnemyAttackType EnemyType => _data?.enemyType ?? EnemyAttackType.Melee;
+
     // ── Unity ──────────────────────────────────────
-    void OnValidate() => this.ValidateRefs();
+    // void OnValidate() => this.ValidateRefs();
 
     void Awake()
     {
@@ -50,10 +52,10 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
         _stateMachine.FixedUpdate();
     }
 
-    void LateUpdate()
-    {
-        Debug.Log($"[EnemyController.LateUpdate] {name} at {transform.position}");
-    }
+    // void LateUpdate()
+    // {
+    //     Debug.Log($"[EnemyController.LateUpdate] {name} at {transform.position}");
+    // }
 
     // ── IPoolSpawned ───────────────────────────────
     // Gọi bởi PoolSpawnManager mỗi lần enemy được lấy ra khỏi pool
@@ -123,16 +125,68 @@ public class EnemyController : MonoBehaviour, IPoolSpawned
     void Any(IState to, IPredicate c) => _stateMachine.AddAnyTransition(to, c);
 
     // ── Public API ─────────────────────────────────
+    // public void Attack()
+    // {
+    //     if (_attackTimer.IsRunning) return;
+    //     _attackTimer.Start();
+
+    //     var health = playerDetector.Player?.GetComponent<HealthSystem>();
+    //     if (health == null) return;
+
+    //     float damage = _data?.damage ?? 10;
+    //     health.TakeDamage(damage);
+    // }
+
+    public void OnAttack()
+    {
+        Attack();
+    }
+    // Hash của animation tấn công — dùng để re-trigger ở mỗi đòn melee, tránh case
+    // animation chạy 1 lần ở OnEnter rồi dừng ở frame cuối.
+    static readonly int AttackAnimHash = Animator.StringToHash("Attack01");
+
     public void Attack()
     {
+        // Attack() bị gọi MỖI FRAME từ EnemyAttackState (melee). Phải return sớm TRƯỚC mọi
+        // Debug.Log, nếu không log + nội suy chuỗi sẽ chạy mỗi frame -> tụt FPS lúc combat.
         if (_attackTimer.IsRunning) return;
         _attackTimer.Start();
 
-        var health = playerDetector.Player?.GetComponent<HealthSystem>();
-        if (health == null) return;
+        switch (_data?.enemyType)
+        {
+            case EnemyAttackType.Ranged:
+                // Ranged: animation play 1 lần ở OnEnter + Animation Event spawn đạn.
+                RangeAttack();
+                break;
+            default: // Melee
+                // Re-trigger animation cho MỖI đòn (đòn 2, 3, ... ) — nếu không, sau lần
+                // CrossFade ở OnEnter, animation kết thúc và quái đứng yên ở frame cuối.
+                if (animator != null)
+                    animator.CrossFade(AttackAnimHash, 0.05f);
 
-        float damage = _data?.damage ?? 10;
-        health.TakeDamage(damage);
+                var health = playerDetector.Player?.GetComponent<HealthSystem>();
+                if (health != null)
+                    health.TakeDamage(_data?.damage ?? 10);
+                break;
+        }
+    }
+
+    void RangeAttack()
+    {
+        if (_data?.bulletPrefab == null || playerDetector.Player == null) return;
+
+        GameObject bulletGO = Instantiate(
+            _data.bulletPrefab,
+            transform.position + Vector3.up,
+            Quaternion.identity
+        );
+        // Dùng EnemyBullet từ code tham khảo
+        var bullet = bulletGO.GetComponent<EnemyBullet>();
+        if (bullet != null)
+        {
+            bullet.damage = _data?.damage ?? 1;
+            bullet.SetTarget(playerDetector.Player);
+        }
     }
 
     public void Explode()

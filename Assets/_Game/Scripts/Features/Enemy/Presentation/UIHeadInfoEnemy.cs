@@ -10,6 +10,8 @@ public class UIHeadInfoEnemy : MonoBehaviour
     [SerializeField] private float maxHealthBar;
     public static Action<HealthSystem, float, float> OnUpdateHealthBar;
 
+    private Transform camTransform;
+
     public void Awake()
     {
         GameEvent.Combat.OnHealthChanged += UpdateHealthBar;
@@ -18,6 +20,9 @@ public class UIHeadInfoEnemy : MonoBehaviour
         {
             targetHealth = GetComponentInParent<HealthSystem>();
         }
+
+        if (Camera.main != null)
+            camTransform = Camera.main.transform;
     }
 
     void OnDestroy()
@@ -33,6 +38,13 @@ public class UIHeadInfoEnemy : MonoBehaviour
 
     void LateUpdate()
     {
-        transform.LookAt(transform.position + Camera.main.transform.rotation * Vector3.forward, Camera.main.transform.rotation * Vector3.up);
+        // Camera.main gọi mỗi frame = FindGameObjectWithTag, rất tốn. Cache lại 1 lần.
+        if (camTransform == null)
+        {
+            if (Camera.main == null) return;
+            camTransform = Camera.main.transform;
+        }
+
+        transform.LookAt(transform.position + camTransform.rotation * Vector3.forward, camTransform.rotation * Vector3.up);
     }
 }

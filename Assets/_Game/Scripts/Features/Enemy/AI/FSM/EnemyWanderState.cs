@@ -27,18 +27,35 @@ public class EnemyWanderState : EnemyBaseState
         //Debug.Log("Enemy exit Walk");
     }
 
-    public override void Update ()
+    // public override void Update ()
+    // {
+    //     if (!agent.isActiveAndEnabled || !agent.isOnNavMesh) return;
+    //     if (HasReachedDestination())
+    //     {
+    //         Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
+    //         randomDirection += wanderPoint;
+    //         NavMeshHit hit;
+    //         NavMesh.SamplePosition(randomDirection, out hit, wanderRadius, 1);
+
+    //         var finalPosition = hit.position;
+    //         agent.SetDestination(finalPosition);
+    //     }
+    // }
+    public override void Update()
     {
         if (!agent.isActiveAndEnabled || !agent.isOnNavMesh) return;
+
         if (HasReachedDestination())
         {
             Vector3 randomDirection = Random.insideUnitSphere * wanderRadius;
             randomDirection += wanderPoint;
-            NavMeshHit hit;
-            NavMesh.SamplePosition(randomDirection, out hit, wanderRadius, 1);
 
-            var finalPosition = hit.position;
-            agent.SetDestination(finalPosition);
+            NavMeshHit hit;
+            // Chỉ SetDestination khi SamplePosition trả về true
+            if (NavMesh.SamplePosition(randomDirection, out hit, wanderRadius, NavMesh.AllAreas))
+            {
+                agent.SetDestination(hit.position);
+            }
         }
     }
 

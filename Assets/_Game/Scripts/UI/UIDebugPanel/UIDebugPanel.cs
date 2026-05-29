@@ -11,7 +11,7 @@ using System.Collections;
 /// </summary>
 public class UIDebugPanel : MonoBehaviour
 {
-    [Header("UI References")]
+[Header("UI References")]
     [SerializeField] private GameObject panel;
     [SerializeField] private TMP_InputField questIdInput;
     [SerializeField] private TMP_InputField stepIdInput;
@@ -38,7 +38,7 @@ public class UIDebugPanel : MonoBehaviour
         if (_instance == null)
         {
             _instance = this;
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(transform.root.gameObject);
         }
         else if (_instance != this)
         {

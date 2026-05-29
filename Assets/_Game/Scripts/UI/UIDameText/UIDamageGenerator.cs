@@ -20,7 +20,6 @@ public class UIDameGenerator : MonoBehaviour
     {
         string text = ((int)damageAmount).ToString();
         Color color = isPlayerTakingDamage ? Color.red : Color.yellow;
-        Debug.Log($"[UIDameGenerator] ShowDamageText called: {text} damage at {position}, isPlayer taking: {isPlayerTakingDamage}, color: {color}");
         CreateDameTextPopUp(position, text, color);
     }
     
@@ -30,7 +29,6 @@ public class UIDameGenerator : MonoBehaviour
         var temp = popup.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         temp.text = text;
         temp.faceColor = color;
-        Debug.Log($"[UIDameGenerator] Damage text created: {text}");
         Destroy(popup, 2f);
     }
 }

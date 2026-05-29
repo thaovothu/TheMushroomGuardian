@@ -15,7 +15,10 @@ public class BossAI_Map2 : ExternalBehaviorTree
         // Utility set dynamically in DieSequence.GetUtility()
 
         // ── Counter Attack: Khi bị đánh, phản công lại (không bị hit thường xuyên) ──
-        var counterAttack = new Sequence();
+        // Dùng CounterAttackSequence (utility ĐỘNG) thay vì Sequence thường — nếu dùng
+        // Sequence với DefaultUtility tĩnh = 25 thì UtilitySelector chọn nó mỗi frame,
+        // IsHit fail → vòng lặp vô tận → boss đứng yên không bao giờ tới Chase+Attack.
+        var counterAttack = new CounterAttackSequence();
         counterAttack.Name = "Counter Attack (Smart Reaction)";
         counterAttack.CreateTasks(
             new IsHit(),                        // Check if boss was hit
@@ -23,7 +26,8 @@ public class BossAI_Map2 : ExternalBehaviorTree
             new IsPlayerInAttackRange(),        // Nếu player trong range
             new MeleeAttack()                   // Đánh lại ngay
         );
-        counterAttack.DefaultUtility = 25f;    // Ưu tiên cao hơn normal attack
+        // Utility set dynamically trong CounterAttackSequence.GetUtility() (= 25 khi đủ
+        // điều kiện, = 0 khi không). Không cần DefaultUtility nữa.
 
         // ── Hit Animation: Nếu player k trong range thì chỉ play hit animation ──
         var hitSequence = new HitSequence();

@@ -4,10 +4,6 @@ public class AncientSeal : MonoBehaviour
 {
     [SerializeField] private int sealIndex;
     [SerializeField] private Vector3 requiredDashDir;
-    [SerializeField] private GameObject idleVFX;
-    [SerializeField] private GameObject activeVFX;
-    [SerializeField] private GameObject brokenVFX;
-
     public bool PlayerInRange { get; private set; } = false;
     public int SealIndex => sealIndex;
     public bool IsBroken { get; private set; } = false;
@@ -37,8 +33,6 @@ public class AncientSeal : MonoBehaviour
     {
         if (IsBroken) return;
         Debug.Log($"[AncientSeal {sealIndex}] SetActive: {active}");
-        if (idleVFX != null) idleVFX.SetActive(!active);
-        if (activeVFX != null) activeVFX.SetActive(active);
     }
 
     public bool CheckDashDirection(Vector3 dashDir)
@@ -52,9 +46,6 @@ public class AncientSeal : MonoBehaviour
     {
         Debug.Log($"[AncientSeal {sealIndex}] 💥 BROKEN!");
         IsBroken = true;
-        if (idleVFX != null) idleVFX.SetActive(false);
-        if (activeVFX != null) activeVFX.SetActive(false);
-        if (brokenVFX != null) brokenVFX.SetActive(true);
 
         var col = GetComponent<Collider>() ?? GetComponentInChildren<Collider>();
         if (col != null) col.enabled = false;
@@ -63,10 +54,6 @@ public class AncientSeal : MonoBehaviour
     {
         Debug.Log($"[AncientSeal {sealIndex}] Reset");
         IsBroken = false;
-        PlayerInRange = false;
-        if (idleVFX != null) idleVFX.SetActive(true);
-        if (activeVFX != null) activeVFX.SetActive(false);
-        if (brokenVFX != null) brokenVFX.SetActive(false);
 
         var col = GetComponent<Collider>() ?? GetComponentInChildren<Collider>();
         if (col != null) col.enabled = true;

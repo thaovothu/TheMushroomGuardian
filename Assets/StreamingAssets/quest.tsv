@@ -2,7 +2,7 @@ QuestID	StepID	Title Quest	Info Quest	ItemReward1	CointReward	Reward	Short Des_1
 1	1	Mầm Nấm Thức Tỉnh	"Sau giấc ngủ dài trong lòng đại địa, hãy di chuyển quanh <color=#00FFFF>Làng Rễ Cây</color> để làm quen với cơ thể mới thức tỉnh"		10	"Di chuyển, nhảy"	Học cách di chuyển	1		
 1	2	Mầm Nấm Thức Tỉnh	Dùng đòn đánh thường đánh 3 <color=red>Cây sương rồng</color> dùng cho luyện tập		50		Học đánh thường	1	1	
 1	3	Mầm Nấm Thức Tỉnh	Một tiếng kêu cứu vang lên. Hãy đi kiểm tra cùng <color=#00FFFF>Dấu Vết Phát Sáng</color>				Đi theo dấu vết	1		
-1	4	Mầm Nấm Thức Tỉnh	Tiêu diệt 5 <color=red>Cây sương rồng</color> đang giam giữ <color=green>Tinh Linh Lumi</color>		100	Tinh linh	Giải cứu Lumi	1	2	
+1	4	Mầm Nấm Thức Tỉnh	Tiêu diệt 5 <color=red>Cây xương rồng</color> đang giam giữ <color=green>Tinh Linh Lumi</color>		100	Tinh linh	Giải cứu Lumi	1	2	
 1	5	Mầm Nấm Thức Tỉnh	Nói chuyện với <color=green>Tinh Linh Lumi</color>. Từ giờ Lumi sẽ đồng hành cùng bạn trên hành trình cứu thế giới				Đối thoại Lumi	1		
 1	6	Mầm Nấm Thức Tỉnh	Đến gặp <color=green>Trưởng làng Nấm</color> tại trung tâm làng				Gặp Trưởng làng	1		
 										
@@ -18,22 +18,21 @@ QuestID	StepID	Title Quest	Info Quest	ItemReward1	CointReward	Reward	Short Des_1
 3	2	Hơi Thở Của Gió	Phát hiện một<color=green>Luồng gió cổ</color> hãy dùng kỹ năng <color=#FFCCFF>Lướt</color> bằng phím "Tab" để có thể tiến sâu hơn			"WindAttack, WindDefend, Dash"	Học Lướt Gió	3		
 3	3	Hơi Thở Của Gió	"Tránh xa các <color=red>Hành Bào Tử</color> lao thẳng vào người, khi chết chúng nổ tung tại chỗ. Đứng gần lúc nổ mất máu nặng. Dùng <color=#FFCCFF>Lướt Gió</color> (Tab) để dash ra xa đúng lúc — hoặc hạ chúng từ xa bằng kỹ năng."				Áp dụng chiêu lướt	3	5	
 3	4	Hơi Thở Của Gió	4 viên đá phong ấn <color=green>Tinh Linh Gió</color> — mỗi viên chỉ vỡ khi <color=#FFCCFF>Lướt</color> đúng hướng		480		Giải cứu Tinh Linh Gió	3		
-3	5	Hơi Thở Của Gió	Tinh Linh dạy bạn cách dùng gió xoáy trong chiến đấu		100		Giải cứu Tinh Linh Gió	3		
-3	6	Hơi Thở Của Gió	"ElementTrial — hiện Đất/Khí, dùng đúng nguyên tố phản công"				Đánh bại Harpy	3	6	
-3	7	Hơi Thở Của Gió	Thu hồi <color=yellow>Lõi Nguyên Tố Khí</color> từ đỉnh Đài Nấm Trôi			Khí	Nhận nguyên tố Khí	3		
+3	5	Hơi Thở Của Gió	<color=green>Tinh Linh</color> dạy bạn cách dùng gió xoáy trong chiến đấu		100		Giải cứu Tinh Linh Gió	3		
+3	6	Hơi Thở Của Gió	Thu hồi <color=yellow>Lõi Nguyên Tố Khí</color> từ đỉnh Đài Nấm Trôi			Khí	Nhận nguyên tố Khí	3		
 										
-4	1	Dòng Nước Mục Nát	Tiêu diệt 15 <color=red>Cua Ký Sinh</color> đang bơm độc vào các hồ nước				Tiêu diệt Cua Ký Sinh	3	7	
+4	1	Dòng Nước Mục Nát	Tiêu diệt 15 <color=red>Ốc Ký Sinh</color> đang bơm độc vào các hồ nước				Tiêu diệt Cua Ký Sinh	3	6	
 4	2	Dòng Nước Mục Nát	Kích hoạt 4 máy bơm cổ đại		600		Làm sạch hồ nước	3		
 4	3	Dòng Nước Mục Nát	<color=green>Tư Tế Nấm Nước</color> cảm nhận được sự thay đổi của dòng nước và tự bước ra khỏi nơi ẩn náu — dạy bạn kỹ năng <color=#FFCCFF>Hồi Phục</color>					3		
 4	4	Dòng Nước Mục Nát	Thu hồi <color=yellow>Lõi Nguyên Tố Nước</color> từ vực sâu đầm lầy	GiotNuocCo		BonusItem		3		
 										
 5	1	Ngọn Lửa Sau Cùng	Nguyên tố cuối cùng đang nằm sâu trong <color=#00FFFF>Núi Lửa Tro</color>. Núi lửa đang hoạt động — các khu vực sẽ bị đóng lại theo từng đợt phun trào. Phải hành động nhanh				Đến Núi Lửa Tro	4		
-5	2	Ngọn Lửa Sau Cùng	Tiêu diệt 20 <color=red>Bọ Lửa</color> canh giữ lối vào lõi dung nham trước khi đợt phun trào đầu tiên bịt lối		1000		Tiêu diệt Bọ Lửa	4	7	
-5	3	Ngọn Lửa Sau Cùng	Thu thập 10 <color=yellow>Than Tinh Thể</color> để kích hoạt cánh cổng cổ				Thu thập Than Tinh Thể	4		
-5	4	Ngọn Lửa Sau Cùng	Gặp <color=green>Thợ Rèn Nấm</color> tại lò rèn cổ — ông ta yêu cầu đổi <color=yellow>Nấm Đất</color> (Q2) và <color=yellow>Giọt Nước Cổ</color> (Q4) để đúc vũ khí chứa Bùng Nổ Lửa				Gặp Thợ Rèn Nấm	4		
-5	5	Ngọn Lửa Sau Cùng	"<color=green>Thợ Rèn Nấm</color> truyền lại kỹ năng <color=#FFCCFF>Bùng Nổ Lửa</color> — đúc từ sự kết hợp của Đất, Nước và Lửa"			"FireAttack, FireDefend"	Học Bùng Nổ Lửa	4		
-5	6	Ngọn Lửa Sau Cùng	Đánh bại <color=red>Khổng Lồ Dung Nham</color> — Giai đoạn 1: dùng <color=#FFCCFF>Đập Đất</color> (Q2) phá lớp giáp dung nham. Giai đoạn 2: dùng <color=#FFCCFF>Bùng Nổ Lửa</color> tấn công lõi lửa bên trong		2500		Đánh bại Khổng Lồ	4	8	
-5	7	Ngọn Lửa Sau Cùng	Thu hồi <color=yellow>Lõi Nguyên Tố Lửa</color> từ trung tâm núi lửa. <color=green>Lumi</color> thì thầm: "Chỉ còn một bước nữa thôi..."			Lửa	Nhận nguyên tố Lửa	4		
+5	2	Ngọn Lửa Sau Cùng	Thu thập 10 than tinh thể bằng cách đánh bại <color=red>Bọ Lửa</color>		1000		Tiêu diệt Bọ Lửa	4	7	
+5	3	Ngọn Lửa Sau Cùng	Gặp <color=green>Thợ Rèn Nấm</color> tại lò rèn — ông truyền chiêu thức cuối cùng <color=#FFCCFF>Hệ Lửa</color>				Gặp Thợ Rèn Nấm	4		
+5	4	Ngọn Lửa Sau Cùng	"Đánh bại <color=red>Khổng Lồ Dung Nham</color> — Phase 1 phá giáp bằng <color=#FFCCFF>Đập Đất</color>, Phase 2 tấn công lõi bằng <color=#FFCCFF>Bùng Nổ Lửa</color>"			"FireAttack, FireDefend"	Học Bùng Nổ Lửa	4	8	
+5	5	Ngọn Lửa Sau Cùng	Thu hồi <color=yellow>Lõi Nguyên Tố Lửa</color>. <color=green>Lumi</color> thì thầm: "Chỉ còn một bước nữa thôi..."		2500		Đánh bại Khổng Lồ	4		
+										
+										
 										
 6	1	Cội Rễ Cuối Cùng	"Sau khi thu thập đủ 4 nguyên tố, hãy gặp lại <color=green>Cổ Thụ Nấm</color>. Những NPC đã gặp trên hành trình gửi lời nhắn động viên trước trận chiến cuối"				Gặp Cổ Thụ Nấm	5		
 6	2	Cội Rễ Cuối Cùng	<color=green>Lumi</color> tiết lộ rằng Hư Không đang nuốt chửng thế giới từ bên dưới lòng đất — flashback ngắn về thế giới trước khi Hư Không xuất hiện				Nghe lời Lumi	5		
