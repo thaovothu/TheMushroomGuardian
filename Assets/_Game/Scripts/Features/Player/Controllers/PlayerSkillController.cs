@@ -5,6 +5,8 @@ using UnityEngine;
 /// <summary>
 /// Controller cho Player Skill System
 /// Quản lý: Chọn nguyên tố, Cast skill, Cooldown, Mana
+/// Skills bị khóa theo mặc định — mở khóa qua SkillReward trong quest.tsv.
+/// Q/E dùng skill, R switch element (chỉ khi có ≥2 element đã mở).
 /// </summary>
 public class PlayerSkillController : MonoBehaviour
 {
@@ -35,15 +37,29 @@ public class PlayerSkillController : MonoBehaviour
     [Tooltip("Xoay bù hướng VFX băng (độ, quanh Y) nếu prefab chĩa lệch trục. Thử 90 / -90 / 180 cho thẳng.")]
     [SerializeField] private float waterVfxYawOffset = 0f;
 
-    private readonly Collider[] _aoeBuffer = new Collider[32]; // buffer cho OverlapSphereNonAlloc
+    private readonly Collider[] _aoeBuffer = new Collider[32];
     private float currentMana;
     private ElementType currentElement = ElementType.Earth;
     private float lastSkillCastTime = -999f;
 
+    // Danh sách element đã được mở khóa theo thứ tự nhận được
+    private readonly List<ElementType> _unlockedElements = new();
+    private int _activeElementIndex = 0;
+
     [Header("Input Settings")]
-    [SerializeField] private KeyCode shieldKey = KeyCode.E;        // Cast Shield/Defender skill
-    [SerializeField] private KeyCode attackKey = KeyCode.Q;        // Cast Attack skill
-    [SerializeField] private KeyCode switchElementKey = KeyCode.R; // Switch element
+    [SerializeField] private KeyCode shieldKey = KeyCode.E;
+    [SerializeField] private KeyCode attackKey = KeyCode.Q;
+    [SerializeField] private KeyCode switchElementKey = KeyCode.R;
+
+    void OnEnable()
+    {
+        GameEvent.Player.OnSkillUnlocked += UnlockElement;
+    }
+
+    void OnDisable()
+    {
+        GameEvent.Player.OnSkillUnlocked -= UnlockElement;
+    }
 
     void Start()
     {
@@ -52,39 +68,42 @@ public class PlayerSkillController : MonoBehaviour
         cam = Camera.main;
 
         currentMana = maxMana;
-        Debug.Log($"[PlayerSkillController] ✓ Initialized - Element: {currentElement}, Mana: {currentMana}/{maxMana}");
+        Debug.Log("[PlayerSkillController] ✓ Initialized — skill locked until quest reward");
     }
 
     void Update()
     {
-        // Regen mana over time
         RegenerateMana();
-
-        // Input handling
         HandleSkillInput();
     }
 
-    /// <summary>
-    /// Xử lý input từ keyboard
-    /// </summary>
     private void HandleSkillInput()
     {
-        if (Input.GetKeyDown(shieldKey))
+        // Q/E chỉ hoạt động khi đã có ít nhất 1 skill được mở khóa
+        if (_unlockedElements.Count > 0)
         {
-            if (playerController != null)
+            if (Input.GetKeyDown(shieldKey) && playerController != null)
                 playerController.SkillDefend();
-        }
 
-        if (Input.GetKeyDown(attackKey))
-        {
-            if (playerController != null)
+            if (Input.GetKeyDown(attackKey) && playerController != null)
                 playerController.SkillAttack();
         }
 
+        // R chỉ switch khi có ít nhất 2 element đã mở
         if (Input.GetKeyDown(switchElementKey))
-        {
             SwitchElement();
-        }
+    }
+
+    /// <summary>Gọi bởi GameEvent.Player.OnSkillUnlocked khi quest trao skill reward.</summary>
+    public void UnlockElement(ElementType element)
+    {
+        if (_unlockedElements.Contains(element)) return;
+
+        _unlockedElements.Add(element);
+        _activeElementIndex = _unlockedElements.Count - 1;
+        currentElement = element;
+
+        Debug.Log($"[PlayerSkillController] ✓ Unlocked: {element} ({_unlockedElements.Count} skill total)");
     }
 
     /// <summary>
@@ -169,21 +188,15 @@ public class PlayerSkillController : MonoBehaviour
         TriggerAttackCast();
     }
 
-    /// <summary>
-    /// Chuyển đổi nguyên tố
-    /// </summary>
+    /// <summary>Switch qua các element đã unlock — cần ít nhất 2.</summary>
     public void SwitchElement()
     {
-        int nextElement = ((int)currentElement + 1) % 5;
-        currentElement = (ElementType)nextElement;
+        if (_unlockedElements.Count < 2) return;
 
-        // Bỏ qua None
-        if (currentElement == ElementType.None)
-        {
-            currentElement = ElementType.Earth;
-        }
+        _activeElementIndex = (_activeElementIndex + 1) % _unlockedElements.Count;
+        currentElement = _unlockedElements[_activeElementIndex];
 
-        Debug.Log($"[PlayerSkillController] ✓ Switched to element: {currentElement}");
+        Debug.Log($"[PlayerSkillController] ✓ Switched to: {currentElement}");
     }
 
     /// <summary>
@@ -388,32 +401,18 @@ public class PlayerSkillController : MonoBehaviour
     public void ConsumeMana(float amount) => currentMana = Mathf.Max(0f, currentMana - amount);
     public void RecoverMana(float amount) => currentMana = Mathf.Min(currentMana + amount, maxMana);
 
-    /// <summary>
-    /// Lấy skill hiện tại (để hiển thị UI)
-    /// </summary>
     public SkillData GetCurrentShield()
     {
-        if (SkillSystem.Instance == null)
-        {
-            Debug.LogError("[PlayerSkillController] SkillSystem.Instance is NULL!");
-            return null;
-        }
-        var shield = SkillSystem.Instance.GetElementShield(currentElement);
-        if (shield == null)
-            Debug.LogWarning($"[PlayerSkillController] No shield skill for {currentElement}");
-        return shield;
+        if (_unlockedElements.Count == 0 || SkillSystem.Instance == null) return null;
+        return SkillSystem.Instance.GetElementShield(currentElement);
     }
 
     public SkillData GetCurrentAttack()
     {
-        if (SkillSystem.Instance == null)
-        {
-            Debug.LogError("[PlayerSkillController] SkillSystem.Instance is NULL!");
-            return null;
-        }
-        var attack = SkillSystem.Instance.GetElementAttack(currentElement);
-        if (attack == null)
-            Debug.LogWarning($"[PlayerSkillController] No attack skill for {currentElement}");
-        return attack;
+        if (_unlockedElements.Count == 0 || SkillSystem.Instance == null) return null;
+        return SkillSystem.Instance.GetElementAttack(currentElement);
     }
+
+    public bool HasUnlockedSkills() => _unlockedElements.Count > 0;
+    public bool CanSwitchSkill() => _unlockedElements.Count >= 2;
 }
