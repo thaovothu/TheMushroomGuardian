@@ -46,7 +46,7 @@ public class QuestCollectTracker : BaseSingleton<QuestCollectTracker>
 
         int questId = QuestProgressManager.Instance.GetCurrentQuestId();
         int stepId = QuestProgressManager.Instance.GetActiveStepForQuest(questId);
-
+        Debug.Log($"[Debug] questId={questId} stepId={stepId} itemId={itemId}");
         // Tìm objective phù hợp
         var objective = FindObjective(questId, stepId, itemId);
         if (objective == null) return;

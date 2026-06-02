@@ -5,58 +5,47 @@ public class BossAI_Map1 : ExternalBehaviorTree
 {
     public override Task CreateBehaviorTree()
     {
-        // ── DIE SEQUENCE: Dynamic utility - only active when IsDead = true ──
+        // ── DIE ──
         var dieSequence = new DieSequence();
         dieSequence.Name = "Die";
         dieSequence.CreateTasks(
-            new IsHealthZero(),         // Check if health = 0
-            new BossDieAction()         // Play die animation and remove
-        );
-        // Utility set dynamically in DieSequence.GetUtility()
-
-        // ── Hit Sequence: khi bị đánh thì chuyển sang hit state ──
-        var hitSequence = new HitSequence();
-        hitSequence.Name = "Hit (Reaction)";
-        hitSequence.CreateTasks(
-            new IsHit(),                // Check if boss was hit
-            new BossHitAction()         // Play hit animation
+            new IsHealthZero(),
+            new BossDieAction()
         );
 
-        // ── Phase 2: HP < 50% → switch nguyên tố rồi mới dùng skill ──
+        // ── Phase 2: HP < 50% → switch element + skill ──
         var phase2 = new Phase2Sequence();
         phase2.Name = "Phase 2 (Skill Attack)";
         phase2.CreateTasks(
-            new IsPlayerDetected(),                     // Player detected?
-            new IsHPBelow(0.5f),                        // check HP
-            new SwitchElement(ElementType.Wind),        // đổi sang Wind nếu chưa
-            new IsAttackReady(skill: true),             // cooldown skill ok? (5s)
+            new IsPlayerDetected(),
+            new IsHPBelow(0.5f),
+            new SwitchElement(ElementType.Wind),
+            new IsAttackReady(skill: true),
             new ChasePlayer(),
-            new IsPlayerInAttackRange(),                // trong tầm?
-            new SkillAttack()                           // đánh skill (1.5x damage)
+            new IsPlayerInAttackRange(),
+            new SkillAttack()
         );
 
-        // ── Phase 1: đuổi → đánh thường ──
-        // Similar to Enemy pattern: Chase only if player detected
+        // ── Phase 1: Chase + Attack thường ──
         var phase1Chase = new Sequence();
         phase1Chase.Name = "Chase + Attack";
         phase1Chase.CreateTasks(
-            new IsPlayerDetected(),         // Detect range (player detected?)
-            new IsAttackReady(),            // cooldown thường ok? (2s)
-            new ChasePlayer(),              // đuổi đến khi vào range (ChasePlayer tự check attack range)
-            new MeleeAttack()               // đánh thường
+            new IsPlayerDetected(),
+            new IsAttackReady(),
+            new ChasePlayer(),
+            new MeleeAttack()
         );
         phase1Chase.DefaultUtility = 5f;
 
-        // ── Idle fallback: wait for player detection ──
+        // ── Idle fallback ──
         var idle = new Idle();
-        idle.Name = "Idle (no player detected)";
+        idle.Name = "Idle";
         idle.DefaultUtility = 1f;
 
-        // ── Root: UtilitySelector chọn hành vi có utility cao nhất ──
-        // Priority: Die (0 normally, 999 when dead) > Hit (20) > Phase 2 (10) > Phase 1 (5) > Idle (1)
+        // Priority: Die (999) > Phase 2 (10) > Phase 1 (5) > Idle (1)
         var root = new UtilitySelector();
         root.Name = "Boss Root";
-        root.CreateTasks(dieSequence, hitSequence, phase2, phase1Chase, idle);
+        root.CreateTasks(dieSequence, phase2, phase1Chase, idle);
 
         return root;
     }

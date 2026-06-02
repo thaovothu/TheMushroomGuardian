@@ -25,7 +25,7 @@ public class QuestProgressManager : BaseSingleton<QuestProgressManager>
         base.Awake();
 
         // Initialize quest tracking
-        for (int i = 1; i <= 6; i++)
+        for (int i = 1; i <= 7; i++)
         {
             if (!completedStepsByQuest.ContainsKey(i))
                 completedStepsByQuest[i] = new List<int>();
@@ -76,7 +76,7 @@ public class QuestProgressManager : BaseSingleton<QuestProgressManager>
     /// </summary>
     public void CompleteCurrentQuest()
     {
-        if (currentQuestId < 6)
+        if (currentQuestId < 7)
         {
             currentQuestId++;
             Debug.Log($"[QuestProgressManager] Quest completed! Moving to Quest {currentQuestId}");
@@ -93,7 +93,7 @@ public class QuestProgressManager : BaseSingleton<QuestProgressManager>
     /// </summary>
     public void SetCurrentQuestId(int questId)
     {
-        if (questId >= 1 && questId <= 6)
+        if (questId >= 1 && questId <= 7)
         {
             currentQuestId = questId;
             Debug.Log($"[QuestProgressManager] Current quest set to {currentQuestId}");
@@ -198,7 +198,7 @@ public class QuestProgressManager : BaseSingleton<QuestProgressManager>
     public void DebugPrintProgress()
     {
         Debug.Log("[QuestProgressManager] === Current Progress ===");
-        for (int i = 1; i <= 6; i++)
+        for (int i = 1; i <= 7; i++)
         {
             if (completedStepsByQuest.ContainsKey(i))
             {

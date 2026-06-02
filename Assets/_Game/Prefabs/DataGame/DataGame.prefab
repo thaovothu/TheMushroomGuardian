@@ -149,6 +149,10 @@ MonoBehaviour:
     stepId: 7
     itemId: 9
     required: 1
+  - questId: 5
+    stepId: 5
+    itemId: 12
+    required: 1
 --- !u!1 &1630003249813757471
 GameObject:
   m_ObjectHideFlags: 0
@@ -612,6 +616,14 @@ MonoBehaviour:
     position: {x: 3.92, y: 6.673, z: 35.69}
     triggerRadius: 3
     mapId: 4
+  - name: "Tr\u01B0\u1EDFng l\xE0ng"
+    position: {x: -5, y: 6.5, z: 87.87}
+    triggerRadius: 3
+    mapId: 4
+  - name: "V\u1EF1c B\xF3ng T\u1ED1i"
+    position: {x: 1.54, y: 0.95, z: 22.78}
+    triggerRadius: 3
+    mapId: 5
   npcDialogEntries:
   - npcName: Tinh Linh Lumi
     npcId: 1
@@ -627,6 +639,8 @@ MonoBehaviour:
     npcId: 7
   - npcName: "Th\u1EE3 R\xE8n N\u1EA5m"
     npcId: 8
+  - npcName: "Tr\u01B0\u1EDFng l\xE0ng"
+    npcId: 9
   npcUnlockNames:
   - "Chi\u1EBFn Binh R\xEAu"
   puzzleLocationNames:
@@ -1046,7 +1060,7 @@ Transform:
   m_GameObject: {fileID: 7319763729141030726}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 754.5524, y: 632.1142, z: 661.0002}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1236,6 +1250,7 @@ MonoBehaviour:
   arrowPrefab: {fileID: 901885972498195501, guid: ca6687b7b53c64877a5173467393de2a,
     type: 3}
   poolSize: 5
+  modelRotationOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &8644107022640072831
 GameObject:
   m_ObjectHideFlags: 0

@@ -20,6 +20,7 @@ MonoBehaviour:
     damage: 0
     defense: 120
     manaCost: 30
+    areaRadius: 0
   - skillId: 102
     skillName: "\u0110\u1ECBa ch\u1EA5n quy\u1EC1n"
     element: 1
@@ -27,6 +28,7 @@ MonoBehaviour:
     damage: 75
     defense: 40
     manaCost: 25
+    areaRadius: 4
   - skillId: 201
     skillName: "L\xE1 ch\u1EAFn kh\xED"
     element: 2
@@ -34,6 +36,7 @@ MonoBehaviour:
     damage: 0
     defense: 60
     manaCost: 20
+    areaRadius: 0
   - skillId: 202
     skillName: "Cu\u1ED3ng phong"
     element: 2
@@ -41,6 +44,7 @@ MonoBehaviour:
     damage: 50
     defense: 30
     manaCost: 20
+    areaRadius: 15
   - skillId: 301
     skillName: "L\xE1 ch\u1EAFn n\u01B0\u1EDBc"
     element: 3
@@ -48,6 +52,7 @@ MonoBehaviour:
     damage: 0
     defense: 90
     manaCost: 30
+    areaRadius: 0
   - skillId: 302
     skillName: "S\xF3ng th\u1EA7n"
     element: 3
@@ -55,6 +60,7 @@ MonoBehaviour:
     damage: 55
     defense: 35
     manaCost: 25
+    areaRadius: 5
   - skillId: 401
     skillName: "L\xE1 ch\u1EAFn l\u1EEDa"
     element: 4
@@ -62,6 +68,7 @@ MonoBehaviour:
     damage: 10
     defense: 70
     manaCost: 35
+    areaRadius: 0
   - skillId: 402
     skillName: "Nham th\u1EA7n"
     element: 4
@@ -69,3 +76,4 @@ MonoBehaviour:
     damage: 85
     defense: 30
     manaCost: 30
+    areaRadius: 20

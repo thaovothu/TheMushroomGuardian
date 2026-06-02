@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -8,12 +10,32 @@ public class PlayerSkillController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private HealthSystem healthSystem;
-    [SerializeField] private Transform attackPoint; // Vị trí phát chiêu
+    [Tooltip("Tâm vòng tròn AoE (Đất/Khí/Lửa) — nên đặt sát chân player. Trống → dùng vị trí player.")]
+    [SerializeField] private Transform aoeCenterPoint;
     private PlayerController playerController;
+    private Camera cam;
 
     [Header("Skill Settings")]
     [SerializeField] private float skillCooldown = 1.5f;
     [SerializeField] private float maxMana = 100f;
+
+    [Header("AoE — Đất / Khí / Lửa")]
+    [Tooltip("Bán kính vòng tròn quanh player (Đất/Khí/Lửa). Nên khớp kích thước VFX vòng tròn.")]
+    [SerializeField] private float aoeRadius = 5f;
+    [Tooltip("Lệch Y điểm rơi quả cầu lửa so với chân enemy (0 = đúng chân; prefab tự lo phần rơi từ trên xuống).")]
+    [SerializeField] private float fireImpactYOffset = 0f;
+    [Tooltip("Lửa: thời gian chờ quả cầu rơi xuống TRƯỚC khi gây damage (giây). Khớp với độ dài VFX rơi.")]
+    [SerializeField] private float fireImpactDelay = 0.6f;
+
+    [Header("Nước — AoE phía trước")]
+    [Tooltip("Tâm vùng băng cách player bao xa về phía trước.")]
+    [SerializeField] private float waterForwardDistance = 3f;
+    [Tooltip("Bán kính vùng băng phía trước (vùng gây damage).")]
+    [SerializeField] private float waterRadius = 3f;
+    [Tooltip("Xoay bù hướng VFX băng (độ, quanh Y) nếu prefab chĩa lệch trục. Thử 90 / -90 / 180 cho thẳng.")]
+    [SerializeField] private float waterVfxYawOffset = 0f;
+
+    private readonly Collider[] _aoeBuffer = new Collider[32]; // buffer cho OverlapSphereNonAlloc
     private float currentMana;
     private ElementType currentElement = ElementType.Earth;
     private float lastSkillCastTime = -999f;
@@ -27,7 +49,7 @@ public class PlayerSkillController : MonoBehaviour
     {
         if (healthSystem == null) healthSystem = GetComponent<HealthSystem>();
         if (playerController == null) playerController = GetComponent<PlayerController>();
-        if (attackPoint == null) attackPoint = transform;
+        cam = Camera.main;
 
         currentMana = maxMana;
         Debug.Log($"[PlayerSkillController] ✓ Initialized - Element: {currentElement}, Mana: {currentMana}/{maxMana}");
@@ -191,115 +213,136 @@ public class PlayerSkillController : MonoBehaviour
     /// </summary>
     private void ApplyDamageEffect(SkillData skill)
     {
-        // Phân loại: Melee (tại chỗ) vs Ranged (bay)
-        if (skill.range == SkillRange.Melee)
+        // Phân loại theo hệ:
+        //   Nước    → AoE chụm PHÍA TRƯỚC player (hướng theo camera, như kiếm)
+        //   Lửa     → vòng tròn quanh player: spawn VFX trên đầu TỪNG enemy + damage
+        //   Đất/Khí → vòng tròn quanh player: 1 VFX ở tâm + damage mọi enemy trong vòng
+        switch (skill.element)
         {
-            ApplyMeleeDamage(skill);
-        }
-        else
-        {
-            ApplyRangedDamage(skill);
+            case ElementType.Water:
+                ApplyForwardAoE(skill);
+                break;
+            case ElementType.Fire:
+                ApplyCircleAoE(skill, vfxOnEachTarget: true);
+                break;
+            default: // Earth, Wind
+                ApplyCircleAoE(skill, vfxOnEachTarget: false);
+                break;
         }
 
         lastSkillCastTime = Time.time;
     }
 
     /// <summary>
-    /// Skill đánh gần - SphereCast tại chỗ
+    /// Skill vòng tròn quanh player (Đất/Khí/Lửa): damage mọi enemy trong bán kính aoeRadius.
+    /// vfxOnEachTarget = false (Đất/Khí): 1 VFX ở tâm vòng.
+    /// vfxOnEachTarget = true  (Lửa): spawn VFX trên đầu từng enemy trúng.
     /// </summary>
-    private void ApplyMeleeDamage(SkillData skill)
+    private void ApplyCircleAoE(SkillData skill, bool vfxOnEachTarget)
     {
-        float radius = 3f;
-        float range = 5f;
+        Vector3 center = aoeCenterPoint != null ? aoeCenterPoint.position : transform.position;
 
-        RaycastHit[] hits = Physics.SphereCastAll(
-            attackPoint.position,
-            radius,
-            attackPoint.forward,
-            range
-        );
+        // VFX vòng tròn ở tâm (Đất/Khí). Lửa: bỏ qua, spawn trên đầu từng enemy ở dưới.
+        if (!vfxOnEachTarget && SkillVFXManager.Instance != null)
+            SkillVFXManager.Instance.SpawnSkillVFX(skill.skillId, center, Quaternion.identity);
 
-        // Visualize SphereCast
-        Debug.DrawLine(attackPoint.position, 
-            attackPoint.position + attackPoint.forward * range, 
-            Color.red, 0.5f);
+        // Bán kính = riêng từng skill (skill.areaRadius) nếu > 0, không thì dùng aoeRadius chung.
+        float r = skill.areaRadius > 0f ? skill.areaRadius : aoeRadius;
+        int count = Physics.OverlapSphereNonAlloc(center, r, _aoeBuffer);
 
-        // Spawn melee attack VFX tại attackPoint
-        if (SkillVFXManager.Instance != null)
+        var targets = new List<HealthSystem>();
+        for (int i = 0; i < count; i++)
         {
-            SkillVFXManager.Instance.SpawnSkillVFX(skill.skillId, attackPoint.position, attackPoint.rotation);
+            var col = _aoeBuffer[i];
+            if (col.gameObject == gameObject) continue;
+
+            // AncientPump (puzzle ấn) — nhận đòn theo hệ. GetComponentInParent gồm cả self.
+            var pump = col.GetComponentInParent<AncientPump>();
+            if (pump != null) { pump.ReceiveElementHit(skill.element); continue; }
+
+            var hs = col.GetComponentInParent<HealthSystem>();
+            if (hs == null || hs.IsDead || hs == healthSystem) continue;
+            if (targets.Contains(hs)) continue; // mỗi enemy chỉ tính 1 lần (1 entity nhiều collider)
+            targets.Add(hs);
+
+            // Lửa: spawn quả cầu rơi trên enemy NGAY (damage hoãn lại tới khi rơi chạm đất).
+            if (vfxOnEachTarget && SkillVFXManager.Instance != null)
+                SkillVFXManager.Instance.SpawnSkillVFX(skill.skillId,
+                    hs.transform.position + Vector3.up * fireImpactYOffset, Quaternion.identity);
         }
 
-        foreach (RaycastHit hit in hits)
-        {
-            if (hit.collider.gameObject == gameObject)
-                continue;
+        // Đất/Khí: damage ngay. Lửa: chờ fireImpactDelay (quả cầu rơi) rồi mới gây damage.
+        if (vfxOnEachTarget && fireImpactDelay > 0f)
+            StartCoroutine(DealAoEDamageDelayed(targets, skill, fireImpactDelay));
+        else
+            foreach (var hs in targets) DealAoEDamage(hs, skill);
 
-            var pump = hit.collider.GetComponent<AncientPump>()
-        ?? hit.collider.GetComponentInParent<AncientPump>();
-            if (pump != null)
-            {
-                pump.ReceiveElementHit(skill.element);
-                continue;
-            }
+        Debug.Log($"[PlayerSkillController] AoE {skill.skillName}: {targets.Count} enemy trong bán kính {r}m");
+    }
 
-            HealthSystem enemyHealth = hit.collider.GetComponent<HealthSystem>();
-            if (enemyHealth != null && !enemyHealth.IsDead)
-            {
-                float multiplier = SkillSystem.Instance.GetElementalMultiplier(skill.element, enemyHealth.GetElement());
-                float finalDamage = skill.damage * multiplier;
+    private void DealAoEDamage(HealthSystem hs, SkillData skill)
+    {
+        if (hs == null || hs.IsDead) return;
+        float multiplier = SkillSystem.Instance.GetElementalMultiplier(skill.element, hs.GetElement());
+        hs.TakeDamage(skill.damage * multiplier, skill.element);
+    }
 
-                enemyHealth.TakeDamage(finalDamage, skill.element);
-                Debug.Log($"[PlayerSkillController] ✓ Hit {hit.collider.name} with {skill.skillName}: {finalDamage} damage (multiplier: {multiplier:F2})");
-
-                // Spawn impact VFX tại vị trí hit
-                if (SkillVFXManager.Instance != null)
-                {
-                    SkillVFXManager.Instance.SpawnImpactVFX(skill.skillId, hit.point);
-                }
-            }
-        }
+    // Lửa: chờ quả cầu rơi xuống rồi mới gây damage (đồng bộ với VFX).
+    private IEnumerator DealAoEDamageDelayed(List<HealthSystem> targets, SkillData skill, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        foreach (var hs in targets) DealAoEDamage(hs, skill);
     }
 
     /// <summary>
-    /// Skill đánh xa - Projectile bay
+    /// Skill Nước: AoE chụm PHÍA TRƯỚC theo HƯỚNG CAMERA — xoay player về hướng cam rồi
+    /// đặt vùng băng + VFX theo cam.forward (KHÔNG lấy rotation player đang lệch).
     /// </summary>
-    private void ApplyRangedDamage(SkillData skill)
+    private void ApplyForwardAoE(SkillData skill)
     {
-        if (SkillVFXManager.Instance == null)
+        // Hướng = TRƯỚC MẶT CAMERA (phẳng), KHÔNG lấy rotation hiện tại của player (có thể đang lệch).
+        Vector3 aim = cam != null ? cam.transform.forward : transform.forward;
+        aim.y = 0f;
+        aim = aim.sqrMagnitude > 0.0001f ? aim.normalized : transform.forward;
+
+        // Xoay player về lại hướng camera (snap mặt player về trước cam).
+        if (playerController != null) playerController.RotateToward(aim);
+
+        // Bán kính = riêng từng skill (skill.areaRadius) nếu > 0, không thì dùng waterRadius chung.
+        float r = skill.areaRadius > 0f ? skill.areaRadius : waterRadius;
+
+        // Tâm vùng băng + VFX đều theo HƯỚNG CAMERA (aim), không phụ thuộc rotation player.
+        Vector3 center = transform.position + aim * waterForwardDistance;
+
+        // Debug: đường cyan = hướng + tầm damage (xem trong Scene view khi Play).
+        Debug.DrawRay(transform.position, aim * (waterForwardDistance + r), Color.cyan, 1f);
+
+        if (SkillVFXManager.Instance != null)
         {
-            Debug.LogError("[PlayerSkillController] ✗ SkillVFXManager not found!");
-            return;
+            // Xoay VFX theo hướng bắn + bù lệch trục prefab (waterVfxYawOffset).
+            Quaternion vfxRot = Quaternion.LookRotation(aim) * Quaternion.Euler(0f, waterVfxYawOffset, 0f);
+            SkillVFXManager.Instance.SpawnSkillVFX(skill.skillId, center, vfxRot);
         }
 
-        // Lấy prefab phù hợp cho skill từ manager
-        var prefab = SkillVFXManager.Instance.GetProjectilePrefab(skill.skillId);
-        if (prefab == null)
+        // Damage mọi enemy chạm vùng phía trước (giống Đất/Khí nhưng tâm ở trước mặt).
+        int count = Physics.OverlapSphereNonAlloc(center, r, _aoeBuffer);
+        var targets = new List<HealthSystem>();
+        for (int i = 0; i < count; i++)
         {
-            Debug.LogError($"[PlayerSkillController] ✗ No projectile prefab for skill: {skill.skillName}");
-            return;
+            var col = _aoeBuffer[i];
+            if (col.gameObject == gameObject) continue;
+
+            var pump = col.GetComponentInParent<AncientPump>();
+            if (pump != null) { pump.ReceiveElementHit(skill.element); continue; }
+
+            var hs = col.GetComponentInParent<HealthSystem>();
+            if (hs == null || hs.IsDead || hs == healthSystem) continue;
+            if (targets.Contains(hs)) continue;
+            targets.Add(hs);
+            DealAoEDamage(hs, skill);
         }
 
-        Debug.Log($"[PlayerSkillController] ✓ Spawning projectile for: {skill.skillName}");
-
-        var projectile = Instantiate(
-            prefab,
-            attackPoint.position,
-            Quaternion.LookRotation(attackPoint.forward)
-        );
-
-        var projectileController = projectile.GetComponent<SkillProjectile>();
-        if (projectileController != null)
-        {
-            Debug.Log($"[PlayerSkillController] ✓ Initializing: {skill.skillName}");
-            projectileController.Initialize(skill, attackPoint.forward);
-        }
-        else
-        {
-            Debug.LogError("[PlayerSkillController] ✗ SkillProjectile component NOT FOUND on prefab!");
-        }
-
-        Debug.Log($"[PlayerSkillController] ✓ Spawned projectile: {skill.skillName}");
+        Debug.Log($"[PlayerSkillController] Nước {skill.skillName}: {targets.Count} enemy trong vùng phía trước (r={r})");
     }
 
     /// <summary>

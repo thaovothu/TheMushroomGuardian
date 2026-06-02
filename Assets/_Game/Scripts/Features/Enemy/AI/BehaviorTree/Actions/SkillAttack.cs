@@ -41,21 +41,59 @@ public class SkillAttack : ActionNode
         //Debug.Log($"[Boss] Skill Attack triggered! Element: {bb.currentElement}");
     }
 
+    // protected override TaskStatus OnUpdate()
+    // {
+    //     timer += Time.deltaTime;
+
+    //     if (bb.animator == null)
+    //         return TaskStatus.Running;
+
+    //     if (bb.player == null)
+    //     {
+    //         RestoreAgent();
+    //         return TaskStatus.Failure;
+    //     }
+
+    //     // Nếu player đã ra khỏi tầm đánh thì hủy skill để cây hành vi quay lại chase
+    //     if (!bb.CanAttackPlayer())
+    //     {
+    //         RestoreAgent();
+    //         return TaskStatus.Failure;
+    //     }
+
+    //     var state = bb.animator.GetCurrentAnimatorStateInfo(0);
+    //     if (!state.IsName("Skill") || state.normalizedTime < 1f)
+    //         return TaskStatus.Running;
+
+    //     RestoreAgent();
+
+    //     // Skill damage hit ở frame 1.0s (lâu hơn attack thường)
+    //     var playerHealth = bb.player.GetComponent<HealthSystem>();
+    //     if (playerHealth != null)
+    //     {
+    //         float damage = bb.healthSystem.GetDamage() * skillDamageMultiplier;
+    //         playerHealth.TakeDamage(damage, bb.currentElement);
+
+    //         //Debug.Log($"[Boss] Skill hit player! Damage: {damage}");
+    //     }
+
+    //     return TaskStatus.Success;
+    // }
+
     protected override TaskStatus OnUpdate()
     {
         timer += Time.deltaTime;
 
-        if (bb.animator == null)
-            return TaskStatus.Running;
-
+        if (bb.animator == null) return TaskStatus.Running;
         if (bb.player == null)
         {
             RestoreAgent();
             return TaskStatus.Failure;
         }
 
-        // Nếu player đã ra khỏi tầm đánh thì hủy skill để cây hành vi quay lại chase
-        if (!bb.CanAttackPlayer())
+        Debug.Log($"[SkillAttack] dist={bb.distanceToPlayer:F1} skillRange={bb.skillRange} animState={bb.animator.GetCurrentAnimatorStateInfo(0).IsName("Skill")} normalizedTime={bb.animator.GetCurrentAnimatorStateInfo(0).normalizedTime:F2}");
+        // Đổi từ CanAttackPlayer() → check skillRange (rộng hơn)
+        if (bb.distanceToPlayer > bb.skillRange)
         {
             RestoreAgent();
             return TaskStatus.Failure;
@@ -66,15 +104,13 @@ public class SkillAttack : ActionNode
             return TaskStatus.Running;
 
         RestoreAgent();
-        
-        // Skill damage hit ở frame 1.0s (lâu hơn attack thường)
+
+        // Skill damage
         var playerHealth = bb.player.GetComponent<HealthSystem>();
         if (playerHealth != null)
         {
-            float damage = bb.healthSystem.GetDamage() * skillDamageMultiplier;
+        float damage = bb.healthSystem.GetDamage() * skillDamageMultiplier;
             playerHealth.TakeDamage(damage, bb.currentElement);
-            
-            //Debug.Log($"[Boss] Skill hit player! Damage: {damage}");
         }
 
         return TaskStatus.Success;

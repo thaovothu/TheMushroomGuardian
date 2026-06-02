@@ -26,6 +26,8 @@ public class SkillData
     [SerializeField] public int damage;
     [SerializeField] public int defense;      // Giá trị bảo vệ/chống
     [SerializeField] public int manaCost;
+    [Tooltip("Bán kính vùng gây damage (m). 0 = dùng mặc định trên PlayerSkillController (aoeRadius / waterRadius).")]
+    [SerializeField] public float areaRadius;
 
     public SkillData(int skillId, string skillName, ElementType element, SkillRange range, int damage, int defense, int manaCost)
     {
