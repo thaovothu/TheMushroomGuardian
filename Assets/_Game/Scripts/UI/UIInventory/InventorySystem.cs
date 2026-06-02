@@ -102,10 +102,25 @@ public class InventorySystem : BaseSingleton<InventorySystem>
         return true;
     }
 
-    /// <summary>Sử dụng item.</summary>
+    /// <summary>Sử dụng item.
+    /// - Potion/Buff: áp dụng hiệu ứng và tiêu thụ 1 cái.
+    /// - Weapon (Sword/Bow): trang bị mà KHÔNG tiêu thụ.
+    /// - Element/Crystal: không làm gì (không tiêu thụ).
+    /// </summary>
     public void UseItem(ItemType type)
     {
         if (!inventory.TryGetValue(type, out var entry)) return;
+
+        if (type == ItemType.Sword || type == ItemType.Bow)
+        {
+            var weaponType = type == ItemType.Sword ? WeaponType.Sword : WeaponType.Bow;
+            EquipmentSystem.Instance?.EquipFromInventory(weaponType);
+            return;
+        }
+
+        if (type == ItemType.EarthCrystal || type == ItemType.WindCrystal ||
+            type == ItemType.WaterCrystal || type == ItemType.FireCrystal)
+            return;
 
         ApplyItemEffect(entry.data);
         RemoveItem(type, 1);

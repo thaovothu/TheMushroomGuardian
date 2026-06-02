@@ -158,10 +158,10 @@ public class LoadResource : BaseSingleton<LoadResource>
                     titleQuest = columns[2],
                     infoQuest = columns[3],
                     itemReward1 = columns[4],
-                    coinReward = columns.Length > 5 ? (string.IsNullOrEmpty(columns[5]) ? 0 : int.Parse(columns[5])) : 0,
+                    skillReward = columns.Length > 5 ? columns[5].Trim() : "",
                     reward = columns.Length > 6 ? columns[6] : "",
                     shortDescription = columns.Length > 7 ? columns[7] : "",
-                    mapId = columns.Length > 8 ? int.Parse(columns[8]) : 1,
+                    mapId = columns.Length > 8 ? (int.TryParse(columns[8], out var mid) ? mid : 1) : 1,
                     spawnGroupId = columns.Length > 9 ? columns[9].Trim() : "",
                     lumiHint = columns.Length > 10 ? columns[10].Trim() : ""
                 };
@@ -288,9 +288,9 @@ public class QuestData
     public int stepId;
     public string titleQuest;
     public string infoQuest;
-    public string itemReward1;
-    public int coinReward;
-    public string reward;
+    public string itemReward1;   // số = vàng, "Kiếm"/"Cung" = vũ khí
+    public string skillReward;   // tên kỹ năng mở khóa (Dash, Skill Đất, ...)
+    public string reward;        // ExtenfReward
     public string shortDescription;
     public int mapId;
     public string lumiHint;

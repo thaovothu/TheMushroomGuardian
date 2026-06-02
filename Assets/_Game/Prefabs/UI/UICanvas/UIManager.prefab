@@ -2398,6 +2398,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIHubGame
       objectReference: {fileID: 0}
+    - target: {fileID: 1614868247493288543, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1947918770993678169, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
         type: 3}
       propertyPath: m_AnchorMax.y
