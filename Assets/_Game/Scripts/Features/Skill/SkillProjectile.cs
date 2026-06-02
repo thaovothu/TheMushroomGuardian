@@ -96,12 +96,13 @@ public class SkillProjectile : MonoBehaviour
         hasHit = true;
         Debug.Log($"[SkillProjectile] Hit registered! Position: {transform.position}");
 
-        // Kiểm tra enemy
-        HealthSystem enemyHealth = collision.GetComponent<HealthSystem>();
+        // Kiểm tra enemy — GetComponentInParent để trúng cả collider của model con
+        // (boss có HealthSystem ở root, collider hiển thị có thể nằm ở child).
+        HealthSystem enemyHealth = collision.GetComponentInParent<HealthSystem>();
         if (enemyHealth == null)
         {
-            Debug.LogWarning($"[SkillProjectile] ✗ {collision.name} has NO HealthSystem component!");
-            Destroy(gameObject);
+            // Trúng vật cản (tường/sàn) không có HealthSystem → bỏ qua, đạn bay tiếp thay vì tự huỷ.
+            hasHit = false;
             return;
         }
 

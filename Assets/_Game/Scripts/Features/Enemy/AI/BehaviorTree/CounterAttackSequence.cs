@@ -23,10 +23,6 @@ public class CounterAttackSequence : Sequence
     public override float GetUtility()
     {
         if (bb == null) return 0f;
-
-        // Không bị hit → không phản công.
-        if (!bb.isHit) return 0f;
-
         // Player ngoài tầm đánh → để HitSequence (out-of-range) xử lý.
         if (!bb.CanAttackPlayer()) return 0f;
 

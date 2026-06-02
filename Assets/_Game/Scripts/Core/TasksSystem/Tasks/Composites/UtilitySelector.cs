@@ -66,6 +66,7 @@ public class UtilitySelector : Composite
             if (status == TaskStatus.Success)
             {
                 Task.Stop(currentTask);
+                currentTask = null;
                 //Debug.Log("[UtilitySelector] Task succeeded, will reselect next frame");
                 return TaskStatus.Success;
             }

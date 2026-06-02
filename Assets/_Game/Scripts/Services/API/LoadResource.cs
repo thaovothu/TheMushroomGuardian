@@ -294,12 +294,6 @@ public class QuestData
     public string shortDescription;
     public int mapId;
     public string lumiHint;
-    /// <summary>
-    /// ID nhóm spawn enemy cho step này.
-    /// Rỗng = step không spawn enemy (waypoint, dialog, collect...).
-    /// Phải khớp với spawnGroupId trong QuestSpawnConfig asset.
-    /// VD: "spawn_q1s2_cactus", "spawn_q2s2_mushroom"
-    /// </summary>
     public string spawnGroupId;
 
     public override string ToString()

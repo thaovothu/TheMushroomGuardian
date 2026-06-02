@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyVariants:
     enemyName: BossFire
-    enemyPrefab: {fileID: 2869362887871855709, guid: 0819646b3990f47cc9a90f72771c7838,
+    enemyPrefab: {fileID: 2869362887871855709, guid: 08ff8ba19dd5d4b51a0162575d269c03,
       type: 3}
   enemyData:
   - levelEnemy: 1

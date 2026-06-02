@@ -1663,7 +1663,7 @@ MonoBehaviour:
   registryType: 1
   spawnPoint: {fileID: 0}
   spawnGroups:
-  - spawnGroupId: 2
+  - spawnGroupId: 1
     spawnPoints:
     - {fileID: 1461713164}
   npcSpawnEntries: []
@@ -1698,7 +1698,7 @@ MonoBehaviour:
   registryType: 1
   spawnPoint: {fileID: 0}
   spawnGroups:
-  - spawnGroupId: 3
+  - spawnGroupId: 2
     spawnPoints:
     - {fileID: 730149866}
   npcSpawnEntries: []

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,22 +5,25 @@ public class ArrowPool : BaseSingleton<ArrowPool>
 {
     [SerializeField] GameObject arrowPrefab;
     [SerializeField] int poolSize = 5;
-    
+
+    [Header("Model Rotation Fix")]
+    [Tooltip("Bù rotation nếu arrow model lệch trục so với +Z. " +
+             "Mũi nhọn chỉ +X → Y=-90. Mũi nhọn chỉ -Z → Y=180. Mũi nhọn chỉ +Z → Y=0 (không cần bù).")]
+    [SerializeField] Vector3 modelRotationOffset = new Vector3(0f, -90f, 0f);
+
     Queue<GameObject> availableArrows;
     List<GameObject> allArrows;
 
     protected override void Awake()
     {
         base.Awake();
-        // Parent (DataGame) handles DontDestroyOnLoad
     }
 
     void Start()
     {
         availableArrows = new Queue<GameObject>(poolSize);
-        allArrows = new List<GameObject>();
-        
-        // Pre-spawn tất cả arrow trong pool
+        allArrows = new List<GameObject>(poolSize);
+
         for (int i = 0; i < poolSize; i++)
         {
             GameObject arrow = Instantiate(arrowPrefab, transform);
@@ -29,47 +31,49 @@ public class ArrowPool : BaseSingleton<ArrowPool>
             availableArrows.Enqueue(arrow);
             allArrows.Add(arrow);
         }
+
+        Debug.Log($"[ArrowPool] Initialized {poolSize} arrows. ModelOffset={modelRotationOffset}");
     }
 
-    // Lấy arrow từ pool
+    /// <summary>
+    /// Lấy arrow từ pool, set đúng vị trí + hướng bay.
+    /// rotation = hướng arrow CẦN BAY (Quaternion.LookRotation(dir)).
+    /// modelRotationOffset bù thêm nếu model lệch trục so với +Z.
+    /// </summary>
     public GameObject GetArrow(Vector3 position, Quaternion rotation)
     {
-        Debug.Log($"[ArrowPool] GetArrow called. Pool available: {availableArrows.Count}");
-        
+        GameObject arrow;
+
         if (availableArrows.Count == 0)
         {
-            Debug.LogWarning("Arrow pool hết! Tạo thêm arrow mới.");
-            GameObject newArrow = Instantiate(arrowPrefab, position, rotation, transform);
-            return newArrow;
+            Debug.LogWarning("[ArrowPool] Pool hết — tạo thêm arrow mới.");
+            arrow = Instantiate(arrowPrefab, transform);
+        }
+        else
+        {
+            arrow = availableArrows.Dequeue();
         }
 
-        GameObject arrow = availableArrows.Dequeue();
-        Debug.Log($"[ArrowPool] Got arrow from pool. Arrow name: {arrow.name}, has Arrow script: {arrow.GetComponent<Arrow>() != null}");
-        
         arrow.transform.position = position;
-        arrow.transform.rotation = rotation;
-        
-        // Reset Rigidbody
+        // Ghép: hướng bay thật * offset bù model lệch trục.
+        arrow.transform.rotation = rotation * Quaternion.Euler(modelRotationOffset);
+
         Rigidbody rb = arrow.GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-            rb.isKinematic = false; // đảm bảo physics hoạt động
-            Debug.Log($"[ArrowPool] Rigidbody found and reset");
+            rb.isKinematic = false;
         }
         else
         {
-            Debug.LogError($"[ArrowPool] Arrow prefab không có Rigidbody!");
+            Debug.LogError("[ArrowPool] Arrow prefab thiếu Rigidbody!");
         }
-        
-        arrow.SetActive(true);
-        Debug.Log($"[ArrowPool] Arrow activated");
 
+        arrow.SetActive(true); // → Arrow.OnEnable sẽ set velocity theo transform.forward
         return arrow;
     }
 
-    // Trả arrow về pool
     public void ReturnArrow(GameObject arrow)
     {
         arrow.SetActive(false);

@@ -93,14 +93,24 @@ public class UISkillPanel : MonoBehaviour
             skillController = player.GetComponent<PlayerSkillController>();
     }
 
+    private bool _buttonsHooked;
+
     private void HookButtonEvents()
     {
-        if (shieldButton != null)
-            shieldButton.onClick.AddListener(() => skillController?.CastShield());
+        // Start() và OnPlayerSpawned() đều gọi hàm này → chặn đăng ký trùng,
+        // nếu không 1 nút sẽ có 2 listener → bấm 1 lần cast 2 lần (VFX lặp).
+        if (_buttonsHooked) return;
+        _buttonsHooked = true;
 
+        if (shieldButton != null)
+            shieldButton.onClick.AddListener(OnShieldButtonClicked);
         if (attackButton != null)
-            attackButton.onClick.AddListener(() => skillController?.CastAttack());
+            attackButton.onClick.AddListener(OnAttackButtonClicked);
     }
+
+    // Hàm có tên (đọc skillController hiện tại) → vẫn đúng khi player respawn.
+    private void OnShieldButtonClicked() => skillController?.CastShield();
+    private void OnAttackButtonClicked() => skillController?.CastAttack();
 
     private void UpdateUI()
     {

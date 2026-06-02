@@ -37,9 +37,10 @@ public class SkillVFXManager : BaseSingleton<SkillVFXManager>
         }
 
         var instance = Instantiate(vfx, position, rotation);
-        instance.Play();
+        // Prefab VFX đã bật "Play On Awake" → tự chạy khi Instantiate.
+        // KHÔNG gọi Play() nữa, gọi thêm sẽ phát hiệu ứng 2 lần.
         Destroy(instance.gameObject, 3f);
-        
+
         Debug.Log($"[SkillVFXManager] ✓ Spawned skill VFX for skill ID: {skillId}");
     }
 
@@ -62,9 +63,9 @@ public class SkillVFXManager : BaseSingleton<SkillVFXManager>
         }
 
         var instance = Instantiate(vfx, position, Quaternion.identity);
-        instance.Play();
+        // Đã có Play On Awake → không gọi Play() để tránh phát 2 lần.
         Destroy(instance.gameObject, 2f);
-        
+
         Debug.Log($"[SkillVFXManager] ✓ Spawned impact VFX for skill ID: {skillId}");
     }
 

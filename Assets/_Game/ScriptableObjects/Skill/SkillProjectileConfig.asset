@@ -14,29 +14,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defendVFX: {fileID: 7177991128484655658, guid: 59a35ab9f68edff40b6e5332bed330f5,
     type: 3}
-  attackEarthVFX: {fileID: 7226888052703040407, guid: 7ec363c8df426644ea85f8d6d570561c,
+  attackEarthVFX: {fileID: 4238007098874307032, guid: 18a53cfc5c22f4739a7c1eb84b66ec30,
     type: 3}
-  attackWindVFX: {fileID: 4772634663558126228, guid: e1385af346f4e624eb313ec1ea4fcd7e,
+  attackWindVFX: {fileID: 2003628781529242846, guid: 5a763a903c85c4551aeff42a2858bfe2,
     type: 3}
-  attackWaterVFX: {fileID: 4772634663558126228, guid: e1385af346f4e624eb313ec1ea4fcd7e,
+  attackWaterVFX: {fileID: 6013317033843827723, guid: f531567b3457845ae84e3362efeac83e,
     type: 3}
-  attackFireVFX: {fileID: 6822807260539482636, guid: badbd861efe604452ae3b197be47582e,
+  attackFireVFX: {fileID: 5726018809045565519, guid: 3d9d4f90c32c54f7483943e9b03e3117,
     type: 3}
-  impactEarthVFX: {fileID: 7177991128484655658, guid: 59a35ab9f68edff40b6e5332bed330f5,
+  impactEarthVFX: {fileID: 484368387861551534, guid: a12820d0efed34aef92a2b3212908087,
     type: 3}
-  impactWindVFX: {fileID: 7177991128484655658, guid: 59a35ab9f68edff40b6e5332bed330f5,
+  impactWindVFX: {fileID: 484368387861551534, guid: a12820d0efed34aef92a2b3212908087,
     type: 3}
-  impactWaterVFX: {fileID: 7177991128484655658, guid: 59a35ab9f68edff40b6e5332bed330f5,
+  impactWaterVFX: {fileID: 484368387861551534, guid: a12820d0efed34aef92a2b3212908087,
     type: 3}
-  impactFireVFX: {fileID: 7177991128484655658, guid: 59a35ab9f68edff40b6e5332bed330f5,
+  impactFireVFX: {fileID: 484368387861551534, guid: a12820d0efed34aef92a2b3212908087,
     type: 3}
-  projectileEarthPrefab: {fileID: 3323294455745290126, guid: 411122f857b234910b52290e8c6ab509,
+  projectileEarthPrefab: {fileID: 6526302276393259002, guid: ebd54925bae7e423caadae64e98b1100,
     type: 3}
-  projectileWindPrefab: {fileID: 3323294455745290126, guid: 63d0da7d2676c412d857a6ba87de0ce7,
+  projectileWindPrefab: {fileID: 6526302276393259002, guid: ebd54925bae7e423caadae64e98b1100,
     type: 3}
-  projectileWaterPrefab: {fileID: 3323294455745290126, guid: 63d0da7d2676c412d857a6ba87de0ce7,
+  projectileWaterPrefab: {fileID: 3156866507962234106, guid: f531567b3457845ae84e3362efeac83e,
     type: 3}
-  projectileFirePrefab: {fileID: 3323294455745290126, guid: badbd861efe604452ae3b197be47582e,
+  projectileFirePrefab: {fileID: 3156866507962234106, guid: f531567b3457845ae84e3362efeac83e,
     type: 3}
   skillMappings:
   - skillId: 101

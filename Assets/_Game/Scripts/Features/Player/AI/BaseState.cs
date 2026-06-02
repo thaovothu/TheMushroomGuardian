@@ -16,7 +16,6 @@ using System;
         public static readonly int AttackWeaponHash = Animator.StringToHash("AttackWeapon");
         public static readonly int DrawHash = Animator.StringToHash("AttackDraw");
         public static readonly int SheathHash = Animator.StringToHash("AttackSheath");
-        public static readonly int HitHash = Animator.StringToHash("Hit1");
         public static readonly int EarthDefendHash = Animator.StringToHash("EarthDefend");
         public static readonly int EarthAttackHash = Animator.StringToHash("EarthAttack");
 

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum BossAnimState { Idle, Walk, Run, Attack, Skill, SwitchElement, Hit, Die }
+public enum BossAnimState { Idle, Walk, Run, Attack01, Attack02, Skill, SwitchElement, Hit, Die }
 
 public class BossBlackboard : MonoBehaviour, IPoolSpawned
 {
@@ -13,15 +13,21 @@ public class BossBlackboard : MonoBehaviour, IPoolSpawned
     public HealthSystem healthSystem;
     private BehaviorTree behaviorTree;
     BaseEnemyData _data;
+    BigBossModelSwitcher _bigBoss; // != null → là boss cuối: áp bảng khắc hệ khi đánh player
 
     [Header("Combat Settings")]
     [SerializeField] public float detectRange = 10f;
     public float attackRange = 2.5f;
+    public float skillRange = 12f;
+    [Tooltip("Prefab đạn dùng cho RangedAttack03/04 và BurstBulletAction (phase 2 Boss Lửa).")]
+    public GameObject rangedProjectilePrefab;
     public float attackCooldown = 2f;
     public float skillCooldown = 5f;
     public float moveSpeed = 15f;     // Tốc độ đi bộ (distance <= 10m)
-    public float runSpeed ;      // Tốc độ chạy (distance > 10m)
+    public float runSpeed;      // Tốc độ chạy (distance > 10m)
     public int damageBoss;
+    [Tooltip("Hệ số nhân damage theo phase (BigBoss: Đất yếu = 0.6...). Mặc định 1 → boss khác không đổi.")]
+    public float damageMultiplier = 1f;
     // Runtime state — các node đọc/ghi vào đây
     [HideInInspector] public float distanceToPlayer;
     [HideInInspector] public bool isPhase2;
@@ -32,19 +38,22 @@ public class BossBlackboard : MonoBehaviour, IPoolSpawned
     [HideInInspector] public bool isHit = false;
     [Header("Boss Identity")]
     [SerializeField] public ElementType bossBaseElement = ElementType.Earth; // set cố định trong Inspector/Prefab
-    private float lastHealthValue;
-    private float hitTimeout = 0f;      // Timeout để reset isHit
-    private const float HIT_DURATION = 0.35f; // Hit animation duration
+    // private float lastHealthValue;
+    // private float hitTimeout = 0f;      // Timeout để reset isHit
+    // private const float HIT_DURATION = 0.35f; // Hit animation duration
     private bool healthInitialized = false;
-
     void Awake()
     {
         if (agent == null) agent = GetComponent<NavMeshAgent>();
-        if (animator == null) animator = GetComponentInChildren<Animator>();
         if (healthSystem == null) healthSystem = GetComponent<HealthSystem>();
         if (behaviorTree == null) behaviorTree = GetComponent<BehaviorTree>();
+        _bigBoss = GetComponent<BigBossModelSwitcher>();
 
-        // Try ngay 1 lần — phòng trường hợp player đã spawn trước
+        // Chỉ auto-fetch animator nếu KHÔNG có switcher
+        // (boss có switcher sẽ tự set trong Start)
+        if (animator == null && GetComponent<BossModelSwitcher>() == null)
+            animator = GetComponentInChildren<Animator>();
+
         if (player == null)
         {
             var playerGO = GameObject.FindGameObjectWithTag("Player");
@@ -83,67 +92,12 @@ public class BossBlackboard : MonoBehaviour, IPoolSpawned
                 Debug.Log("[BossBlackboard] ✓ Player found!");
             }
         }
-        
-        // Cập nhật distance mỗi frame — dùng chung cho mọi node
+
         distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        // Debug.Log($"[BossBlackboard.Update] Distance updated: {distanceToPlayer}");
         
-        // Phase check
         isPhase2 = healthSystem.GetHPPercent() < 0.5f;
-        
-        // Detect if Boss took damage
-        if (healthSystem.CurrentHealth < lastHealthValue)
-        {
-            isHit = true;
-            hitTimeout = HIT_DURATION;
-            lastHealthValue = healthSystem.CurrentHealth;
-        }
-
-        // Reset isHit sau HIT_DURATION
-        if (isHit && hitTimeout > 0)
-        {
-            hitTimeout -= Time.deltaTime;
-            if (hitTimeout <= 0)
-            {
-                isHit = false;
-            }
-        }
     }
-
-    /// <summary>
-    /// IPoolSpawned: Initialize boss with data from PoolSpawnManager
-    /// </summary>
     void IPoolSpawned.OnSpawned() { }
-
-    // public void OnSpawn(BaseEnemyData data)
-    // {
-    //     _data = data ?? new BaseEnemyData { hp = 100, damage = 10, moveSpeed = 3.5f };
-
-    //     // Apply stats từ data
-    //     agent.speed = moveSpeed;
-    //     runSpeed = _data.moveSpeed;
-    //     healthSystem.Init(_data.hp);
-    //     damageBoss = _data.damage;
-
-    //     // Initialize health tracking ngay sau Init()
-    //     lastHealthValue = healthSystem.CurrentHealth;
-    //     healthInitialized = true;
-    //     Debug.Log($"[BossBlackboard.OnSpawn] ✓ Health tracking initialized: {lastHealthValue}");
-
-    //     // Restart BehaviorTree - retry nếu không ready
-    //     if (behaviorTree == null)
-    //     {
-    //         behaviorTree = GetComponent<BehaviorTree>();
-    //     }
-
-    //     if (behaviorTree != null && behaviorTree.Root != null)
-    //     {
-    //         Task.Restart(behaviorTree.Root);
-    //     }
-    //     BossEventBus.OnBossSpawned?.Invoke(gameObject);
-    //     Debug.Log($"[BossBlackboard] OnBossSpawned fired: {gameObject.name}");
-    // }
-
     public void OnSpawn(BaseEnemyData data)
     {
         _data = data ?? new BaseEnemyData { hp = 100, damage = 10, moveSpeed = 3.5f };
@@ -153,7 +107,7 @@ public class BossBlackboard : MonoBehaviour, IPoolSpawned
         healthSystem.Init(_data.hp);
         damageBoss = _data.damage;
 
-        lastHealthValue = healthSystem.CurrentHealth;
+        // lastHealthValue = healthSystem.CurrentHealth;
         healthInitialized = true;
 
         if (behaviorTree == null)
@@ -165,7 +119,7 @@ public class BossBlackboard : MonoBehaviour, IPoolSpawned
         BossEventBus.OnBossSpawned?.Invoke(gameObject);
 
 #if UNITY_EDITOR
-        Debug.Log($"[BossBlackboard] OnSpawn complete: {gameObject.name} | HP: {lastHealthValue}");
+        Debug.Log($"[BossBlackboard] OnSpawn complete: {gameObject.name} ");
 #endif
     }
 
@@ -196,7 +150,11 @@ public class BossBlackboard : MonoBehaviour, IPoolSpawned
                 animator.SetBool("isRunning", false);
                 //Debug.Log("[Boss] Idle animation triggered.");
                 break;
-            case BossAnimState.Attack:
+            case BossAnimState.Attack01:
+                animator.SetTrigger("attack");
+                //Debug.Log("[Boss] Attack animation triggered.");
+                break;
+            case BossAnimState.Attack02:
                 animator.SetTrigger("attack");
                 //Debug.Log("[Boss] Attack animation triggered.");
                 break;
@@ -238,10 +196,21 @@ public class BossBlackboard : MonoBehaviour, IPoolSpawned
     }
 
     /// <summary>
-    /// Check if player is too far away
+    /// Damage cuối cùng boss đánh lên player = damage gốc × hệ-số-phase (damageMultiplier)
+    /// × bảng khắc hệ (hệ boss tấn công vs hệ player phòng thủ).
+    /// Bảng khắc hệ CHỈ áp cho BigBoss (boss cuối). Boss khác: _bigBoss == null → giữ nguyên
+    /// (damageMultiplier mặc định 1) nên KHÔNG bị ảnh hưởng.
     /// </summary>
-    public bool IsPlayerTooFar()
+    public float ResolveDamageVsPlayer(float baseDamage)
     {
-        return distanceToPlayer > detectRange;
+        float dmg = baseDamage * damageMultiplier;
+
+        if (_bigBoss != null && player != null)
+        {
+            var ps = player.GetComponent<PlayerSkillController>();
+            if (ps != null)
+                dmg *= ElementalSystem.GetMultiplier(currentElement, ps.GetCurrentElement());
+        }
+        return dmg;
     }
 }

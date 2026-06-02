@@ -31,13 +31,9 @@ QuestID	StepID	Title Quest	Info Quest	ItemReward1	CointReward	Reward	Short Des_1
 5	3	Ngọn Lửa Sau Cùng	Gặp <color=green>Thợ Rèn Nấm</color> tại lò rèn — ông truyền chiêu thức cuối cùng <color=#FFCCFF>Hệ Lửa</color>				Gặp Thợ Rèn Nấm	4		
 5	4	Ngọn Lửa Sau Cùng	"Đánh bại <color=red>Khổng Lồ Dung Nham</color> — Phase 1 phá giáp bằng <color=#FFCCFF>Đập Đất</color>, Phase 2 tấn công lõi bằng <color=#FFCCFF>Bùng Nổ Lửa</color>"			"FireAttack, FireDefend"	Học Bùng Nổ Lửa	4	8	
 5	5	Ngọn Lửa Sau Cùng	Thu hồi <color=yellow>Lõi Nguyên Tố Lửa</color>. <color=green>Lumi</color> thì thầm: "Chỉ còn một bước nữa thôi..."		2500		Đánh bại Khổng Lồ	4		
+5	6	Ngọn Lửa Sau Cùng	<color=green>Trưởng làng</color> dặn dò cuối cùng để bước vào trận chiến cuối cùng					4		
 										
-										
-										
-6	1	Cội Rễ Cuối Cùng	"Sau khi thu thập đủ 4 nguyên tố, hãy gặp lại <color=green>Cổ Thụ Nấm</color>. Những NPC đã gặp trên hành trình gửi lời nhắn động viên trước trận chiến cuối"				Gặp Cổ Thụ Nấm	5		
-6	2	Cội Rễ Cuối Cùng	<color=green>Lumi</color> tiết lộ rằng Hư Không đang nuốt chửng thế giới từ bên dưới lòng đất — flashback ngắn về thế giới trước khi Hư Không xuất hiện				Nghe lời Lumi	5		
-6	3	Cội Rễ Cuối Cùng	<color=green>Lumi</color> dùng toàn bộ sức lực để mở cổng <color=#00FFFF>Vực Bóng Tối</color> và phải ở lại bên ngoài. Người chơi bước vào một mình — âm nhạc tắt				Bước vào Vực một mình	5		
-6	4	Cội Rễ Cuối Cùng	Tiêu diệt 25 <color=red>Chiến Binh Hư Không</color> để mở cánh cổng cuối cùng				Tiêu diệt quân Hư Không	5	9	
-6	5	Cội Rễ Cuối Cùng	Đối mặt <color=red>Vua Hư Không</color> — Giai đoạn 1: phá shield Gió bằng <color=#FFCCFF>Lướt Gió</color>. Giai đoạn 2: phá shield Nước bằng <color=#FFCCFF>Hồi Phục</color>. Giai đoạn 3: phá shield Lửa bằng <color=#FFCCFF>Đập Đất</color> rồi kết thúc bằng <color=#FFCCFF>Bùng Nổ Lửa</color>				Phá phong ấn Boss	5	10	
-6	6	Cội Rễ Cuối Cùng	Đánh bại <color=red>Vua Hư Không</color> và giải phóng cội nguồn thế giới				Đánh bại Vua Hư Không	5		
-6	7	Cội Rễ Cuối Cùng	Đứng chờ <color=green>Lumi</color> hồi phục — ánh sáng lan rộng từ từ ra khắp bản đồ. Nói chuyện với Lumi sau khi ánh sáng quay trở lại hoàn toàn				Hoàn thành hành trình	5		
+6	1	Cội Rễ Cuối Cùng	<color=#00FFFF>Vực Bóng Tối</color> đang xuất hiện					5		
+6	2	Cội Rễ Cuối Cùng	Đối mặt <color=red>Vua Hư Không</color> — Giai đoạn 1: phá shield Gió bằng <color=#FFCCFF>Lướt Gió</color>. Giai đoạn 2: phá shield Nước bằng <color=#FFCCFF>Hồi Phục</color>. Giai đoạn 3: phá shield Lửa bằng <color=#FFCCFF>Đập Đất</color> rồi kết thúc bằng <color=#FFCCFF>Bùng Nổ Lửa</color>				Phá phong ấn Boss	5	9	
+6	3	Cội Rễ Cuối Cùng	Đánh bại <color=red>Vua Hư Không</color> và giải phóng cội nguồn thế giới				Đánh bại Vua Hư Không	5		
+6	4	Cội Rễ Cuối Cùng	Đứng chờ <color=green>Lumi</color> hồi phục — ánh sáng lan rộng từ từ ra khắp bản đồ. Nói chuyện với Lumi sau khi ánh sáng quay trở lại hoàn toàn				Hoàn thành hành trình	5		
