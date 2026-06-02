@@ -2,10 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-/// <summary>
-/// Hiển thị chi tiết item được chọn.
-/// SetActive(true) khi click slot, SetActive(false) khi đóng/clear.
-/// </summary>
 public class ItemDetailUI : MonoBehaviour
 {
     [Header("UI References")]
@@ -16,29 +12,22 @@ public class ItemDetailUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI descriptionText;
     [SerializeField] private TextMeshProUGUI statsText;
     [SerializeField] private Button useItemButton;
-    [SerializeField] private Button deleteItemButton;
-    [SerializeField] private Button equipButton;
+    [SerializeField] private Button removeButton;
     [SerializeField] private Button closeButton;
 
     private ItemType currentItemType = ItemType.None;
 
-    // ── Unity ─────────────────────────────────────────────────────────────────
-
     private void Start()
     {
         if (useItemButton != null)
-            useItemButton.onClick.AddListener(OnUseItemClicked);
-        if (deleteItemButton != null)
-            deleteItemButton.onClick.AddListener(OnDeleteItemClicked);
-        if (equipButton != null)
-            equipButton.onClick.AddListener(OnEquipClicked);
+            useItemButton.onClick.AddListener(OnUseClicked);
+        if (removeButton != null)
+            removeButton.onClick.AddListener(OnRemoveClicked);
         if (closeButton != null)
             closeButton.onClick.AddListener(Hide);
 
         gameObject.SetActive(false);
     }
-
-    // ── Public API ────────────────────────────────────────────────────────────
 
     public void ShowItemDetailByType(ItemType type, int quantity)
     {
@@ -60,22 +49,14 @@ public class ItemDetailUI : MonoBehaviour
             if (statsText != null) statsText.text = BuildStatsText(data);
         }
 
-        bool isWeapon = type == ItemType.Sword || type == ItemType.Bow;
         bool isElement = type == ItemType.EarthCrystal || type == ItemType.WindCrystal
                       || type == ItemType.WaterCrystal || type == ItemType.FireCrystal;
 
-        // Weapons: show Use (acts as Equip) but hide Delete.
-        // Elements: hide both Use and Delete.
-        // Potions/Buffs: show both Use and Delete.
+        // Elements have no actions; weapons and potions both get Dùng + Cởi.
         if (useItemButton != null)
             useItemButton.gameObject.SetActive(!isElement);
-
-        if (deleteItemButton != null)
-            deleteItemButton.gameObject.SetActive(!isElement && !isWeapon);
-
-        // equipButton — optional dedicated equip button (set in Inspector)
-        if (equipButton != null)
-            equipButton.gameObject.SetActive(isWeapon);
+        if (removeButton != null)
+            removeButton.gameObject.SetActive(!isElement);
 
         gameObject.SetActive(true);
     }
@@ -87,8 +68,6 @@ public class ItemDetailUI : MonoBehaviour
     }
 
     public void Hide() => ClearDetail();
-
-    // ── Internal ──────────────────────────────────────────────────────────────
 
     private string BuildStatsText(ItemData data)
     {
@@ -112,32 +91,31 @@ public class ItemDetailUI : MonoBehaviour
         };
     }
 
-    private bool IsUsable(ItemType type) =>
-        type == ItemType.HealthPotion ||
-        type == ItemType.ManaPotion ||
-        type == ItemType.StrengthBuff ||
-        type == ItemType.DefenseBuff;
-
-    private void OnUseItemClicked()
+    // "Dùng" — equip weapon or consume potion/buff
+    private void OnUseClicked()
     {
         if (currentItemType == ItemType.None) return;
-        InventorySystem.Instance?.UseItem(currentItemType);
-        Hide();
-    }
 
-    private void OnDeleteItemClicked()
-    {
-        if (currentItemType == ItemType.None) return;
-        InventorySystem.Instance?.RemoveItem(currentItemType);
-        Hide();
-    }
-
-    private void OnEquipClicked()
-    {
         if (currentItemType == ItemType.Sword)
             EquipmentSystem.Instance?.EquipFromInventory(WeaponType.Sword);
         else if (currentItemType == ItemType.Bow)
             EquipmentSystem.Instance?.EquipFromInventory(WeaponType.Bow);
+        else
+            InventorySystem.Instance?.UseItem(currentItemType);
+
+        Hide();
+    }
+
+    // "Cởi" — unequip weapon (set to None) or delete potion/buff
+    private void OnRemoveClicked()
+    {
+        if (currentItemType == ItemType.None) return;
+
+        if (currentItemType == ItemType.Sword || currentItemType == ItemType.Bow)
+            EquipmentSystem.Instance?.EquipFromInventory(WeaponType.None);
+        else
+            InventorySystem.Instance?.RemoveItem(currentItemType);
+
         Hide();
     }
 }
