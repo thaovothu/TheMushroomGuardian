@@ -38,6 +38,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float attackDistance = 1f;
     [SerializeField] int attackDamage = 10;
 
+    private float _attackBuffMultiplier = 1f;
+    private float _attackBuffEndTime = 0f;
+
     [Header("Skill Settings")]
     [SerializeField] float skillAttackDuration = 1f;
     [SerializeField] float skillDefendDuration = 1f;
@@ -450,7 +453,10 @@ public class PlayerController : MonoBehaviour
                 var health = enemy.GetComponent<HealthSystem>();
                 if (health != null)
                 {
-                    health.TakeDamage(attackDamage);
+                    float finalDamage = _attackBuffEndTime > Time.time
+                        ? attackDamage * _attackBuffMultiplier
+                        : attackDamage;
+                    health.TakeDamage(finalDamage);
                     //Debug.Log($"[Player.Attack] ✓✓ Damage applied: {attackDamage}, new health: {health.CurrentHealth}");
                 }
                 else
@@ -477,6 +483,13 @@ public class PlayerController : MonoBehaviour
         EquipmentSystem.Instance.StartDealDamage();
         yield return new WaitForSeconds(window);
         EquipmentSystem.Instance.EndDealDamage();
+    }
+
+    public void AddAttackBuff(float buffPercent, float duration)
+    {
+        _attackBuffMultiplier = 1f + buffPercent / 100f;
+        _attackBuffEndTime = Time.time + duration;
+        Debug.Log($"[PlayerController] ✓ Attack buff: +{buffPercent}% for {duration}s");
     }
 
 }
