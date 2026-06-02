@@ -106,8 +106,68 @@ public class InventorySystem : BaseSingleton<InventorySystem>
     public void UseItem(ItemType type)
     {
         if (!inventory.TryGetValue(type, out var entry)) return;
-        Debug.Log($"[InventorySystem] Using {entry.data.itemName}");
+
+        ApplyItemEffect(entry.data);
         RemoveItem(type, 1);
+    }
+
+    private void ApplyItemEffect(ItemData data)
+    {
+        var player = GameObject.FindWithTag("Player");
+        if (player == null)
+        {
+            Debug.LogWarning("[InventorySystem] Player not found!");
+            return;
+        }
+
+        switch (data.itemType)
+        {
+            case ItemType.HealthPotion:
+                var healthSys = player.GetComponent<HealthSystem>();
+                if (healthSys != null)
+                {
+                    float healAmt = data.isPercentage
+                        ? healthSys.MaxHealth * data.healAmount / 100f
+                        : data.healAmount;
+                    healthSys.Recover(healAmt);
+                    Debug.Log($"[InventorySystem] ✓ Used {data.itemName}: Healed {healAmt} HP");
+                }
+                break;
+
+            case ItemType.ManaPotion:
+                var skillCtrl = player.GetComponent<PlayerSkillController>();
+                if (skillCtrl != null)
+                {
+                    float manaAmt = data.isPercentage
+                        ? skillCtrl.GetMaxMana() * data.healAmount / 100f
+                        : data.healAmount;
+                    skillCtrl.RecoverMana(manaAmt);
+                    Debug.Log($"[InventorySystem] ✓ Used {data.itemName}: Recovered {manaAmt} Mana");
+                }
+                break;
+
+            case ItemType.StrengthBuff:
+                var playerCtrl = player.GetComponent<PlayerController>();
+                if (playerCtrl != null)
+                {
+                    playerCtrl.AddAttackBuff(data.buffValue, data.buffDuration);
+                    Debug.Log($"[InventorySystem] ✓ Used {data.itemName}: Attack +{data.buffValue}% for {data.buffDuration}s");
+                }
+                break;
+
+            case ItemType.DefenseBuff:
+                var healthForBuff = player.GetComponent<HealthSystem>();
+                if (healthForBuff != null)
+                {
+                    healthForBuff.AddDefenseBuff(data.buffValue, data.buffDuration);
+                    Debug.Log($"[InventorySystem] ✓ Used {data.itemName}: Defense +{data.buffValue}% for {data.buffDuration}s");
+                }
+                break;
+
+            default:
+                Debug.Log($"[InventorySystem] Using {data.itemName} — no effect defined for {data.itemType}");
+                break;
+        }
     }
 
     /// <summary>Xóa toàn bộ inventory.</summary>

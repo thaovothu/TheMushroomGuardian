@@ -386,6 +386,7 @@ public class PlayerSkillController : MonoBehaviour
 
     public bool HasMana(float amount) => currentMana >= amount;
     public void ConsumeMana(float amount) => currentMana = Mathf.Max(0f, currentMana - amount);
+    public void RecoverMana(float amount) => currentMana = Mathf.Min(currentMana + amount, maxMana);
 
     /// <summary>
     /// Lấy skill hiện tại (để hiển thị UI)
