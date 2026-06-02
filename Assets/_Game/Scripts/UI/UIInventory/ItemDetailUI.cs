@@ -17,6 +17,7 @@ public class ItemDetailUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI statsText;
     [SerializeField] private Button useItemButton;
     [SerializeField] private Button deleteItemButton;
+    [SerializeField] private Button equipButton;
     [SerializeField] private Button closeButton;
 
     private ItemType currentItemType = ItemType.None;
@@ -29,6 +30,8 @@ public class ItemDetailUI : MonoBehaviour
             useItemButton.onClick.AddListener(OnUseItemClicked);
         if (deleteItemButton != null)
             deleteItemButton.onClick.AddListener(OnDeleteItemClicked);
+        if (equipButton != null)
+            equipButton.onClick.AddListener(OnEquipClicked);
         if (closeButton != null)
             closeButton.onClick.AddListener(Hide);
 
@@ -57,18 +60,22 @@ public class ItemDetailUI : MonoBehaviour
             if (statsText != null) statsText.text = BuildStatsText(data);
         }
 
+        bool isWeapon = type == ItemType.Sword || type == ItemType.Bow;
         bool isElement = type == ItemType.EarthCrystal || type == ItemType.WindCrystal
                       || type == ItemType.WaterCrystal || type == ItemType.FireCrystal;
 
+        // Weapons: show Use (acts as Equip) but hide Delete.
+        // Elements: hide both Use and Delete.
+        // Potions/Buffs: show both Use and Delete.
         if (useItemButton != null)
-        {
-            useItemButton.gameObject.SetActive(!isElement); // ẩn hẳn với crystal
-        }
+            useItemButton.gameObject.SetActive(!isElement);
 
         if (deleteItemButton != null)
-        {
-            deleteItemButton.gameObject.SetActive(!isElement); // crystal cũng không xóa được
-        }
+            deleteItemButton.gameObject.SetActive(!isElement && !isWeapon);
+
+        // equipButton — optional dedicated equip button (set in Inspector)
+        if (equipButton != null)
+            equipButton.gameObject.SetActive(isWeapon);
 
         gameObject.SetActive(true);
     }
@@ -122,6 +129,15 @@ public class ItemDetailUI : MonoBehaviour
     {
         if (currentItemType == ItemType.None) return;
         InventorySystem.Instance?.RemoveItem(currentItemType);
+        Hide();
+    }
+
+    private void OnEquipClicked()
+    {
+        if (currentItemType == ItemType.Sword)
+            EquipmentSystem.Instance?.EquipFromInventory(WeaponType.Sword);
+        else if (currentItemType == ItemType.Bow)
+            EquipmentSystem.Instance?.EquipFromInventory(WeaponType.Bow);
         Hide();
     }
 }

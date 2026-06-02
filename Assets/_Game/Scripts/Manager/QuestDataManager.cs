@@ -109,15 +109,13 @@ public class QuestDataManager : BaseSingleton<QuestDataManager>
     /// <summary>
     /// Lấy reward của một quest step
     /// </summary>
-    public (int coin, string item, string reward) GetQuestReward(int questId, int stepId)
+    public (string itemReward, string skillReward, string extendReward) GetQuestReward(int questId, int stepId)
     {
         var questData = GetQuestStep(questId, stepId);
         if (questData != null)
-        {
-            return (questData.coinReward, questData.itemReward1, questData.reward);
-        }
+            return (questData.itemReward1, questData.skillReward, questData.reward);
 
-        return (0, "", "");
+        return ("", "", "");
     }
 
     /// <summary>

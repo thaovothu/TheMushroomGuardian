@@ -71,6 +71,13 @@ public static class GameEvent
         public static System.Action OnPopupButtonClicked;
         public static System.Action<int> OnUnlocked; // ← thêm dòng này
     }
+    // ── EQUIPMENT ──────────────────────────────────────────────────────────────
+    public static class Equipment
+    {
+        /// <summary>Fired whenever the equipped weapon changes (including WeaponType.None).</summary>
+        public static Action<WeaponType> OnWeaponChanged;
+    }
+
     // ── BOSS ───────────────────────────────────────────────────────────────────
     // Boss events remain in BossEventBus.cs (Core/Events/Boss/).
 }

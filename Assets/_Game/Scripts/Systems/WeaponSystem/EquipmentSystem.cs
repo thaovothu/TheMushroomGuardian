@@ -25,11 +25,8 @@ public class EquipmentSystem : BaseSingleton<EquipmentSystem>
 
     [SerializeField] Transform weaponHolderRight;
     [SerializeField] Transform weaponHolderLeft;
-    [SerializeField] WeaponType currentWeaponType ;
+    [SerializeField] WeaponType currentWeaponType;
     [SerializeField] GameObject[] weaponList;
-    [SerializeField] Button weaponNone;
-    [SerializeField] Button weaponBow;
-    [SerializeField] Button weaponSword;
     GameObject currentWeaponInHandRight;
     GameObject currentWeaponInHandLeft;
 
@@ -47,20 +44,13 @@ public class EquipmentSystem : BaseSingleton<EquipmentSystem>
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
-        // Listen khi player được spawn xong
         GameEvent.Player.OnSpawned += OnPlayerSpawned;
-        if (weaponBow != null) weaponBow.onClick.AddListener(() => OnClickButton(WeaponButton.BowButton));
-        if (weaponSword != null) weaponSword.onClick.AddListener(() => OnClickButton(WeaponButton.SwordButton));
-        if (weaponNone != null) weaponNone.onClick.AddListener(() => OnClickButton(WeaponButton.NoneButton));
     }
 
     void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
         GameEvent.Player.OnSpawned -= OnPlayerSpawned;
-        if (weaponBow != null) weaponBow.onClick.RemoveAllListeners();
-        if (weaponSword != null) weaponSword.onClick.RemoveAllListeners();
-        if (weaponNone != null) weaponNone.onClick.RemoveAllListeners();
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -182,7 +172,7 @@ public class EquipmentSystem : BaseSingleton<EquipmentSystem>
     {
         Debug.Log("Change weapon to " + type);
         if (currentWeaponType == type) return;
-        
+
         if (currentWeaponInHandRight != null)
             Destroy(currentWeaponInHandRight);
         if (currentWeaponInHandLeft != null)
@@ -194,7 +184,30 @@ public class EquipmentSystem : BaseSingleton<EquipmentSystem>
         else if (currentWeaponType == WeaponType.Sword)
             DrawWeaponRight();
         SetWeaponAnim(type);
+
+        GameEvent.Equipment.OnWeaponChanged?.Invoke(type);
     }
+
+    /// <summary>Equip weapon only if player owns it in inventory.</summary>
+    public void EquipFromInventory(WeaponType type)
+    {
+        if (type == WeaponType.None)
+        {
+            ChangeWeapon(WeaponType.None);
+            return;
+        }
+
+        var itemType = type == WeaponType.Sword ? ItemType.Sword : ItemType.Bow;
+        if (InventorySystem.Instance == null || InventorySystem.Instance.GetItemQuantity(itemType) <= 0)
+        {
+            Debug.LogWarning($"[EquipmentSystem] Cannot equip {type} — not in inventory.");
+            return;
+        }
+
+        ChangeWeapon(type);
+    }
+
+    public WeaponType GetCurrentWeaponType() => currentWeaponType;
 
     void SetWeaponAnim(WeaponType type)
     {
@@ -239,26 +252,7 @@ public class EquipmentSystem : BaseSingleton<EquipmentSystem>
         currentWeaponInHandLeft = Instantiate(weaponList[(int)currentWeaponType], weaponHolderLeft.transform);
     }
 
-    public void OnClickButton(WeaponButton button)
-    {
-        switch (button)
-        {
-            case WeaponButton.BowButton:
-                //Debug.Log("Bow button clicked");
-                ChangeWeapon(WeaponType.Bow);
-                break;
-            case WeaponButton.SwordButton:
-                //Debug.Log("Sword button clicked");
-                ChangeWeapon(WeaponType.Sword);
-                break;
-            case WeaponButton.NoneButton:
-                //Debug.Log("None button clicked");
-                ChangeWeapon(WeaponType.None);
-                break;
-        }
-    }
-
-    public void StartDealDamage()
+public void StartDealDamage()
     {
         if (currentWeaponType == WeaponType.Sword)
         {

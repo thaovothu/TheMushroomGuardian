@@ -1,39 +1,38 @@
-QuestID	StepID	Title Quest	Info Quest	ItemReward1	CointReward	Reward	Short Des_1	MapID	SpawnGroupID	LumiHint
-1	1	Mầm Nấm Thức Tỉnh	"Sau giấc ngủ dài trong lòng đại địa, hãy di chuyển quanh <color=#00FFFF>Làng Rễ Cây</color> để làm quen với cơ thể mới thức tỉnh"		10	"Di chuyển, nhảy"	Học cách di chuyển	1		
-1	2	Mầm Nấm Thức Tỉnh	Dùng đòn đánh thường đánh 3 <color=red>Cây sương rồng</color> dùng cho luyện tập		50		Học đánh thường	1	1	
-1	3	Mầm Nấm Thức Tỉnh	Một tiếng kêu cứu vang lên. Hãy đi kiểm tra cùng <color=#00FFFF>Dấu Vết Phát Sáng</color>				Đi theo dấu vết	1		
-1	4	Mầm Nấm Thức Tỉnh	Tiêu diệt 5 <color=red>Cây xương rồng</color> đang giam giữ <color=green>Tinh Linh Lumi</color>		100	Tinh linh	Giải cứu Lumi	1	2	
-1	5	Mầm Nấm Thức Tỉnh	Nói chuyện với <color=green>Tinh Linh Lumi</color>. Từ giờ Lumi sẽ đồng hành cùng bạn trên hành trình cứu thế giới				Đối thoại Lumi	1		
-1	6	Mầm Nấm Thức Tỉnh	Đến gặp <color=green>Trưởng làng Nấm</color> tại trung tâm làng				Gặp Trưởng làng	1		
+QuestID	StepID	Title Quest	Info Quest	ItemReward	SkillReward	ExtenfReward	Short Des_1	MapID	SpawnGroupID	LumiHint
+1	1	Mầm Nấm Thức Tỉnh	"Sau giấc ngủ dài trong lòng đại địa, hãy di chuyển quanh <color=#00FFFF>Làng Rễ Cây</color> để làm quen với cơ thể mới thức tỉnh"					1		
+1	2	Mầm Nấm Thức Tỉnh	Dùng đòn đánh thường đánh 3 <color=red>Cây sương rồng</color> dùng cho luyện tập	10				1	1	
+1	3	Mầm Nấm Thức Tỉnh	Một tiếng kêu cứu vang lên. Hãy đi kiểm tra cùng <color=#00FFFF>Dấu Vết Phát Sáng</color>					1		
+1	4	Mầm Nấm Thức Tỉnh	Tiêu diệt 5 <color=red>Cây xương rồng</color> đang giam giữ <color=green>Tinh Linh Lumi</color>	20		Tinh linh		1	2	
+1	5	Mầm Nấm Thức Tỉnh	Nói chuyện với <color=green>Tinh Linh Lumi</color>. Từ giờ Lumi sẽ đồng hành cùng bạn trên hành trình cứu thế giới					1		
+1	6	Mầm Nấm Thức Tỉnh	Đến gặp <color=green>Trưởng làng Nấm</color> tại trung tâm làng	Kiếm				1		
 										
-2	1	Con Đường Chiến Đấu	Tiến vào <color=#00FFFF>Hang Động Golem</color> để bắt đầu cuộc hành trình.				Tiến vào Hang 	2		Các nguyên tố tiếp theo sẽ đòi hỏi nhiều hơn sức mạnh...
-2	2	Con Đường Chiến Đấu	Tiêu diệt 10 <color=red>Nấm Ký Sinh</color> để luyện tập chiến đấu và thu thập vàng	Kiếm	200		Tiêu diệt Nấm Ký Sinh	2	3	
-2	3	Con Đường Chiến Đấu	Ghé qua <color=green>Thương Nhân Nấm</color> để mua vật phẩm hồi phục trước khi tiến sâu hơn				Mở khóa cửa hàng	2		
-2	4	Con Đường Chiến Đấu	Tìm <color=green>Chiến Binh Rêu</color> bị mắc kẹt trong hang động		100		Tìm Chiến Binh Rêu	2		
-2	5	Con Đường Chiến Đấu	<color=green>Chiến Binh</color> dạy bạn sử dụng <color=#FFCCFF>Kỹ năng Đập Đất</color>. Ông ta nói: "Bọn quái ở những nơi sau này — sức mạnh đơn thuần sẽ không đủ."			"EarthAttack, EarthDefend"	Học Đập Đất	2		
-2	6	Con Đường Chiến Đấu	Sử dụng <color=#FFCCFF>Đập Đất</color> để phá lớp giáp của <color=red>Golem Rễ Cây</color> — lớp giáp đá sẽ vỡ tung khi trúng đúng kỹ năng				Đánh bại Golem	2	4	
-2	7	Con Đường Chiến Đấu	Thu hồi <color=yellow>Lõi Nguyên Tố Đất</color> từ cơ thể Golem			Đất	Nhận nguyên tố Đất	2		
+2	1	Con Đường Chiến Đấu	Tiến vào <color=#00FFFF>Hang Động Golem</color> để bắt đầu cuộc hành trình.					2		
+2	2	Con Đường Chiến Đấu	Tiêu diệt 10 <color=red>Nấm Ký Sinh</color> để luyện tập chiến đấu và thu thập vàng	40				2	3	
+2	3	Con Đường Chiến Đấu	Ghé qua <color=green>Thương Nhân Nấm</color> để mua vật phẩm hồi phục trước khi tiến sâu hơn					2		
+2	4	Con Đường Chiến Đấu	Tìm <color=green>Chiến Binh Rêu</color> bị mắc kẹt trong hang động	10				2		
+2	5	Con Đường Chiến Đấu	<color=green>Chiến Binh</color> dạy bạn sử dụng <color=#FFCCFF>Kỹ năng Đập Đất</color>. Ông ta nói: "Bọn quái ở những nơi sau này — sức mạnh đơn thuần sẽ không đủ."					2		
+2	6	Con Đường Chiến Đấu	Sử dụng <color=#FFCCFF>Đập Đất</color> để phá lớp giáp của <color=red>Golem Rễ Cây</color> — lớp giáp đá sẽ vỡ tung khi trúng đúng kỹ năng					2	4	
+2	7	Con Đường Chiến Đấu	Thu hồi <color=yellow>Lõi Nguyên Tố Đất</color> từ cơ thể Golem	Cung	Skill Đất			2		
 										
-3	1	Hơi Thở Của Gió	Đi đến <color=green>Cổng vô tận</color> để đến <color=#00FFFF>Rừng Trên Mây</color>				Đến Rừng Trên Mây	3		
-3	2	Hơi Thở Của Gió	Phát hiện một<color=green>Luồng gió cổ</color> hãy dùng kỹ năng <color=#FFCCFF>Lướt</color> bằng phím "Tab" để có thể tiến sâu hơn			"WindAttack, WindDefend, Dash"	Học Lướt Gió	3		
-3	3	Hơi Thở Của Gió	"Tránh xa các <color=red>Hành Bào Tử</color> lao thẳng vào người, khi chết chúng nổ tung tại chỗ. Đứng gần lúc nổ mất máu nặng. Dùng <color=#FFCCFF>Lướt Gió</color> (Tab) để dash ra xa đúng lúc — hoặc hạ chúng từ xa bằng kỹ năng."				Áp dụng chiêu lướt	3	5	
-3	4	Hơi Thở Của Gió	4 viên đá phong ấn <color=green>Tinh Linh Gió</color> — mỗi viên chỉ vỡ khi <color=#FFCCFF>Lướt</color> đúng hướng		480		Giải cứu Tinh Linh Gió	3		
-3	5	Hơi Thở Của Gió	<color=green>Tinh Linh</color> dạy bạn cách dùng gió xoáy trong chiến đấu		100		Giải cứu Tinh Linh Gió	3		
-3	6	Hơi Thở Của Gió	Thu hồi <color=yellow>Lõi Nguyên Tố Khí</color> từ đỉnh Đài Nấm Trôi			Khí	Nhận nguyên tố Khí	3		
+3	1	Hơi Thở Của Gió	Đi đến <color=green>Cổng vô tận</color> để đến <color=#00FFFF>Rừng Trên Mây</color>					3		
+3	2	Hơi Thở Của Gió	Phát hiện một<color=green>Luồng gió cổ</color> hãy dùng kỹ năng <color=#FFCCFF>Lướt</color> bằng phím "Tab" để có thể tiến sâu hơn		Dash			3		
+3	3	Hơi Thở Của Gió	"Tránh xa các <color=red>Hành Bào Tử</color> lao thẳng vào người, khi chết chúng nổ tung tại chỗ. Đứng gần lúc nổ mất máu nặng. Dùng <color=#FFCCFF>Lướt Gió</color> (Tab) để dash ra xa đúng lúc — hoặc hạ chúng từ xa bằng kỹ năng."	20				3	5	
+3	4	Hơi Thở Của Gió	4 viên đá phong ấn <color=green>Tinh Linh Gió</color> — mỗi viên chỉ vỡ khi <color=#FFCCFF>Lướt</color> đúng hướng	10				3		
+3	5	Hơi Thở Của Gió	<color=green>Tinh Linh</color> dạy bạn cách dùng gió xoáy trong chiến đấu		Skill khí			3		
+3	6	Hơi Thở Của Gió	Thu hồi <color=yellow>Lõi Nguyên Tố Khí</color> từ đỉnh Đài Nấm Trôi					3		
 										
-4	1	Dòng Nước Mục Nát	Tiêu diệt 15 <color=red>Ốc Ký Sinh</color> đang bơm độc vào các hồ nước				Tiêu diệt Cua Ký Sinh	3	6	
-4	2	Dòng Nước Mục Nát	Kích hoạt 4 máy bơm cổ đại		600		Làm sạch hồ nước	3		
-4	3	Dòng Nước Mục Nát	<color=green>Tư Tế Nấm Nước</color> cảm nhận được sự thay đổi của dòng nước và tự bước ra khỏi nơi ẩn náu — dạy bạn kỹ năng <color=#FFCCFF>Hồi Phục</color>					3		
-4	4	Dòng Nước Mục Nát	Thu hồi <color=yellow>Lõi Nguyên Tố Nước</color> từ vực sâu đầm lầy	GiotNuocCo		BonusItem		3		
+4	1	Dòng Nước Mục Nát	Tiêu diệt 10 <color=red>Ốc Ký Sinh</color> đang bơm độc vào các hồ nước	40				3	6	
+4	2	Dòng Nước Mục Nát	Kích hoạt 4 máy bơm cổ đại	10				3		
+4	3	Dòng Nước Mục Nát	<color=green>Tư Tế Nấm Nước</color> cảm nhận được sự thay đổi của dòng nước và tự bước ra khỏi nơi ẩn náu — dạy bạn kỹ năng <color=#FFCCFF>Hồi Phục</color>		Skill nước			3		
+4	4	Dòng Nước Mục Nát	Thu hồi <color=yellow>Lõi Nguyên Tố Nước</color> từ vực sâu đầm lầy					3		
 										
-5	1	Ngọn Lửa Sau Cùng	Nguyên tố cuối cùng đang nằm sâu trong <color=#00FFFF>Núi Lửa Tro</color>. Núi lửa đang hoạt động — các khu vực sẽ bị đóng lại theo từng đợt phun trào. Phải hành động nhanh				Đến Núi Lửa Tro	4		
-5	2	Ngọn Lửa Sau Cùng	Thu thập 10 than tinh thể bằng cách đánh bại <color=red>Bọ Lửa</color>		1000		Tiêu diệt Bọ Lửa	4	7	
-5	3	Ngọn Lửa Sau Cùng	Gặp <color=green>Thợ Rèn Nấm</color> tại lò rèn — ông truyền chiêu thức cuối cùng <color=#FFCCFF>Hệ Lửa</color>				Gặp Thợ Rèn Nấm	4		
-5	4	Ngọn Lửa Sau Cùng	"Đánh bại <color=red>Khổng Lồ Dung Nham</color> — Phase 1 phá giáp bằng <color=#FFCCFF>Đập Đất</color>, Phase 2 tấn công lõi bằng <color=#FFCCFF>Bùng Nổ Lửa</color>"			"FireAttack, FireDefend"	Học Bùng Nổ Lửa	4	8	
-5	5	Ngọn Lửa Sau Cùng	Thu hồi <color=yellow>Lõi Nguyên Tố Lửa</color>. <color=green>Lumi</color> thì thầm: "Chỉ còn một bước nữa thôi..."		2500		Đánh bại Khổng Lồ	4		
+5	1	Ngọn Lửa Sau Cùng	Nguyên tố cuối cùng đang nằm sâu trong <color=#00FFFF>Núi Lửa Tro</color>. Núi lửa đang hoạt động — các khu vực sẽ bị đóng lại theo từng đợt phun trào. Phải hành động nhanh					4		
+5	2	Ngọn Lửa Sau Cùng	Thu thập 10 than tinh thể bằng cách đánh bại <color=red>Bọ Lửa</color>	40				4	7	
+5	3	Ngọn Lửa Sau Cùng	Gặp <color=green>Thợ Rèn Nấm</color> tại lò rèn — ông truyền chiêu thức cuối cùng <color=#FFCCFF>Hệ Lửa</color>		Skill lửa			4		
+5	4	Ngọn Lửa Sau Cùng	"Đánh bại <color=red>Khổng Lồ Dung Nham</color> — Phase 1 phá giáp bằng <color=#FFCCFF>Đập Đất</color>, Phase 2 tấn công lõi bằng <color=#FFCCFF>Bùng Nổ Lửa</color>"					4	8	
+5	5	Ngọn Lửa Sau Cùng	Thu hồi <color=yellow>Lõi Nguyên Tố Lửa</color>. <color=green>Lumi</color> thì thầm: "Chỉ còn một bước nữa thôi..."					4		
 5	6	Ngọn Lửa Sau Cùng	<color=green>Trưởng làng</color> dặn dò cuối cùng để bước vào trận chiến cuối cùng					4		
 										
 6	1	Cội Rễ Cuối Cùng	<color=#00FFFF>Vực Bóng Tối</color> đang xuất hiện					5		
-6	2	Cội Rễ Cuối Cùng	Đối mặt <color=red>Vua Hư Không</color> — Giai đoạn 1: phá shield Gió bằng <color=#FFCCFF>Lướt Gió</color>. Giai đoạn 2: phá shield Nước bằng <color=#FFCCFF>Hồi Phục</color>. Giai đoạn 3: phá shield Lửa bằng <color=#FFCCFF>Đập Đất</color> rồi kết thúc bằng <color=#FFCCFF>Bùng Nổ Lửa</color>				Phá phong ấn Boss	5	9	
-6	3	Cội Rễ Cuối Cùng	Đánh bại <color=red>Vua Hư Không</color> và giải phóng cội nguồn thế giới				Đánh bại Vua Hư Không	5		
-6	4	Cội Rễ Cuối Cùng	Đứng chờ <color=green>Lumi</color> hồi phục — ánh sáng lan rộng từ từ ra khắp bản đồ. Nói chuyện với Lumi sau khi ánh sáng quay trở lại hoàn toàn				Hoàn thành hành trình	5		
+6	2	Cội Rễ Cuối Cùng	Đánh bại <color=red>Vua Hư Không</color> và giải phóng cội nguồn thế giới					5	9	
+6	3	Cội Rễ Cuối Cùng	Đứng chờ <color=green>Lumi</color> hồi phục — ánh sáng lan rộng từ từ ra khắp bản đồ. Nói chuyện với Lumi sau khi ánh sáng quay trở lại hoàn toàn					5		

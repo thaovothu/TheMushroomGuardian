@@ -109,9 +109,7 @@ public class UIQuestPanel : MonoBehaviour
 
     private void OnQuestStepCompleted(int questId, int stepId)
     {
-        var questData = QuestDataManager.Instance.GetQuestStep(questId, stepId);
-        if (questData != null) GiveRewards(questData);
-
+        // Reward logic đã được QuestRewardManager xử lý — UIQuestPanel chỉ refresh UI.
         if (questId == currentQuestId && stepId == currentStepId)
             DisplayQuestInfo();
 
@@ -166,9 +164,14 @@ public class UIQuestPanel : MonoBehaviour
         if (questTitleText != null) questTitleText.text = questData.titleQuest;
         if (questInfoText != null) questInfoText.text = questData.infoQuest;
         if (stepDescriptionText != null) stepDescriptionText.text = questData.shortDescription;
-        if (rewardCoinText != null) rewardCoinText.text = $"Coin: {questData.coinReward}";
-        if (rewardItemText != null) rewardItemText.text = $"Item: {questData.itemReward1}";
-        if (rewardText != null) rewardText.text = $"Reward: {questData.reward}";
+        // itemReward1: số = vàng, "Kiếm"/"Cung" = vũ khí
+        bool isCoin = int.TryParse(questData.itemReward1, out int coinAmt);
+        if (rewardCoinText != null)
+            rewardCoinText.text = isCoin && coinAmt > 0 ? $"Vàng: {coinAmt}" : "";
+        if (rewardItemText != null)
+            rewardItemText.text = !isCoin && !string.IsNullOrEmpty(questData.itemReward1)
+                ? $"Vật phẩm: {questData.itemReward1}" : "";
+        if (rewardText != null) rewardText.text = questData.reward;
         if (mapIdText != null) mapIdText.text = $"Map ID: {questData.mapId}";
 
         var steps = QuestDataManager.Instance.GetQuestSteps(currentQuestId);
@@ -195,15 +198,4 @@ public class UIQuestPanel : MonoBehaviour
 
     private void OnCloseUI() => gameObject.SetActive(false);
 
-    private void GiveRewards(QuestData questData)
-    {
-        if (questData.coinReward > 0)
-        {
-            UIMoney.Instance?.AddCoin(questData.coinReward);
-            Debug.Log($"[UIQuestPanel] Reward: +{questData.coinReward} coin");
-        }
-
-        if (!string.IsNullOrEmpty(questData.itemReward1))
-            Debug.Log($"[UIQuestPanel] Reward item: {questData.itemReward1}");
-    }
 }
