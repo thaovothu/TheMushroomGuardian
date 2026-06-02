@@ -658,6 +658,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2213486da4b3492ca74f05df048c306, type: 3}
+--- !u!114 &1084153068449499220 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1146227310139930065, guid: a2213486da4b3492ca74f05df048c306,
+    type: 3}
+  m_PrefabInstance: {fileID: 64062851109158277}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97d2d842822ec459dac297d3e359b29c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &2506443094454444606 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2462119226146086843, guid: a2213486da4b3492ca74f05df048c306,
@@ -2381,25 +2393,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8822045130255328694}
     m_Modifications:
-    - target: {fileID: 472472253791207180, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
-        type: 3}
-      propertyPath: m_SortingOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 472472253791207180, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
-        type: 3}
-      propertyPath: m_OverrideSorting
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1614868247493288543, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
         type: 3}
       propertyPath: m_Name
       value: UIHubGame
-      objectReference: {fileID: 0}
-    - target: {fileID: 1614868247493288543, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1947918770993678169, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
         type: 3}
@@ -2422,6 +2419,31 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1947918770993678169, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2824356420504215123, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2824356420504215123, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2824356420504215123, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2824356420504215123, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2824356420504215123, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
@@ -2553,14 +2575,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9151452491600757342, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
         type: 3}
+      propertyPath: shopUI
+      value: 
+      objectReference: {fileID: 1084153068449499220}
+    - target: {fileID: 9151452491600757342, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
+        type: 3}
       propertyPath: questUI
       value: 
       objectReference: {fileID: 4232760908528643110}
-    - target: {fileID: 9151452491600757342, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
-        type: 3}
-      propertyPath: inventoryUI
-      value: 
-      objectReference: {fileID: 4224388886229377680}
     - target: {fileID: 9151452491600757342, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
         type: 3}
       propertyPath: uIInventory

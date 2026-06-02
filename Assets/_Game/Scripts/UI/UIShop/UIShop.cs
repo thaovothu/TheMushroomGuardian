@@ -75,6 +75,7 @@ public class UIShop : MonoBehaviour
 
     public void OpenShop(int npcId)
     {
+        Debug.Log($"[UIShop] Attempting to open shop for NPC {npcId}...");
         currentNpcId = npcId;
 
         var config = GetShopConfig(npcId);
@@ -100,7 +101,6 @@ public class UIShop : MonoBehaviour
         if (shopPanel != null)
             shopPanel.SetActive(false);
 
-        currentNpcId = -1;
         Debug.Log("[UIShop] Shop closed");
     }
 
@@ -147,5 +147,10 @@ public class UIShop : MonoBehaviour
                 return config;
         }
         return null;
+    }
+    public void Show()
+    {
+        gameObject.SetActive(true);
+        OpenShop(currentNpcId);    
     }
 }
