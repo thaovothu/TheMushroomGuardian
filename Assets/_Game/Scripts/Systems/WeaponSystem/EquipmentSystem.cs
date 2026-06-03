@@ -55,10 +55,20 @@ public class EquipmentSystem : BaseSingleton<EquipmentSystem>
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Reset khi load scene mới
-        currentWeaponType = WeaponType.None;
-        currentWeaponInHandRight = null;
-        currentWeaponInHandLeft = null;
+        // Destroy weapon GO cũ (player là DontDestroyOnLoad nên GO không tự destroy theo scene)
+        if (currentWeaponInHandRight != null)
+        {
+            Destroy(currentWeaponInHandRight);
+            currentWeaponInHandRight = null;
+        }
+        if (currentWeaponInHandLeft != null)
+        {
+            Destroy(currentWeaponInHandLeft);
+            currentWeaponInHandLeft = null;
+        }
+        // KHÔNG null weaponHolderRight/Left/animator: player DontDestroyOnLoad → holder vẫn valid.
+        // Null chúng gây race condition nếu user equip trước khi OnPlayerSpawned fires.
+        // currentWeaponType giữ nguyên → RebuildWeaponVisuals tạo lại weapon đúng loại.
     }
 
     void OnPlayerSpawned(GameObject player)
@@ -235,6 +245,8 @@ public class EquipmentSystem : BaseSingleton<EquipmentSystem>
     public void DrawWeaponRight()
     {
         if (weaponHolderRight == null)
+            TryResolveWeaponHolders();
+        if (weaponHolderRight == null)
         {
             Debug.LogError("[EquipmentSystem] weaponHolderRight is null! Cannot draw weapon.");
             return;
@@ -245,6 +257,8 @@ public class EquipmentSystem : BaseSingleton<EquipmentSystem>
     public void DrawWeaponLeft()
     {
         if (weaponHolderLeft == null)
+            TryResolveWeaponHolders();
+        if (weaponHolderLeft == null)
         {
             Debug.LogError("[EquipmentSystem] weaponHolderLeft is null! Cannot draw weapon.");
             return;
@@ -252,22 +266,23 @@ public class EquipmentSystem : BaseSingleton<EquipmentSystem>
         currentWeaponInHandLeft = Instantiate(weaponList[(int)currentWeaponType], weaponHolderLeft.transform);
     }
 
-public void StartDealDamage()
+    public void StartDealDamage()
     {
         if (currentWeaponType == WeaponType.Sword)
         {
-            currentWeaponInHandRight.GetComponentInChildren<SwordAttack>()?.StartDealDamage();
+            currentWeaponInHandRight?.GetComponentInChildren<SwordAttack>()?.StartDealDamage();
         }
         else if (currentWeaponType == WeaponType.Bow)
         {
-            currentWeaponInHandLeft.GetComponentInChildren<BowAttack>()?.FireArrow();
+            currentWeaponInHandLeft?.GetComponentInChildren<BowAttack>()?.FireArrow();
         }
     }
+
     public void EndDealDamage()
     {
         if (currentWeaponType == WeaponType.Sword)
         {
-            currentWeaponInHandRight.GetComponentInChildren<SwordAttack>()?.EndDealDamage();
+            currentWeaponInHandRight?.GetComponentInChildren<SwordAttack>()?.EndDealDamage();
         }
     }
 }

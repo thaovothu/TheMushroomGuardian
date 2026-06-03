@@ -49,7 +49,7 @@ public class UIMoney : BaseSingleton<UIMoney>
     {
         if (coinText != null)
         {
-            coinText.text = $"Coin: {totalCoins}";
+            coinText.text = $"{totalCoins}";
         }
     }
 
@@ -97,5 +97,12 @@ public class UIMoney : BaseSingleton<UIMoney>
     {
         Debug.Log($"[UIMoney] Current coin: {totalCoins}");
         return totalCoins;
+    }
+
+    public void RestoreCoins(int amount)
+    {
+        totalCoins = amount;
+        RefreshCoinText();
+        Debug.Log($"[UIMoney] Coins restored to {totalCoins}");
     }
 }

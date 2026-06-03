@@ -1,138 +1,211 @@
 using UnityEngine;
 
 /// <summary>
-/// Lumi là child của Player prefab — tồn tại xuyên scene.
+/// Lumi là GameObject độc lập (DontDestroyOnLoad), tự tìm và bay theo Player.
 ///
 /// Trạng thái:
-///   Hidden  — ẩn hoàn toàn (trước step 4)
-///   Caged   — hiện tại vị trí chuồng, đứng yên (step 4 đang diễn ra)
-///   Follow  — float theo player (step 5+)
+///   Hidden  — ẩn hoàn toàn (trước quest 1 step 4)
+///   Follow  — float theo player (sau khi unlock)
 ///
-/// Setup:
-///   1. Đặt LumiNPC làm child của Player prefab
-///   2. Add LumiController vào LumiNPC
-///   3. SetActive = false mặc định
+/// Natural motion:
+///   - SmoothDamp với velocity persistence → quán tính, không cứng
+///   - Distance-based smoothTime → lazy gần, bắt kịp nhanh khi xa
+///   - 2-layer sine float → chuyển động không đều, tự nhiên
+///   - Velocity tilt → nghiêng nhẹ theo chiều bay như tinh linh
+///
+/// Setup Editor:
+///   Đặt LumiNPC trên DataGame prefab (hoặc scene riêng), SetActive = false.
+///   Không cần gán playerTransform — tự tìm qua tag "Player" lúc unlock.
 /// </summary>
 public class LumiController : MonoBehaviour
 {
-    [Header("Follow Settings")]
-    [Tooltip("Offset so với player khi follow (phía sau bên phải)")]
-    [SerializeField] private Vector3 followOffset = new Vector3(0.8f, 0.5f, -0.8f);
-    [Tooltip("Tốc độ Lumi di chuyển về vị trí follow")]
-    [SerializeField] private float followSpeed = 5f;
+    [Header("Follow Target")]
+    [Tooltip("Offset trong world-space phía sau bên phải player")]
+    [SerializeField] private Vector3 followOffset = new Vector3(1f, 0.6f, -1f);
+
+    [Header("SmoothDamp Settings")]
+    [Tooltip("Smooth bình thường khi gần player — cao hơn = lazy hơn")]
+    [SerializeField] private float normalSmoothTime = 0.35f;
+    [Tooltip("Smooth khi xa player quá snapDistance — bắt kịp nhanh hơn")]
+    [SerializeField] private float fastSmoothTime = 0.08f;
+    [Tooltip("Khoảng cách để bắt đầu tăng tốc bắt kịp player")]
+    [SerializeField] private float snapDistance = 6f;
+    [Tooltip("Tốc độ tối đa (SmoothDamp clamp)")]
+    [SerializeField] private float maxFollowSpeed = 8f;
 
     [Header("Float Animation")]
-    [Tooltip("Lumi lơ lửng lên xuống nhẹ khi follow")]
-    [SerializeField] private float floatAmplitude = 0.15f;
-    [SerializeField] private float floatSpeed = 2f;
+    [Tooltip("Biên độ lơ lửng lên xuống (layer chính)")]
+    [SerializeField] private float floatAmplitude = 0.18f;
+    [Tooltip("Tốc độ lơ lửng")]
+    [SerializeField] private float floatSpeed = 1.8f;
 
-    [Header("Animator Parameters")]
+    [Header("Tilt")]
+    [Tooltip("Độ nghiêng tối đa theo hướng di chuyển (degree-ish scale)")]
+    [SerializeField] private float tiltStrength = 14f;
+    [Tooltip("Tốc độ quay mặt về phía player")]
+    [SerializeField] private float rotationSpeed = 8f;
+
+    [Header("Animator")]
     [SerializeField] private string animIsMoving = "IsMoving";
 
     // ── Runtime ───────────────────────────────────────────────────────────────
-    private enum State { Hidden, Caged, Follow }
-    private State currentState = State.Hidden;
 
-    private Transform playerTransform;
-    private Animator animator;
-    private float floatTimer = 0f;
+    private enum State { Hidden, Follow }
+    private State _state = State.Hidden;
+
+    private Transform _playerTransform;
+    private Animator _animator;
+
+    private Vector3 _smoothVelocity = Vector3.zero;
+    private float _floatTimer = 0f;
 
     // ── Unity ─────────────────────────────────────────────────────────────────
 
     private void Awake()
     {
-        playerTransform = transform.parent;
-        animator = GetComponent<Animator>();
-        // gameObject.SetActive(false);
+        _animator = GetComponent<Animator>();
+        DontDestroyOnLoad(gameObject);
     }
 
     private void OnEnable()
     {
-        GameEvent.Quest.OnStepCompleted += OnStepCompleted;
+        GameEvent.Player.OnSpawned += OnPlayerSpawned;
+        GameEvent.Player.OnRespawn += OnPlayerRespawn;
     }
 
     private void OnDisable()
     {
-        GameEvent.Quest.OnStepCompleted -= OnStepCompleted;
+        GameEvent.Player.OnSpawned -= OnPlayerSpawned;
+        GameEvent.Player.OnRespawn -= OnPlayerRespawn;
     }
 
     private void Update()
     {
-        if (currentState != State.Follow || playerTransform == null) return;
+        if (_state != State.Follow || _playerTransform == null) return;
 
-        floatTimer += Time.deltaTime * floatSpeed;
+        _floatTimer += Time.deltaTime;
 
-        Vector3 targetPos = playerTransform.position +
-                            playerTransform.TransformDirection(followOffset) +
-                            Vector3.up * Mathf.Sin(floatTimer) * floatAmplitude;
+        // ── Float offset (2-layer sine) ───────────────────────────────────────
+        float yFloat = Mathf.Sin(_floatTimer * floatSpeed) * floatAmplitude
+                     + Mathf.Sin(_floatTimer * floatSpeed * 1.37f) * floatAmplitude * 0.35f;
 
-        transform.position = Vector3.Lerp(transform.position, targetPos, followSpeed * Time.deltaTime);
+        // ── Target position (world-space offset phía sau bên phải player) ─────
+        Vector3 right   = _playerTransform.right;
+        Vector3 forward = _playerTransform.forward;
+        Vector3 targetPos = _playerTransform.position
+                          + right   * followOffset.x
+                          - forward * Mathf.Abs(followOffset.z)
+                          + Vector3.up * (followOffset.y + yFloat);
 
-        Vector3 lookDir = playerTransform.position - transform.position;
-        lookDir.y = 0f;
-        if (lookDir != Vector3.zero)
-            transform.rotation = Quaternion.Slerp(transform.rotation,
-                Quaternion.LookRotation(lookDir), 10f * Time.deltaTime);
+        // ── SmoothDamp với distance-based smoothTime ──────────────────────────
+        float dist = Vector3.Distance(transform.position, targetPos);
+        float t = Mathf.InverseLerp(snapDistance, 0f, dist); // 0 khi xa, 1 khi gần
+        float smoothTime = Mathf.Lerp(fastSmoothTime, normalSmoothTime, t);
 
-        SetAnim(true);
+        transform.position = Vector3.SmoothDamp(
+            transform.position, targetPos,
+            ref _smoothVelocity, smoothTime, maxFollowSpeed);
+
+        // ── Rotation: mặt về phía player + nghiêng theo velocity ─────────────
+        Vector3 toPlayer = _playerTransform.position - transform.position;
+        toPlayer.y = 0f;
+
+        if (toPlayer.sqrMagnitude > 0.01f)
+        {
+            Quaternion lookRot = Quaternion.LookRotation(toPlayer.normalized);
+
+            // Tilt theo hướng di chuyển (cross product velocity × up)
+            Vector3 vel = _smoothVelocity;
+            vel.y = 0f;
+            float tiltAngle = Mathf.Clamp(vel.magnitude * tiltStrength * 0.1f, -30f, 30f);
+            Vector3 tiltAxis = Vector3.Cross(vel.normalized, Vector3.up);
+            Quaternion tiltRot = tiltAxis.sqrMagnitude > 0.01f
+                ? Quaternion.AngleAxis(-tiltAngle, tiltAxis)
+                : Quaternion.identity;
+
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation, lookRot * tiltRot, rotationSpeed * Time.deltaTime);
+        }
+
+        SetAnim(_smoothVelocity.magnitude > 0.3f);
     }
 
     // ── Public API ────────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Gọi từ QuestNPCSpawner khi step 4 bắt đầu.
-    /// Lumi hiện tại vị trí chuồng, đứng yên.
+    /// Gọi khi quest 1 step 4 hoàn thành — Lumi unlock và bắt đầu bay theo player.
     /// </summary>
-    public void ShowAtCage(Vector3 position)
+    public void UnlockAndFollow()
     {
-        currentState = State.Caged;
-        transform.SetParent(null); // Tách khỏi player để đứng yên tại chuồng
-        transform.position = position;
+        if (_state == State.Follow) return;
+
+        // Tìm player nếu chưa có reference
+        if (_playerTransform == null)
+        {
+            var playerGO = GameObject.FindGameObjectWithTag("Player");
+            if (playerGO == null)
+            {
+                Debug.LogWarning("[LumiController] Player not found!");
+                return;
+            }
+            _playerTransform = playerGO.transform;
+        }
+
+        _state = State.Follow;
         gameObject.SetActive(true);
-        SetAnim(false);
-        Debug.Log("[LumiController] Lumi hiện tại chuồng");
+
+        // Snap ngay sát player để tránh bay từ vị trí cũ
+        SnapToPlayer();
+
+        Debug.Log("[LumiController] Lumi unlocked — bắt đầu follow player");
     }
 
-    /// <summary>
-    /// Gọi sau khi dialog step 5 kết thúc — Lumi bắt đầu float theo player.
-    /// </summary>
-    public void StartFollow()
-    {
-        currentState = State.Follow;
-        transform.SetParent(playerTransform); // Gắn lại vào player
-        Debug.Log("[LumiController] Lumi bắt đầu follow player");
-    }
-
-    /// <summary>
-    /// Dừng follow tạm thời (cutscene, dialog).
-    /// </summary>
+    /// <summary>Dừng follow tạm thời (dialog, cutscene).</summary>
     public void StopFollow()
     {
-        currentState = State.Caged;
+        _state = State.Hidden;
         SetAnim(false);
     }
 
-    /// <summary>
-    /// Tiếp tục follow sau StopFollow.
-    /// </summary>
+    /// <summary>Tiếp tục follow sau StopFollow.</summary>
     public void ResumeFollow()
     {
-        currentState = State.Follow;
+        if (_playerTransform == null) return;
+        _state = State.Follow;
+        SetAnim(true);
     }
+
+    public bool IsFollowing => _state == State.Follow;
 
     // ── Event Handlers ────────────────────────────────────────────────────────
 
-    private void OnStepCompleted(int questId, int stepId)
+    private void OnPlayerSpawned(GameObject playerGO)
     {
-        if (questId == 1 && stepId == 4)
-            Debug.Log("[LumiController] Step 4 complete — Lumi được giải thoát, chờ dialog");
+        if (playerGO != null)
+            _playerTransform = playerGO.transform;
+    }
+
+    private void OnPlayerRespawn()
+    {
+        if (_state != State.Follow || _playerTransform == null) return;
+        // Snap về gần player sau khi respawn (tránh Lumi bay từ điểm chết về điểm spawn)
+        SnapToPlayer();
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
+    private void SnapToPlayer()
+    {
+        if (_playerTransform == null) return;
+        transform.position = _playerTransform.position
+                           + _playerTransform.right * followOffset.x
+                           + Vector3.up * followOffset.y;
+        _smoothVelocity = Vector3.zero;
+    }
+
     private void SetAnim(bool isMoving)
     {
-        if (animator == null) return;
-        animator.SetBool(animIsMoving, isMoving);
+        if (_animator == null) return;
+        _animator.SetBool(animIsMoving, isMoving);
     }
 }

@@ -128,6 +128,7 @@ public class UIDebugPanel : MonoBehaviour
             pendingQuestId = -1;
             pendingStepId = -1;
             GameEvent.Quest.OnStepChanged?.Invoke(targetQuestId, targetStepId);
+            GrantSkippedRewards(targetQuestId, targetStepId);
             Log($"✅ Jumped to Quest {targetQuestId} Step {targetStepId}");
         }
         else
@@ -167,6 +168,7 @@ public class UIDebugPanel : MonoBehaviour
         QuestProgressManager.Instance?.ForceSetActiveStep(qId, sId);
         GameEvent.Quest.OnQuestChanged?.Invoke(qId);
         GameEvent.Quest.OnStepChanged?.Invoke(qId, sId);
+        GrantSkippedRewards(qId, sId);
         Debug.Log($"[UIDebugPanel] ✅ Fired Quest {qId} Step {sId}");
     }
     private void ResetIntro()
@@ -180,5 +182,100 @@ public class UIDebugPanel : MonoBehaviour
     {
         Debug.Log($"[UIDebugPanel] {msg}");
         if (logText != null) logText.text = msg;
+    }
+
+    // ── Skipped reward granting ────────────────────────────────────────────────
+
+    /// <summary>
+    /// Tự động nhận tất cả phần thưởng hệ thống (ItemReward, SkillReward) của các step
+    /// nằm trước targetStep. Dùng cho debug jump để đảm bảo inventory/skill đúng với tiến trình.
+    /// </summary>
+    private void GrantSkippedRewards(int targetQuestId, int targetStepId)
+    {
+        var dm = QuestDataManager.Instance;
+        if (dm == null) return;
+
+        int grantedItems = 0, grantedSkills = 0;
+
+        for (int qId = 1; qId <= targetQuestId; qId++)
+        {
+            var steps = dm.GetQuestSteps(qId);
+            if (steps == null) continue;
+
+            foreach (var data in steps)
+            {
+                // Chỉ grant reward của các step TRƯỚC target (không tính target step)
+                if (qId == targetQuestId && data.stepId >= targetStepId) continue;
+
+                if (GrantItemReward(data.itemReward1?.Trim())) grantedItems++;
+                if (GrantSkillReward(data.skillReward?.Trim())) grantedSkills++;
+                GrantExtendReward(data.reward?.Trim());
+            }
+        }
+
+        Debug.Log($"[UIDebugPanel] Skipped rewards granted: {grantedItems} item(s), {grantedSkills} skill(s)");
+    }
+
+    private bool GrantItemReward(string raw)
+    {
+        if (string.IsNullOrEmpty(raw)) return false;
+
+        if (int.TryParse(raw, out int coins) && coins > 0)
+        {
+            UIMoney.Instance?.AddCoin(coins);
+            return true;
+        }
+
+        if (raw == "Kiếm")
+        {
+            if (InventorySystem.Instance != null && InventorySystem.Instance.GetItemQuantity(ItemType.Sword) == 0)
+                InventorySystem.Instance.AddItem((int)ItemType.Sword);
+            return true;
+        }
+
+        if (raw == "Cung")
+        {
+            if (InventorySystem.Instance != null && InventorySystem.Instance.GetItemQuantity(ItemType.Bow) == 0)
+                InventorySystem.Instance.AddItem((int)ItemType.Bow);
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool GrantSkillReward(string raw)
+    {
+        if (string.IsNullOrEmpty(raw)) return false;
+
+        ElementType? element = raw.ToLower() switch
+        {
+            "skill đất" => ElementType.Earth,
+            "skill khí" => ElementType.Wind,
+            "skill nước" => ElementType.Water,
+            "skill lửa" => ElementType.Fire,
+            _ => null
+        };
+
+        if (element.HasValue)
+        {
+            GameEvent.Player.OnSkillUnlocked?.Invoke(element.Value);
+            return true;
+        }
+
+        // "Dash" — chưa có hệ thống unlock riêng, bỏ qua
+        return false;
+    }
+
+    private void GrantExtendReward(string raw)
+    {
+        if (string.IsNullOrEmpty(raw)) return;
+
+        if (raw == "Tinh linh")
+        {
+            GameEvent.Player.OnLumiUnlocked?.Invoke();
+            // Lumi là standalone GO — tìm qua FindObjectOfType
+            var lumi = FindObjectOfType<LumiController>(true);
+            lumi?.UnlockAndFollow();
+        }
     }
 }

@@ -103,6 +103,7 @@ MonoBehaviour:
   moveSpeed: 15
   runSpeed: 0
   damageBoss: 0
+  damageMultiplier: 1
   distanceToPlayer: 0
   isPhase2: 0
   lastAttackTime: -99

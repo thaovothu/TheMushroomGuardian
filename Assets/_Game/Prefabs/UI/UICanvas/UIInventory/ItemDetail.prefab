@@ -627,7 +627,7 @@ MonoBehaviour:
   descriptionText: {fileID: 6079571121356247643}
   statsText: {fileID: 0}
   useItemButton: {fileID: 8560388439922865764}
-  deleteItemButton: {fileID: 1179689174126213662}
+  removeButton: {fileID: 1179689174126213662}
   closeButton: {fileID: 4723468439279496451}
 --- !u!1001 &1308898593789924086
 PrefabInstance:

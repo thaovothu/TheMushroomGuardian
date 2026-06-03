@@ -489,12 +489,12 @@ PrefabInstance:
     - target: {fileID: 1836552964250487843, guid: 9bbfa3f92bbec4deabd885b807a3700b,
         type: 3}
       propertyPath: m_FollowOffset.y
-      value: 1.7
+      value: 1.700005
       objectReference: {fileID: 0}
     - target: {fileID: 1836552964250487843, guid: 9bbfa3f92bbec4deabd885b807a3700b,
         type: 3}
       propertyPath: m_FollowOffset.z
-      value: -6
+      value: -6.000002
       objectReference: {fileID: 0}
     - target: {fileID: 2569271112201513280, guid: 9bbfa3f92bbec4deabd885b807a3700b,
         type: 3}
@@ -584,22 +584,22 @@ PrefabInstance:
     - target: {fileID: 8875205123851705575, guid: 9bbfa3f92bbec4deabd885b807a3700b,
         type: 3}
       propertyPath: m_FollowOffset.y
-      value: 1.7
+      value: 1.700005
       objectReference: {fileID: 0}
     - target: {fileID: 8875205123851705575, guid: 9bbfa3f92bbec4deabd885b807a3700b,
         type: 3}
       propertyPath: m_FollowOffset.z
-      value: -6
+      value: -6.000002
       objectReference: {fileID: 0}
     - target: {fileID: 8890823670737944273, guid: 9bbfa3f92bbec4deabd885b807a3700b,
         type: 3}
       propertyPath: m_FollowOffset.y
-      value: 1.7
+      value: 1.700005
       objectReference: {fileID: 0}
     - target: {fileID: 8890823670737944273, guid: 9bbfa3f92bbec4deabd885b807a3700b,
         type: 3}
       propertyPath: m_FollowOffset.z
-      value: -6
+      value: -6.000002
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -48,9 +48,15 @@ public static class GameEvent
     public static class Player
     {
         public static System.Action<GameObject> OnSpawned;
-        public static System.Action<ElementType> OnSkillAttackCast; // ← thêm
-        public static System.Action<ElementType> OnSkillDefendCast; // ← thêm
-        public static System.Action OnDashUsed;                     // ← thêm
+        public static System.Action<ElementType> OnSkillAttackCast;
+        public static System.Action<ElementType> OnSkillDefendCast;
+        public static System.Action OnDashUsed;
+        /// <summary>Fired when a new element skill is unlocked via quest reward.</summary>
+        public static System.Action<ElementType> OnSkillUnlocked;
+        /// <summary>Player respawned at checkpoint.</summary>
+        public static System.Action OnRespawn;
+        /// <summary>Lumi companion unlocked — fires when quest 1 step 4 reward is granted.</summary>
+        public static System.Action OnLumiUnlocked;
     }
 
     // ── INVENTORY ──────────────────────────────────────────────────────────────
