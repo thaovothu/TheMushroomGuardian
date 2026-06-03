@@ -41,6 +41,8 @@ public class UIHeadInfoStatus : MonoBehaviour
             return;
         }
 
+        // Subscribe in Awake (not OnEnable) so the event fires even when this GO is disabled
+        GameEvent.Player.OnRespawn += HandleRespawn;
         InitPlayer();
     }
 
@@ -73,6 +75,8 @@ public class UIHeadInfoStatus : MonoBehaviour
         UnsubscribeFromHealthSystem();
         if (entityType == EntityType.Boss)
             BossEventBus.OnBossSpawned -= OnBossSpawned;
+        else
+            GameEvent.Player.OnRespawn -= HandleRespawn;
     }
 
     // ── Boss spawn ────────────────────────────────────────────────────────────
@@ -155,7 +159,14 @@ public class UIHeadInfoStatus : MonoBehaviour
         else
         {
             gameObject.SetActive(false);
+            // HandleRespawn (subscribed in Awake) will re-enable this GO when OnRespawn fires
         }
+    }
+
+    private void HandleRespawn()
+    {
+        gameObject.SetActive(true);
+        // OnEnable fires automatically and re-subscribes to health/mana events
     }
 
     // ── Update ────────────────────────────────────────────────────────────────

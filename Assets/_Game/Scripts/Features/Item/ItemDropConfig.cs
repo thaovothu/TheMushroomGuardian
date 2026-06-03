@@ -118,7 +118,7 @@ public class ItemDropConfig : ScriptableObject
 
     public List<ItemDropChance> GetMainDrops()
     {
-        return new List<ItemDropChance> { coinDrop, expGemDrop, defenseBuffDrop, strengthBuffDrop };
+        return new List<ItemDropChance> { coinDrop, defenseBuffDrop, strengthBuffDrop };
     }
 
     /// <summary>
@@ -127,7 +127,7 @@ public class ItemDropConfig : ScriptableObject
     public List<ItemDropChance> GetBossDrops(ElementType bossElement)
     {
         Debug.Log($"[ItemDropConfig] GetBossDrops called with element: {bossElement}");
-        var drops = new List<ItemDropChance> { coinDrop, expGemDrop };
+        var drops = new List<ItemDropChance> { coinDrop };
 
         switch (bossElement)
         {

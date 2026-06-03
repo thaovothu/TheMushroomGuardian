@@ -198,6 +198,21 @@ public class InventorySystem : BaseSingleton<InventorySystem>
             return entry.data;
         return null;
     }
+
+    /// <summary>Trả về bản sao của inventory để lưu checkpoint.</summary>
+    public Dictionary<ItemType, (ItemData data, int quantity)> GetInventorySnapshot()
+    {
+        return new Dictionary<ItemType, (ItemData, int)>(inventory);
+    }
+
+    /// <summary>Khôi phục inventory về snapshot đã lưu — dùng khi respawn sau khi chết.</summary>
+    public void RestoreInventory(Dictionary<ItemType, (ItemData data, int quantity)> snapshot)
+    {
+        inventory = new Dictionary<ItemType, (ItemData, int)>(snapshot);
+        GameEvent.Inventory.OnSlotChanged?.Invoke(0, 0);
+        Debug.Log($"[InventorySystem] Inventory restored: {inventory.Count} item type(s)");
+    }
+
     // ── Legacy support ────────────────────────────────────────────────────────
     public int GetBagCount() => 1;
     public bool IsFull() => false;

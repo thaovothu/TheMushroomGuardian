@@ -229,7 +229,7 @@ public class PlayerController : MonoBehaviour
 
     void OnSkillAttack(bool performed)
     {
-        if (performed && !skillAttackTimer.IsRunning)
+        if (performed && !skillAttackTimer.IsRunning && skillController != null && skillController.HasUnlockedSkills())
         {
             Debug.Log("[PlayerController] SkillAttack input received, starting skill attack timer.");
             skillAttackTimer.Start();
@@ -238,7 +238,7 @@ public class PlayerController : MonoBehaviour
 
     void OnSkillDefend(bool performed)
     {
-        if (performed && !skillDefendTimer.IsRunning)
+        if (performed && !skillDefendTimer.IsRunning && skillController != null && skillController.HasUnlockedSkills())
         {
             skillDefendTimer.Start();
         }
@@ -249,7 +249,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void SkillAttack()
     {
-        if (!skillAttackTimer.IsRunning)
+        if (!skillAttackTimer.IsRunning && skillController != null && skillController.HasUnlockedSkills())
         {
             skillAttackTimer.Start();
         }
@@ -260,7 +260,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void SkillDefend()
     {
-        if (!skillDefendTimer.IsRunning)
+        if (!skillDefendTimer.IsRunning && skillController != null && skillController.HasUnlockedSkills())
         {
             skillDefendTimer.Start();
         }

@@ -1,9 +1,9 @@
-QuestID	StepID	Title Quest	Info Quest	ItemReward	SkillReward	ExtenfReward	Short Des_1	MapID	SpawnGroupID	LumiHint
+QuestID	StepID	Title Quest	Info Quest	ItemReward	SkillReward	ExtendReward	Short Des_1	MapID	SpawnGroupID	LumiHint
 1	1	Mầm Nấm Thức Tỉnh	"Sau giấc ngủ dài trong lòng đại địa, hãy di chuyển quanh <color=#00FFFF>Làng Rễ Cây</color> để làm quen với cơ thể mới thức tỉnh"					1		
 1	2	Mầm Nấm Thức Tỉnh	Dùng đòn đánh thường đánh 3 <color=red>Cây sương rồng</color> dùng cho luyện tập	10				1	1	
 1	3	Mầm Nấm Thức Tỉnh	Một tiếng kêu cứu vang lên. Hãy đi kiểm tra cùng <color=#00FFFF>Dấu Vết Phát Sáng</color>					1		
-1	4	Mầm Nấm Thức Tỉnh	Tiêu diệt 5 <color=red>Cây xương rồng</color> đang giam giữ <color=green>Tinh Linh Lumi</color>	20		Tinh linh		1	2	
-1	5	Mầm Nấm Thức Tỉnh	Nói chuyện với <color=green>Tinh Linh Lumi</color>. Từ giờ Lumi sẽ đồng hành cùng bạn trên hành trình cứu thế giới					1		
+1	4	Mầm Nấm Thức Tỉnh	Tiêu diệt 5 <color=red>Cây xương rồng</color> đang giam giữ <color=green>Tinh Linh Lumi</color>	20				1	2	
+1	5	Mầm Nấm Thức Tỉnh	Nói chuyện với <color=green>Tinh Linh Lumi</color>. Từ giờ Lumi sẽ đồng hành cùng bạn trên hành trình cứu thế giới			Tinh linh		1		
 1	6	Mầm Nấm Thức Tỉnh	Đến gặp <color=green>Trưởng làng Nấm</color> tại trung tâm làng	Kiếm				1		
 										
 2	1	Con Đường Chiến Đấu	Tiến vào <color=#00FFFF>Hang Động Golem</color> để bắt đầu cuộc hành trình.					2		

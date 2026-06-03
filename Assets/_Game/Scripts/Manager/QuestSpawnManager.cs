@@ -20,6 +20,7 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
         public int questId;
         public int stepId;
         public string groupId;
+        public GameObject prefab; // pool key so we can release on respawn
     }
 
     [Header("Spawn Configs - kéo tất cả QuestSpawnConfig assets vào đây")]
@@ -41,7 +42,7 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
     private Dictionary<GameObject, SimpleObjectPool> poolMap = new Dictionary<GameObject, SimpleObjectPool>();
 
     // Track enemy/boss đã spawn thuộc quest/step nào để complete step khi tất cả chết
-    private Dictionary<int, ActiveSpawnInfo> activeSpawnMap = new Dictionary<int, ActiveSpawnInfo>();
+    private Dictionary<GameObject, ActiveSpawnInfo> activeSpawnMap = new Dictionary<GameObject, ActiveSpawnInfo>();
     private Dictionary<string, int> aliveCountByQuestStep = new Dictionary<string, int>();
 
     // Danh sách spawnPoints fallback theo index
@@ -251,7 +252,7 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
         Debug.Log($"  └─ after force-set: {go.name} at {go.transform.position}  (expected={spawnPoint.position})  match={(go.transform.position == spawnPoint.position)}");
         
         var data = enemySOData.GetEnemyData(level);
-        RegisterSpawnedEnemy(go, questId, stepId, groupId);
+        RegisterSpawnedEnemy(go, questId, stepId, groupId, variant.enemyPrefab);
 
         if (go.TryGetComponent<EnemyController>(out var ec))
         {
@@ -281,13 +282,12 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
             return;
         }
 
-        int instanceId = enemyObject.GetInstanceID();
-        if (!activeSpawnMap.TryGetValue(instanceId, out var spawnInfo))
+        if (!activeSpawnMap.TryGetValue(enemyObject, out var spawnInfo))
         {
             return;
         }
 
-        activeSpawnMap.Remove(instanceId);
+        activeSpawnMap.Remove(enemyObject);
 
         string stepKey = GetStepKey(spawnInfo.questId, spawnInfo.stepId);
         if (!aliveCountByQuestStep.TryGetValue(stepKey, out var aliveCount))
@@ -318,19 +318,19 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
         QuestProgressManager.Instance.CompleteCurrentStep(spawnInfo.questId, spawnInfo.stepId, maxStepId);
     }
 
-    private void RegisterSpawnedEnemy(GameObject enemyObject, int questId, int stepId, string groupId)
+    private void RegisterSpawnedEnemy(GameObject enemyObject, int questId, int stepId, string groupId, GameObject prefab)
     {
         if (enemyObject == null)
         {
             return;
         }
 
-        int instanceId = enemyObject.GetInstanceID();
-        activeSpawnMap[instanceId] = new ActiveSpawnInfo
+        activeSpawnMap[enemyObject] = new ActiveSpawnInfo
         {
             questId = questId,
             stepId = stepId,
-            groupId = groupId
+            groupId = groupId,
+            prefab = prefab
         };
 
         string stepKey = GetStepKey(questId, stepId);
@@ -341,6 +341,39 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
 
         aliveCountByQuestStep[stepKey]++;
         Debug.Log($"[QuestSpawnManager] Registered {enemyObject.name} for Quest {questId} Step {stepId}. Alive count: {aliveCountByQuestStep[stepKey]}");
+    }
+
+    /// <summary>
+    /// Despawn tất cả enemy còn sống của step hiện tại và spawn lại từ đầu.
+    /// Gọi khi player respawn để reset lại toàn bộ encounter.
+    /// </summary>
+    public void ResetStepForRespawn(int questId, int stepId)
+    {
+        string stepKey = GetStepKey(questId, stepId);
+        var toRemove = new List<GameObject>();
+
+        foreach (var kvp in activeSpawnMap)
+        {
+            var info = kvp.Value;
+            if (info.questId != questId || info.stepId != stepId) continue;
+
+            toRemove.Add(kvp.Key);
+            var go = kvp.Key;
+            if (go == null) continue;
+
+            if (info.prefab != null && poolMap.TryGetValue(info.prefab, out var pool))
+                pool.Release(go);
+            else
+                go.SetActive(false);
+        }
+
+        foreach (var go in toRemove)
+            activeSpawnMap.Remove(go);
+
+        aliveCountByQuestStep.Remove(stepKey);
+
+        Debug.Log($"[QuestSpawnManager] Respawn reset: despawned {toRemove.Count} enemies for Quest {questId} Step {stepId}, re-spawning...");
+        TrySpawnForStep(questId, stepId);
     }
 
     private static string GetStepKey(int questId, int stepId)
