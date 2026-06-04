@@ -19,26 +19,36 @@ MonoBehaviour:
   enemyData:
   - levelEnemy: 1
     moveSpeed: 3.5
-    hp: 80
-    damage: 20
+    hp: 30
+    damage: 10
     recover: 0
+    enemyType: 0
+    bulletPrefab: {fileID: 0}
   - levelEnemy: 2
     moveSpeed: 3.8
     hp: 110
     damage: 28
     recover: 1
+    enemyType: 0
+    bulletPrefab: {fileID: 0}
   - levelEnemy: 3
     moveSpeed: 4.2
     hp: 140
     damage: 36
     recover: 2
+    enemyType: 0
+    bulletPrefab: {fileID: 0}
   - levelEnemy: 4
     moveSpeed: 4.6
     hp: 180
     damage: 45
     recover: 3
+    enemyType: 0
+    bulletPrefab: {fileID: 0}
   - levelEnemy: 5
     moveSpeed: 5
     hp: 220
     damage: 60
     recover: 5
+    enemyType: 0
+    bulletPrefab: {fileID: 0}

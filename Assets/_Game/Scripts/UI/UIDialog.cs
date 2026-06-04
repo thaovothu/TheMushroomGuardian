@@ -66,6 +66,35 @@ public class UIDialog : MonoBehaviour
             DisplayCurrentStep();
     }
 
+    public void PlayLumiDialog(List<LumiDialogData> steps)
+    {
+        if (steps == null || steps.Count == 0)
+        {
+            Debug.LogWarning("[UIDialog] PlayLumiDialog: empty steps");
+            return;
+        }
+
+        currentDialogSteps = steps.ConvertAll(l => new DialogData
+        {
+            npcId = 0,
+            dialogStep = l.stepId,
+            text = l.text,
+            displayDuration = l.displayDuration,
+            playerReply = l.playerReply
+        });
+
+        currentStepIndex = 0;
+        isPlaying = true;
+
+        if (!gameObject.activeSelf)
+            gameObject.SetActive(true);
+
+        if (canvasGroup != null)
+            StartCoroutine(FadeIn());
+        else
+            DisplayCurrentStep();
+    }
+
     IEnumerator FadeIn()
     {
         canvasGroup.alpha = 0f;

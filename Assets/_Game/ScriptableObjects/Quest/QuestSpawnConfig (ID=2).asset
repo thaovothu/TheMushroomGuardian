@@ -16,6 +16,6 @@ MonoBehaviour:
   enemyConfigs:
   - baseEnemySO: {fileID: 11400000, guid: 327156cc3b5fe4569a410d5367c6f1f5, type: 2}
     count: 5
-    level: 0200000002000000020000000200000002000000
+    level: 0100000001000000010000000100000001000000
   spawnPoints:
   - {fileID: 5055696700553513324, guid: 03ca0b411c0d9428ebd84e135acb0dbc, type: 3}

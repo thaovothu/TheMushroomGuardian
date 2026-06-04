@@ -21,7 +21,7 @@ public class LumiController : MonoBehaviour
 {
     [Header("Follow Target")]
     [Tooltip("Offset trong world-space phía sau bên phải player")]
-    [SerializeField] private Vector3 followOffset = new Vector3(1f, 0.6f, -1f);
+    [SerializeField] private Vector3 followOffset = new Vector3(1f, 2f, -1f);
 
     [Header("SmoothDamp Settings")]
     [Tooltip("Smooth bình thường khi gần player — cao hơn = lazy hơn")]
@@ -32,6 +32,8 @@ public class LumiController : MonoBehaviour
     [SerializeField] private float snapDistance = 6f;
     [Tooltip("Tốc độ tối đa (SmoothDamp clamp)")]
     [SerializeField] private float maxFollowSpeed = 8f;
+    [Tooltip("Khoảng cách tối đa trước khi teleport về sát player (tránh lạc khi chuyển scene)")]
+    [SerializeField] private float teleportDistance = 20f;
 
     [Header("Float Animation")]
     [Tooltip("Biên độ lơ lửng lên xuống (layer chính)")]
@@ -79,7 +81,7 @@ public class LumiController : MonoBehaviour
         GameEvent.Player.OnRespawn -= OnPlayerRespawn;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if (_state != State.Follow || _playerTransform == null) return;
 
@@ -97,8 +99,15 @@ public class LumiController : MonoBehaviour
                           - forward * Mathf.Abs(followOffset.z)
                           + Vector3.up * (followOffset.y + yFloat);
 
-        // ── SmoothDamp với distance-based smoothTime ──────────────────────────
+        // ── Teleport nếu quá xa (chuyển scene, spawn mới, ...) ───────────────
         float dist = Vector3.Distance(transform.position, targetPos);
+        if (dist > teleportDistance)
+        {
+            SnapToPlayer();
+            return;
+        }
+
+        // ── SmoothDamp với distance-based smoothTime ──────────────────────────
         float t = Mathf.InverseLerp(snapDistance, 0f, dist); // 0 khi xa, 1 khi gần
         float smoothTime = Mathf.Lerp(fastSmoothTime, normalSmoothTime, t);
 
