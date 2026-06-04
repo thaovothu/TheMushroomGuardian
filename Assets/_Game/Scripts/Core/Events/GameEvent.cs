@@ -17,6 +17,9 @@ public static class GameEvent
         /// <summary>Quest TSV data loaded from StreamingAssets.</summary>
         public static Action<List<QuestData>> OnDataLoaded;
 
+        /// <summary>Quest sắp chuyển — fires TRƯỚC khi currentQuestId tăng. Dùng để blocking dialog (Lumi).</summary>
+        public static Action<int> OnQuestAboutToChange;
+
         /// <summary>New quest unlocked (currentQuestId advanced).</summary>
         public static Action<int> OnQuestChanged;
 

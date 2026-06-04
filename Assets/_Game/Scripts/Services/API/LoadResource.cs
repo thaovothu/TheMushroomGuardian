@@ -319,3 +319,21 @@ public class DialogData
         return $"Dialog NPC{npcId}-Step{dialogStep}: {text}";
     }
 }
+
+/// <summary>
+/// Data class cho dialog của Lumi — keyed theo questId + stepId thay vì npcId
+/// </summary>
+[System.Serializable]
+public class LumiDialogData
+{
+    public int questId;
+    public int stepId;
+    public string text;
+    public float displayDuration;
+    public string playerReply;
+
+    public override string ToString()
+    {
+        return $"LumiDialog Q{questId}-S{stepId}: {text}";
+    }
+}

@@ -89,10 +89,10 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4709693851466505992}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
+  m_Enabled: 0
+  m_Avatar: {fileID: 9000000, guid: 5a0559ef416cdcc449118faa95e73b4c, type: 3}
+  m_Controller: {fileID: 9100000, guid: 93d49370b5f7dc342b6b94d4d268dcd0, type: 2}
+  m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
@@ -114,11 +114,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aff48dcf58cc1454e8d12f14208c017b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followOffset: {x: 0.8, y: 0.5, z: -0.8}
+  followOffset: {x: 0.8, y: 1, z: -0.8}
   normalSmoothTime: 0.35
   fastSmoothTime: 0.08
   snapDistance: 6
   maxFollowSpeed: 8
+  teleportDistance: 15
   floatAmplitude: 0.15
   floatSpeed: 2
   tiltStrength: 14
@@ -139,28 +140,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1131587461562481080, guid: a8ee024cc6ba34a90878b116881174bc,
         type: 3}
-      propertyPath: m_LocalScale.x
-      value: 2.5291
-      objectReference: {fileID: 0}
-    - target: {fileID: 1131587461562481080, guid: a8ee024cc6ba34a90878b116881174bc,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 2.5291
-      objectReference: {fileID: 0}
-    - target: {fileID: 1131587461562481080, guid: a8ee024cc6ba34a90878b116881174bc,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 2.5291
-      objectReference: {fileID: 0}
-    - target: {fileID: 1131587461562481080, guid: a8ee024cc6ba34a90878b116881174bc,
-        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1131587461562481080, guid: a8ee024cc6ba34a90878b116881174bc,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.84
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1131587461562481080, guid: a8ee024cc6ba34a90878b116881174bc,
         type: 3}

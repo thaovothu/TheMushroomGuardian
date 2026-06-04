@@ -72,19 +72,38 @@ public class QuestProgressManager : BaseSingleton<QuestProgressManager>
     }
 
     /// <summary>
-    /// Hoàn thành quest hiện tại, chuyển sang quest tiếp theo.
+    /// Hoàn thành quest hiện tại — fires OnQuestAboutToChange để LumiQuestDialogController
+    /// có thể chèn blocking dialog. Gọi ConfirmQuestAdvance() khi sẵn sàng advance thực sự.
     /// </summary>
     public void CompleteCurrentQuest()
     {
         if (currentQuestId < 7)
         {
-            currentQuestId++;
-            Debug.Log($"[QuestProgressManager] Quest completed! Moving to Quest {currentQuestId}");
-            GameEvent.Quest.OnQuestChanged?.Invoke(currentQuestId);
+            int nextQuestId = currentQuestId + 1;
+            Debug.Log($"[QuestProgressManager] Quest {currentQuestId} complete — pending advance to Quest {nextQuestId}");
+
+            if (GameEvent.Quest.OnQuestAboutToChange != null)
+                GameEvent.Quest.OnQuestAboutToChange.Invoke(nextQuestId);
+            else
+                ConfirmQuestAdvance(); // fallback nếu không có handler
         }
         else
         {
             Debug.Log("[QuestProgressManager] All quests completed!");
+        }
+    }
+
+    /// <summary>
+    /// Thực hiện advance quest sau khi blocking dialog (nếu có) đã xong.
+    /// Gọi bởi LumiQuestDialogController (hoặc trực tiếp nếu không có dialog).
+    /// </summary>
+    public void ConfirmQuestAdvance()
+    {
+        if (currentQuestId < 7)
+        {
+            currentQuestId++;
+            Debug.Log($"[QuestProgressManager] Quest advanced → Quest {currentQuestId}");
+            GameEvent.Quest.OnQuestChanged?.Invoke(currentQuestId);
         }
     }
 
