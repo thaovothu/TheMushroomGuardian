@@ -87,6 +87,17 @@ public static class GameEvent
         public static Action<WeaponType> OnWeaponChanged;
     }
 
+    // ── AUTH ───────────────────────────────────────────────────────────────────
+    public static class Auth
+    {
+        /// <summary>Login hoặc Register thành công.</summary>
+        public static Action<string> OnLoginSuccess;   // playFabId
+        /// <summary>Login hoặc Register thất bại.</summary>
+        public static Action<string> OnLoginFailed;    // error message
+        /// <summary>Logout.</summary>
+        public static System.Action OnLogout;
+    }
+
     // ── BOSS ───────────────────────────────────────────────────────────────────
     // Boss events remain in BossEventBus.cs (Core/Events/Boss/).
 }
