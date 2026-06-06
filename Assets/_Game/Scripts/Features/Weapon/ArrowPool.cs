@@ -17,10 +17,12 @@ public class ArrowPool : BaseSingleton<ArrowPool>
     protected override void Awake()
     {
         base.Awake();
+        GameEvent.Auth.OnLoginSuccess += OnLoginReady;
     }
 
-    void Start()
+    private void OnLoginReady(string _)
     {
+        GameEvent.Auth.OnLoginSuccess -= OnLoginReady;
         availableArrows = new Queue<GameObject>(poolSize);
         allArrows = new List<GameObject>(poolSize);
 
@@ -42,6 +44,7 @@ public class ArrowPool : BaseSingleton<ArrowPool>
     /// </summary>
     public GameObject GetArrow(Vector3 position, Quaternion rotation)
     {
+        if (availableArrows == null) return null;
         GameObject arrow;
 
         if (availableArrows.Count == 0)

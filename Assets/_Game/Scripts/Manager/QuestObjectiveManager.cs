@@ -50,6 +50,12 @@ public class QuestObjectiveManager : BaseSingleton<QuestObjectiveManager>
     protected override void Awake()
     {
         base.Awake();
+        GameEvent.Auth.OnLoginSuccess += OnLoginReady;
+    }
+
+    private void OnLoginReady(string _)
+    {
+        GameEvent.Auth.OnLoginSuccess -= OnLoginReady;
         RebuildLocationMap();
         RebuildNPCMaps();
     }

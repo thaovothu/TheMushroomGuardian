@@ -20,6 +20,12 @@ public class LumiDialogDataManager : BaseSingleton<LumiDialogDataManager>
         if (dontDestroyOnLoad)
             DontDestroyOnLoad(transform.root.gameObject);
 
+        GameEvent.Auth.OnLoginSuccess += OnLoginReady;
+    }
+
+    private void OnLoginReady(string _)
+    {
+        GameEvent.Auth.OnLoginSuccess -= OnLoginReady;
         LoadFromFile();
     }
 
