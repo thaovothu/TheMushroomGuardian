@@ -124,15 +124,13 @@ public class UIShop : MonoBehaviour
 
     private void OnBuyItem(int itemId, int price)
     {
-        if (UIMoney.Instance == null) return;
-
-        if (UIMoney.Instance.GetCoin() < price)
+        if (UIMoney.TotalCoins < price)
         {
             Debug.Log("[UIShop] Không đủ tiền!");
             return;
         }
 
-        UIMoney.Instance.AddCoin(-price);
+        UIMoney.AddCoin(-price);
         InventorySystem.Instance?.AddItem(itemId, 1);
         GameEvent.Item.OnItemPickedUp?.Invoke(itemId, 1);
 

@@ -41,7 +41,7 @@ public class CheckpointManager : BaseSingleton<CheckpointManager>
 
         _savedPosition = player.transform.position;
         _savedInventory = InventorySystem.Instance?.GetInventorySnapshot();
-        _savedCoins = UIMoney.Instance?.GetTotalCoins() ?? 0;
+        _savedCoins = UIMoney.TotalCoins;
         _hasCheckpoint = true;
 
         Debug.Log($"[CheckpointManager] Checkpoint saved at {_savedPosition} | {_savedInventory?.Count ?? 0} item type(s) | {_savedCoins} coins");
@@ -74,7 +74,7 @@ public class CheckpointManager : BaseSingleton<CheckpointManager>
             if (_savedInventory != null)
                 InventorySystem.Instance?.RestoreInventory(_savedInventory);
 
-            UIMoney.Instance?.RestoreCoins(_savedCoins);
+            UIMoney.RestoreCoins(_savedCoins);
         }
 
         // Reset HP về full

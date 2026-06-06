@@ -415,4 +415,5 @@ public class PlayerSkillController : MonoBehaviour
 
     public bool HasUnlockedSkills() => _unlockedElements.Count > 0;
     public bool CanSwitchSkill() => _unlockedElements.Count >= 2;
+    public IReadOnlyList<ElementType> GetUnlockedElements() => _unlockedElements;
 }

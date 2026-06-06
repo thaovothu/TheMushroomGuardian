@@ -45,7 +45,7 @@ public class QuestRewardManager : BaseSingleton<QuestRewardManager>
 
         if (int.TryParse(raw, out int coins))
         {
-            UIMoney.Instance?.AddCoin(coins);
+            UIMoney.AddCoin(coins);
             Debug.Log($"[QuestRewardManager] {questId}-{stepId}: +{coins} vàng");
         }
         else if (raw == "Kiếm")
