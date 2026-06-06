@@ -18,16 +18,19 @@ public class CameraManager : BaseSingleton<CameraManager>
 
     bool cameraLookEnabled = true;
     bool cameraMovementLock;
+    bool gameReady = false;     // false = auth/loading phase, ESC bị disabled
     Texture2D crosshairTex;
 
     void OnEnable()
     {
         input.Look += OnLook;
+        GameEvent.Player.OnSpawned += OnPlayerSpawned;
     }
 
     void OnDisable()
     {
         input.Look -= OnLook;
+        GameEvent.Player.OnSpawned -= OnPlayerSpawned;
     }
 
     void Start()
@@ -39,6 +42,16 @@ public class CameraManager : BaseSingleton<CameraManager>
         freeLookVCam.m_YAxis.m_InputAxisValue = 0f;
 
         crosshairTex = BuildCircleTexture(32);
+
+        // Auth/loading phase: cursor tự do để click UI
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    private void OnPlayerSpawned(GameObject _)
+    {
+        gameReady = true;
+        cameraLookEnabled = true;
         ApplyCameraLookState();
     }
 
@@ -83,6 +96,8 @@ public class CameraManager : BaseSingleton<CameraManager>
 
     void Update()
     {
+        if (!gameReady) return;
+
         var kb = Keyboard.current;
         if (kb != null && kb.escapeKey.wasPressedThisFrame)
         {

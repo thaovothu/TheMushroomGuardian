@@ -1,4 +1,3 @@
-using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,8 +23,6 @@ public class UIHeadInfoStatus : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameCharacterText;
 
     private bool isSubscribed = false;
-    private int findRetry = 0;
-    private const int MAX_RETRY = 100;
 
     // Cache giá trị mana đã hiển thị để tránh tạo string mới mỗi frame
     private float lastManaPercent = -1f;
@@ -36,29 +33,22 @@ public class UIHeadInfoStatus : MonoBehaviour
     {
         if (entityType == EntityType.Boss)
         {
-            BossEventBus.OnBossSpawned += OnBossSpawned; // subscribe khi còn active
-            gameObject.SetActive(false);                  // sau đó mới ẩn
+            BossEventBus.OnBossSpawned += OnBossSpawned;
+            gameObject.SetActive(false);
             return;
         }
 
-        // Subscribe in Awake (not OnEnable) so the event fires even when this GO is disabled
         GameEvent.Player.OnRespawn += HandleRespawn;
-        InitPlayer();
+        GameEvent.Player.OnSpawned += OnPlayerSpawned;
     }
 
     void OnEnable()
     {
-        if (entityType == EntityType.Boss) return; // Boss dùng Awake rồi
+        if (entityType == EntityType.Boss) return;
 
-        if (targetHealth == null)
-            targetHealth = FindHealthSystemByTag();
-        if (playerSkillController == null)
-            playerSkillController = FindPlayerSkillController();
-
+        // Player đã sẵn (re-enable sau respawn) → subscribe lại luôn
         if (targetHealth != null)
             SubscribeToHealthSystem();
-        else
-            StartCoroutine(WaitForHealthSystem());
 
         SetManaVisible(true);
     }
@@ -76,15 +66,10 @@ public class UIHeadInfoStatus : MonoBehaviour
         if (entityType == EntityType.Boss)
             BossEventBus.OnBossSpawned -= OnBossSpawned;
         else
+        {
             GameEvent.Player.OnRespawn -= HandleRespawn;
-    }
-
-    // ── Boss spawn ────────────────────────────────────────────────────────────
-
-    private void OnPlayerSpawned(GameObject _)
-    {
-        // Scene đã ready, bắt đầu lắng nghe boss
-        // (OnEnable đã subscribe BossEventBus.OnBossSpawned rồi)
+            GameEvent.Player.OnSpawned -= OnPlayerSpawned;
+        }
     }
 
     private void OnBossSpawned(GameObject bossGO)
@@ -108,19 +93,14 @@ public class UIHeadInfoStatus : MonoBehaviour
 
     // ── Player init ───────────────────────────────────────────────────────────
 
-    private void InitPlayer()
+    private void OnPlayerSpawned(GameObject player)
     {
-        if (targetHealth == null)
-            targetHealth = FindHealthSystemByTag();
-        if (playerSkillController == null)
-            playerSkillController = FindPlayerSkillController();
-
+        if (player == null) return;
+        targetHealth = player.GetComponent<HealthSystem>();
+        playerSkillController = player.GetComponent<PlayerSkillController>();
         SetManaVisible(true);
-
         if (targetHealth != null)
             SubscribeToHealthSystem();
-        else
-            StartCoroutine(WaitForHealthSystem());
     }
 
     // ── Health subscribe ──────────────────────────────────────────────────────
@@ -175,12 +155,6 @@ public class UIHeadInfoStatus : MonoBehaviour
     {
         if (entityType == EntityType.Player && playerSkillController != null)
             UpdateManaDisplay();
-
-        if (entityType == EntityType.Player && playerSkillController == null && findRetry < MAX_RETRY)
-        {
-            findRetry++;
-            playerSkillController = FindPlayerSkillController();
-        }
     }
 
     // ── UI update ─────────────────────────────────────────────────────────────
@@ -220,30 +194,4 @@ public class UIHeadInfoStatus : MonoBehaviour
         if (manaBarText != null) manaBarText.gameObject.SetActive(visible);
     }
 
-    // ── Find helpers ──────────────────────────────────────────────────────────
-
-    private HealthSystem FindHealthSystemByTag()
-    {
-        string tag = entityType == EntityType.Player ? "Player" : "Boss";
-        return GameObject.FindGameObjectWithTag(tag)?.GetComponent<HealthSystem>();
-    }
-
-    private PlayerSkillController FindPlayerSkillController()
-    {
-        return GameObject.FindGameObjectWithTag("Player")?.GetComponent<PlayerSkillController>();
-    }
-
-    private IEnumerator WaitForHealthSystem()
-    {
-        for (int i = 0; i < 60; i++)
-        {
-            yield return null;
-            targetHealth = FindHealthSystemByTag();
-            if (targetHealth != null)
-            {
-                SubscribeToHealthSystem();
-                yield break;
-            }
-        }
-    }
 }

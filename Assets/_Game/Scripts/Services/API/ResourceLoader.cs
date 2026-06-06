@@ -3,100 +3,112 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Orchestrate việc load toàn bộ resources khi game khởi động
-/// - Hiển thị loading screen
-/// - Gọi LoadResource để load quest.tsv
-/// - Update tiến trình lên UILoading
-/// - Tự động chuyển sang scene chính sau khi load xong
+/// Orchestrate toàn bộ startup sequence:
+///
+///   UILoading (phase 1) — giả lập khởi tạo SDK ~1.5s
+///   → UIAuth            — chờ player login/register/guest
+///   → UILoading (phase 2) — load quest.tsv + dialog.tsv
+///   → LoadScene         — chuyển sang game scene (y như cũ)
 /// </summary>
 public class ResourceLoader : MonoBehaviour
 {
     [SerializeField] private LoadResource loadResource;
     [SerializeField] private UILoading uiLoading;
-    [SerializeField] private string nextSceneName = "Map1"; // Scene muốn load sau khi ready
-    [SerializeField] private bool autoLoadNextScene = true; // Tự động load scene sau khi resource ready
-    [SerializeField] private float minLoadingTime = 2f; // Thời gian tối thiểu hiển thị loading screen
+    [SerializeField] private GameObject uiAuth;
+    [SerializeField] private string nextSceneName = "Map1";
+    [SerializeField] private float phase1Duration = 1.5f;
+    [SerializeField] private float minPhase2Time = 1.5f;
 
-    private float elapsedTime = 0f;
-    private bool resourceLoadComplete = false;
+    private bool _resourceLoadComplete = false;
+    private bool _loggedIn = false;
 
     private void Start()
     {
-        // Đảm bảo UILoading được activate
-        if (uiLoading != null)
-        {
-            uiLoading.gameObject.SetActive(true);
-            uiLoading.ResetProgress();
-        }
-
-        // Khởi động quy trình load
         StartCoroutine(LoadingSequence());
     }
 
     private IEnumerator LoadingSequence()
     {
-        elapsedTime = 0f;
+        // ── PHASE 1: Brief init loading ───────────────────────────────────────
+        uiAuth.SetActive(false);
+        uiLoading.gameObject.SetActive(true);
+        uiLoading.ResetProgress();
 
-        Debug.Log("[ResourceLoader] Starting resource loading sequence...");
+        float t = 0f;
+        while (t < phase1Duration)
+        {
+            t += Time.deltaTime;
+            uiLoading.UpdateProgress(Mathf.Clamp01(t / phase1Duration) * 0.3f);
+            yield return null;
+        }
+        uiLoading.UpdateProgress(0.3f);
 
-        // Ensure LoadResource exists
+        // ── UIAuth: chờ login ─────────────────────────────────────────────────
+        uiLoading.gameObject.SetActive(false);
+
+        _loggedIn = false;
+        GameEvent.Auth.OnLoginSuccess += OnLoggedIn;
+
+        uiAuth.SetActive(true);
+        yield return new WaitUntil(() => _loggedIn);
+
+        GameEvent.Auth.OnLoginSuccess -= OnLoggedIn;
+        uiAuth.SetActive(false);
+
+        // ── PHASE 2: Load resources ───────────────────────────────────────────
+        uiLoading.gameObject.SetActive(true);
+        uiLoading.ResetProgress();
+
+        if (loadResource == null)
+            loadResource = FindObjectOfType<LoadResource>();
+
         if (loadResource == null)
         {
-            loadResource = FindObjectOfType<LoadResource>();
-            if (loadResource == null)
-            {
-                Debug.LogError("[ResourceLoader] LoadResource component not found!");
-                yield break;
-            }
+            Debug.LogError("[ResourceLoader] LoadResource not found!");
+            yield break;
         }
 
-        // Subscribe to LoadResource events
-        loadResource.OnProgressUpdate += UpdateLoadingProgress;
-        loadResource.OnLoadComplete += OnResourceLoadComplete;
+        _resourceLoadComplete = false;
+        float elapsed = 0f;
 
-        // Bắt đầu load resources
+        loadResource.OnProgressUpdate += OnProgressUpdate;
+        loadResource.OnLoadComplete   += OnResourceLoadComplete;
         loadResource.LoadAllResources();
 
-        // Chờ cho đến khi load xong + minLoadingTime
-        while (!resourceLoadComplete || elapsedTime < minLoadingTime)
+        while (!_resourceLoadComplete || elapsed < minPhase2Time)
         {
-            elapsedTime += Time.deltaTime;
+            elapsed += Time.deltaTime;
             yield return null;
         }
 
-        Debug.Log("[ResourceLoader] All resources loaded!");
+        loadResource.OnProgressUpdate -= OnProgressUpdate;
+        loadResource.OnLoadComplete   -= OnResourceLoadComplete;
 
-        // Chờ thêm 0.5s trước khi chuyển scene
         yield return new WaitForSeconds(0.5f);
 
-        // Chuyển sang scene tiếp theo nếu được cấu hình
-        if (autoLoadNextScene && !string.IsNullOrEmpty(nextSceneName))
-        {
-            Debug.Log($"[ResourceLoader] Loading scene: {nextSceneName}");
-            // Subscribe static callback trước — tồn tại dù ResourceLoader bị destroy cùng loading scene
-            SceneManager.sceneLoaded += OnGameSceneLoaded;
-            SceneManager.LoadScene(nextSceneName);
-        }
+        // ── Load scene (y như cũ) ─────────────────────────────────────────────
+        Debug.Log($"[ResourceLoader] Loading scene: {nextSceneName}");
+        SceneManager.sceneLoaded += OnGameSceneLoaded;
+        SceneManager.LoadScene(nextSceneName);
     }
 
-    private void UpdateLoadingProgress(float progress)
-    {
-        if (uiLoading != null)
-            uiLoading.UpdateProgress(progress);
+    // ── Callbacks ─────────────────────────────────────────────────────────────
 
-        Debug.Log($"[ResourceLoader] Loading progress: {progress:P}");
+    private void OnLoggedIn(string _) => _loggedIn = true;
+
+    private void OnProgressUpdate(float progress)
+    {
+        // phase 2 chiếm 70% còn lại (0.3 → 1.0)
+        uiLoading.UpdateProgress(0.3f + progress * 0.7f);
     }
 
     private void OnResourceLoadComplete()
     {
-        resourceLoadComplete = true;
-        if (uiLoading != null)
-            uiLoading.UpdateProgress(1f); // Cập nhật UI 100%, KHÔNG fire OnLoadingComplete ở đây
-        Debug.Log("[ResourceLoader] Resource loading complete!");
+        _resourceLoadComplete = true;
+        uiLoading.UpdateProgress(1f);
+        Debug.Log("[ResourceLoader] Resources loaded.");
     }
 
-    // Static method — tồn tại dù ResourceLoader bị destroy khi loading scene unload.
-    // Fire OnLoadingComplete SAU KHI Map1 load xong và tất cả OnEnable() đã chạy.
     private static void OnGameSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         SceneManager.sceneLoaded -= OnGameSceneLoaded;
@@ -106,11 +118,11 @@ public class ResourceLoader : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Unsubscribe từ events
         if (loadResource != null)
         {
-            loadResource.OnProgressUpdate -= UpdateLoadingProgress;
-            loadResource.OnLoadComplete -= OnResourceLoadComplete;
+            loadResource.OnProgressUpdate -= OnProgressUpdate;
+            loadResource.OnLoadComplete   -= OnResourceLoadComplete;
         }
+        GameEvent.Auth.OnLoginSuccess -= OnLoggedIn;
     }
 }

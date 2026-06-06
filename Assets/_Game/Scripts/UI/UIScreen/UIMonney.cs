@@ -2,107 +2,79 @@ using UnityEngine;
 using TMPro;
 
 /// <summary>
-/// Hiển thị và quản lý UI tiền coin và exp
+/// Hiển thị coin và exp. Đặt dưới UIInventory trong hierarchy — không phải singleton.
+/// Dữ liệu lưu dưới dạng static để các hệ thống khác gọi UIMoney.AddCoin() mà không cần instance.
 /// </summary>
-public class UIMoney : BaseSingleton<UIMoney>
+public class UIMoney : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI coinText;      // Hiển thị số coin
-    [SerializeField] private TextMeshProUGUI expText;       // Hiển thị số exp
+    [SerializeField] private TextMeshProUGUI coinText;
+    [SerializeField] private TextMeshProUGUI expText;
 
-    private int totalCoins = 0;
-    private int totalExp = 0;
+    public static int TotalCoins { get; private set; }
+    public static int TotalExp   { get; private set; }
 
+    private static UIMoney _ui;
 
-    private void Start()
+    private void Awake()
     {
-        RefreshUI();
+        _ui = this;
     }
 
-    /// <summary>
-    /// Thêm coin
-    /// </summary>
-    public void AddCoin(int amount)
+    private void OnDestroy()
     {
-        if (amount <= 0) return;
-
-        totalCoins += amount;
-        RefreshCoinText();
-        Debug.Log($"[UIMoney] +{amount} coin (Total: {totalCoins})");
+        if (_ui == this) _ui = null;
     }
 
-    /// <summary>
-    /// Thêm exp
-    /// </summary>
-    public void AddExp(int amount)
-    {
-        if (amount <= 0) return;
+    private void Start() => RefreshUI();
 
-        totalExp += amount;
-        RefreshExpText();
-        Debug.Log($"[UIMoney] +{amount} exp (Total: {totalExp})");
+    // ── Public static API ─────────────────────────────────────────────────────
+
+    public static void AddCoin(int amount)
+    {
+        if (amount == 0) return;
+        TotalCoins += amount;
+        if (_ui != null) _ui.RefreshCoinText();
+        Debug.Log($"[UIMoney] +{amount} coin (Total: {TotalCoins})");
     }
 
-    /// <summary>
-    /// Cập nhật text coin
-    /// </summary>
+    public static void AddExp(int amount)
+    {
+        if (amount == 0) return;
+        TotalExp += amount;
+        if (_ui != null) _ui.RefreshExpText();
+        Debug.Log($"[UIMoney] +{amount} exp (Total: {TotalExp})");
+    }
+
+    public static void RestoreCoins(int amount)
+    {
+        TotalCoins = amount;
+        if (_ui != null) _ui.RefreshCoinText();
+        Debug.Log($"[UIMoney] Coins restored to {TotalCoins}");
+    }
+
+    public static void ResetMoney()
+    {
+        TotalCoins = 0;
+        TotalExp   = 0;
+        if (_ui != null) _ui.RefreshUI();
+        Debug.Log("[UIMoney] Money reset");
+    }
+
+    // ── Private UI refresh ────────────────────────────────────────────────────
+
     private void RefreshCoinText()
     {
-        if (coinText != null)
-        {
-            coinText.text = $"{totalCoins}";
-        }
+        if (coinText != null) coinText.text = $"{TotalCoins}";
     }
 
-    /// <summary>
-    /// Cập nhật text exp
-    /// </summary>
     private void RefreshExpText()
     {
-        if (expText != null)
-        {
-            expText.text = $"EXP: {totalExp}";
-        }
+        if (expText != null) expText.text = $"EXP: {TotalExp}";
     }
 
-    /// <summary>
-    /// Cập nhật cả coin và exp
-    /// </summary>
     private void RefreshUI()
     {
         RefreshCoinText();
         RefreshExpText();
-    }
-
-    /// <summary>
-    /// Lấy số coin hiện tại
-    /// </summary>
-    public int GetTotalCoins() => totalCoins;
-
-    /// <summary>
-    /// Lấy số exp hiện tại
-    /// </summary>
-    public int GetTotalExp() => totalExp;
-
-    /// <summary>
-    /// Reset coin và exp
-    /// </summary>
-    public void ResetMoney()
-    {
-        totalCoins = 0;
-        totalExp = 0;
-        RefreshUI();
-        Debug.Log("[UIMoney] Money reset");
-    }
-    public int GetCoin()
-    {
-        Debug.Log($"[UIMoney] Current coin: {totalCoins}");
-        return totalCoins;
-    }
-
-    public void RestoreCoins(int amount)
-    {
-        totalCoins = amount;
-        RefreshCoinText();
-        Debug.Log($"[UIMoney] Coins restored to {totalCoins}");
     }
 }

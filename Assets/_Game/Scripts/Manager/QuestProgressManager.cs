@@ -247,4 +247,21 @@ public class QuestProgressManager : BaseSingleton<QuestProgressManager>
     {
         activeStepByQuest[questId] = stepId;
     }
+
+    /// <summary>
+    /// Restore quest progress từ cloud (PlayFab) sau khi login.
+    /// Set state im lặng rồi fire event để các hệ thống khác cập nhật UI/spawn.
+    /// </summary>
+    public void LoadFromCloud(int questId, int stepId)
+    {
+        if (questId < 1 || questId > 7) return;
+
+        currentQuestId = questId;
+        activeStepByQuest[questId] = stepId;
+
+        Debug.Log($"[QuestProgressManager] Loaded from cloud — Quest: {questId}, Step: {stepId}");
+
+        GameEvent.Quest.OnQuestChanged?.Invoke(currentQuestId);
+        GameEvent.Quest.OnStepChanged?.Invoke(currentQuestId, stepId);
+    }
 }

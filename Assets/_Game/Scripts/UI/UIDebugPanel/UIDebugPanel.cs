@@ -17,6 +17,7 @@ public class UIDebugPanel : MonoBehaviour
     [SerializeField] private TMP_InputField stepIdInput;
     [SerializeField] private Button jumpButton;
     [SerializeField] private Button resetIntroButton;
+    [SerializeField] private Button closeButton;
     [SerializeField] private TextMeshProUGUI logText;
 
     [Header("Toggle Key")]
@@ -26,9 +27,11 @@ public class UIDebugPanel : MonoBehaviour
     [Tooltip("Index 0 bỏ trống, index 1 = Map1, index 2 = Map2, ...")]
     [SerializeField] private string[] mapSceneNames = { "", "Map1", "Map2", "Map3", "Map4", "Map5" };
 
-    private int pendingQuestId = -1;
-    private int pendingStepId = -1;
+    private int  pendingQuestId   = -1;
+    private int  pendingStepId    = -1;
+    private bool pendingGrantItems = true;
 
+    public static UIDebugPanel Instance => _instance;
     private static UIDebugPanel _instance;
 
     // ── Unity ─────────────────────────────────────────────────────────────────
@@ -49,6 +52,7 @@ public class UIDebugPanel : MonoBehaviour
         if (panel != null) panel.SetActive(false);
         if (jumpButton != null) jumpButton.onClick.AddListener(JumpToStep);
         if (resetIntroButton != null) resetIntroButton.onClick.AddListener(ResetIntro);
+        if (closeButton != null) closeButton.onClick.AddListener(() => panel?.SetActive(false));
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -64,6 +68,57 @@ public class UIDebugPanel : MonoBehaviour
     }
 
     // ── Logic ─────────────────────────────────────────────────────────────────
+
+    /// <summary>Gọi từ PlayFabPlayerDataManager sau khi login để restore đúng quest/scene.</summary>
+    public void JumpToQuestStep(int questId, int stepId, bool grantRewards = true)
+    {
+        PlayerPrefs.SetInt("IntroPlayed", 1);
+        PlayerPrefs.Save();
+
+        var pm = QuestProgressManager.Instance;
+        var dm = QuestDataManager.Instance;
+        if (pm == null || dm == null) { Log($"❌ Manager null khi jump Quest {questId} Step {stepId}"); return; }
+
+        var stepData = dm.GetQuestStep(questId, stepId);
+        if (stepData == null) { Log($"❌ Quest {questId} Step {stepId} không tồn tại!"); return; }
+
+        int mapId = stepData.mapId;
+
+        pm.SetCurrentQuestId(questId);
+        int maxStep = dm.GetMaxStepId(questId);
+        for (int s = 1; s < stepId; s++)
+            if (pm.GetActiveStepForQuest(questId) == s)
+                pm.ForceCompleteStep(questId, s, maxStep);
+        pm.ForceSetActiveStep(questId, stepId);
+
+        string currentScene = SceneManager.GetActiveScene().name;
+        string targetScene  = mapId < mapSceneNames.Length ? mapSceneNames[mapId] : "";
+
+        if (string.IsNullOrEmpty(targetScene))
+        {
+            Log($"❌ Không tìm thấy scene cho mapId={mapId}!");
+            GameEvent.Quest.OnStepChanged?.Invoke(questId, stepId);
+            return;
+        }
+
+        if (currentScene == targetScene)
+        {
+            pendingQuestId = -1;
+            pendingStepId  = -1;
+            GameEvent.Quest.OnStepChanged?.Invoke(questId, stepId);
+            if (grantRewards) GrantSkippedItemRewards(questId, stepId);
+            GrantSkippedSkillsAndExtras(questId, stepId);
+            Log($"✅ Cloud restore: Quest {questId} Step {stepId} (same scene)");
+        }
+        else
+        {
+            pendingQuestId    = questId;
+            pendingStepId     = stepId;
+            pendingGrantItems = grantRewards;
+            Log($"✅ Cloud restore: loading {targetScene} for Quest {questId} Step {stepId}");
+            SceneManager.LoadScene(targetScene);
+        }
+    }
 
     private void JumpToStep()
     {
@@ -165,10 +220,14 @@ public class UIDebugPanel : MonoBehaviour
         pendingQuestId = -1;
         pendingStepId = -1;
 
+        bool doGrantItems = pendingGrantItems;
+        pendingGrantItems = true; // reset về default
+
         QuestProgressManager.Instance?.ForceSetActiveStep(qId, sId);
         GameEvent.Quest.OnQuestChanged?.Invoke(qId);
         GameEvent.Quest.OnStepChanged?.Invoke(qId, sId);
-        GrantSkippedRewards(qId, sId);
+        if (doGrantItems) GrantSkippedItemRewards(qId, sId);
+        GrantSkippedSkillsAndExtras(qId, sId); // skills luôn derive từ quest progress
         Debug.Log($"[UIDebugPanel] ✅ Fired Quest {qId} Step {sId}");
     }
     private void ResetIntro()
@@ -190,30 +249,54 @@ public class UIDebugPanel : MonoBehaviour
     /// Tự động nhận tất cả phần thưởng hệ thống (ItemReward, SkillReward) của các step
     /// nằm trước targetStep. Dùng cho debug jump để đảm bảo inventory/skill đúng với tiến trình.
     /// </summary>
-    private void GrantSkippedRewards(int targetQuestId, int targetStepId)
+    public void GrantSkippedRewards(int targetQuestId, int targetStepId)
+    {
+        GrantSkippedItemRewards(targetQuestId, targetStepId);
+        GrantSkippedSkillsAndExtras(targetQuestId, targetStepId);
+    }
+
+    /// <summary>Grant coin/weapon rewards của các step đã hoàn thành trước targetStep.</summary>
+    public void GrantSkippedItemRewards(int targetQuestId, int targetStepId)
     {
         var dm = QuestDataManager.Instance;
         if (dm == null) return;
 
-        int grantedItems = 0, grantedSkills = 0;
-
+        int granted = 0;
         for (int qId = 1; qId <= targetQuestId; qId++)
         {
             var steps = dm.GetQuestSteps(qId);
             if (steps == null) continue;
-
             foreach (var data in steps)
             {
-                // Chỉ grant reward của các step TRƯỚC target (không tính target step)
                 if (qId == targetQuestId && data.stepId >= targetStepId) continue;
+                if (GrantItemReward(data.itemReward1?.Trim())) granted++;
+            }
+        }
+        Debug.Log($"[UIDebugPanel] Item rewards granted: {granted}");
+    }
 
-                if (GrantItemReward(data.itemReward1?.Trim())) grantedItems++;
+    /// <summary>
+    /// Grant skill/Lumi rewards dựa theo quest.tsv — luôn được gọi khi restore
+    /// vì skills là system state derive từ quest progress, không lưu riêng.
+    /// </summary>
+    public void GrantSkippedSkillsAndExtras(int targetQuestId, int targetStepId)
+    {
+        var dm = QuestDataManager.Instance;
+        if (dm == null) return;
+
+        int grantedSkills = 0;
+        for (int qId = 1; qId <= targetQuestId; qId++)
+        {
+            var steps = dm.GetQuestSteps(qId);
+            if (steps == null) continue;
+            foreach (var data in steps)
+            {
+                if (qId == targetQuestId && data.stepId >= targetStepId) continue;
                 if (GrantSkillReward(data.skillReward?.Trim())) grantedSkills++;
                 GrantExtendReward(data.reward?.Trim());
             }
         }
-
-        Debug.Log($"[UIDebugPanel] Skipped rewards granted: {grantedItems} item(s), {grantedSkills} skill(s)");
+        Debug.Log($"[UIDebugPanel] Skill rewards granted: {grantedSkills}");
     }
 
     private bool GrantItemReward(string raw)
@@ -222,7 +305,7 @@ public class UIDebugPanel : MonoBehaviour
 
         if (int.TryParse(raw, out int coins) && coins > 0)
         {
-            UIMoney.Instance?.AddCoin(coins);
+            UIMoney.AddCoin(coins);
             return true;
         }
 

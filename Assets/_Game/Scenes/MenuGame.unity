@@ -153,16 +153,6 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1254664453767231959, guid: 3f569e800ca07498db1e279ee251ccb7,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2140638614270288188, guid: 3f569e800ca07498db1e279ee251ccb7,
-        type: 3}
-      propertyPath: displayDuration
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 3483275441868645115, guid: 3f569e800ca07498db1e279ee251ccb7,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -485,11 +475,22 @@ PrefabInstance:
       propertyPath: uiDialog
       value: 
       objectReference: {fileID: 1112496632}
+    - target: {fileID: 7473546215898592259, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: uiAuth
+      value: 
+      objectReference: {fileID: 1330075240}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8ed2475fb74494ed4b433f5f683fe074, type: 3}
+--- !u!1 &1330075240 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1485289481972777160, guid: 3f569e800ca07498db1e279ee251ccb7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1112496631}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1947462036
 PrefabInstance:
   m_ObjectHideFlags: 0
