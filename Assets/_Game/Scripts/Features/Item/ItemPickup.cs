@@ -106,7 +106,7 @@ public class ItemPickup : MonoBehaviour
 
         // Cập nhật UI coin/exp
         if (itemId == 8) UIMoney.AddCoin(amount);
-        else if (itemId == 7) UIMoney.AddExp(amount);
+        // else if (itemId == 7) UIMoney.AddExp(amount);
 
         // Fire event để QuestCollectTracker đếm  ← thiếu dòng này
         GameEvent.Item.OnItemPickedUp?.Invoke(itemId, amount);

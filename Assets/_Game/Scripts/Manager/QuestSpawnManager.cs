@@ -57,8 +57,13 @@ public class QuestSpawnManager : BaseSingleton<QuestSpawnManager>
     protected override void Awake()
     {
         base.Awake();
-        BuildConfigMap();
+        GameEvent.Auth.OnLoginSuccess += OnLoginReady;
+    }
 
+    private void OnLoginReady(string _)
+    {
+        GameEvent.Auth.OnLoginSuccess -= OnLoginReady;
+        BuildConfigMap();
         if (defaultSpawnPoints != null)
             spawnPointList.AddRange(defaultSpawnPoints);
     }

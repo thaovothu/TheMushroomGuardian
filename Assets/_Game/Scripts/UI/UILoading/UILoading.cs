@@ -16,13 +16,21 @@ public class UILoading : MonoBehaviour
 
     void OnEnable()
     {
-        Debug.Log("[UILoading] OnEnable called");
         if (progressSlider != null)
-        {
             progressSlider.value = 0f;
-        }
         currentProgress = 0f;
-        // Không reset hasCompleted ở đây!
+        GameEvent.Player.OnSpawned += HideOnPlayerSpawned;
+    }
+
+    void OnDisable()
+    {
+        GameEvent.Player.OnSpawned -= HideOnPlayerSpawned;
+    }
+
+    private void HideOnPlayerSpawned(GameObject _)
+    {
+        GameEvent.Player.OnSpawned -= HideOnPlayerSpawned;
+        gameObject.SetActive(false);
     }
 
     /// <summary>
