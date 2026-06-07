@@ -98,7 +98,7 @@ public class PlayFabManager : BaseSingleton<PlayFabManager>
     {
         PlayFabId = result.PlayFabId;
         DisplayName = result.InfoResultPayload?.PlayerProfile?.DisplayName;
-        Debug.Log($"[PlayFab] Login OK — PlayFabId: {PlayFabId}, NewAccount: {result.NewlyCreated}");
+        Debug.Log($"[PlayFab] Login OK — PlayFabId: {PlayFabId}, NewAccount: {DisplayName}");
         GameEvent.Auth.OnLoginSuccess?.Invoke(PlayFabId);
     }
 
