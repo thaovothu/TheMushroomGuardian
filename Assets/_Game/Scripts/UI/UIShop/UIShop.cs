@@ -15,7 +15,7 @@ public class UIShop : MonoBehaviour
     {
         public int itemId;
         public int price;
-        public int stock; // -1 = unlimited
+        public int stock; 
     }
 
     [System.Serializable]

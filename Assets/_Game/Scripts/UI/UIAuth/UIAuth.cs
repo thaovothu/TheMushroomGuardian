@@ -35,13 +35,18 @@ public class UIAuth : MonoBehaviour
 
     [Header("Other")]
     [SerializeField] private Button guestButton;
+    [SerializeField] private Button backButton;
     [SerializeField] private TextMeshProUGUI errorText;
+
+    [Header("Navigation")]
+    [SerializeField] private GameObject uiChannelPanel;
 
     private void OnEnable()
     {
         loginButton.onClick.AddListener(OnLoginClicked);
         registerButton.onClick.AddListener(OnRegisterClicked);
         guestButton.onClick.AddListener(OnGuestClicked);
+        if (backButton) backButton.onClick.AddListener(OnBackClicked);
         tabLoginToggle.onValueChanged.AddListener(isOn => { if (isOn) SwitchTab(true); });
         tabRegisterToggle.onValueChanged.AddListener(isOn => { if (isOn) SwitchTab(false); });
 
@@ -53,11 +58,21 @@ public class UIAuth : MonoBehaviour
         ClearError();
     }
 
+    private void OnBackClicked()
+    {
+        if (uiChannelPanel != null)
+        {
+            uiChannelPanel.SetActive(true);
+            gameObject.SetActive(false);
+        }
+    }
+
     private void OnDisable()
     {
         loginButton.onClick.RemoveListener(OnLoginClicked);
         registerButton.onClick.RemoveListener(OnRegisterClicked);
         guestButton.onClick.RemoveListener(OnGuestClicked);
+        if (backButton) backButton.onClick.RemoveListener(OnBackClicked);
         tabLoginToggle.onValueChanged.RemoveAllListeners();
         tabRegisterToggle.onValueChanged.RemoveAllListeners();
 
