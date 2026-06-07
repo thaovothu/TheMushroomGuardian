@@ -21,7 +21,7 @@ public class SwitchElement : ActionNode
         bb.PlayAnimation(BossAnimState.SwitchElement);
 
         // Thông báo ra ngoài qua event (Observer pattern đang dùng)
-        BossEventBus.OnElementChanged?.Invoke(bb.currentElement);
+        GameEvent.BossEventBus.OnElementChanged?.Invoke(bb.currentElement);
 
         //Debug.Log($"[Boss] Switched to {targetElement}");
         return TaskStatus.Success;

@@ -1,25 +1,33 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using PlayFab;
-using PlayFab.ClientModels;
 using UnityEngine;
+using UnityEngine.Networking;
 
 /// <summary>
-/// Lưu và load player data lên PlayFab UserData.
+/// Lưu và load player data lên Server2 (ASP.NET Core + PostgreSQL).
+/// Mirrors PlayFabPlayerDataManager — cùng logic, khác transport (HTTP thay PlayFab SDK).
 ///
-/// Keys:
-///   "QuestId"   — currentQuestId
-///   "StepId"    — currentStepId
-///   "Inventory" — JSON danh sách item (itemTypeId:quantity)
-///   "Coins"     — số coin hiện tại
+/// Fields lưu:
+///   questId, stepId, coins, inventoryJson, skillsCsv
 /// </summary>
-public class PlayFabPlayerDataManager : BaseSingleton<PlayFabPlayerDataManager>
+public class GameServer2PlayerDataManager : BaseSingleton<GameServer2PlayerDataManager>
 {
     [System.Serializable]
     private class InventorySave
     {
         public List<int> itemTypes  = new List<int>();
         public List<int> quantities = new List<int>();
+    }
+
+    [System.Serializable]
+    private class PlayerDataPayload
+    {
+        public int    questId;
+        public int    stepId;
+        public int    coins;
+        public string inventoryJson;
+        public string skillsCsv;
     }
 
     private int                   _pendingQuestId       = -1;
@@ -30,6 +38,9 @@ public class PlayFabPlayerDataManager : BaseSingleton<PlayFabPlayerDataManager>
     private int                   _pendingCoins         = -1;
     private string                _pendingSkillsRaw     = null;
     private PlayerSkillController _skillController      = null;
+
+    private string BaseUrl => ServerConfig.Instance.Server2BaseUrl;
+    private string Token   => GameServer2Manager.Instance.Token;
 
     // ── Events ────────────────────────────────────────────────────────────────
 
@@ -49,57 +60,50 @@ public class PlayFabPlayerDataManager : BaseSingleton<PlayFabPlayerDataManager>
         GameEvent.Player.OnSpawned     -= OnPlayerSpawned;
     }
 
-    private void OnApplicationQuit()
-    {
-        SaveAll();
-    }
+    private void OnApplicationQuit() => SaveAll();
 
     // ── Load ──────────────────────────────────────────────────────────────────
 
-    private void OnLoggedIn(string _) => LoadPlayerData();
-
-    public void LoadPlayerData()
+    private void OnLoggedIn(string _)
     {
-        PlayFabClientAPI.GetUserData(new GetUserDataRequest(), OnLoadSuccess, OnError);
-        Debug.Log("[PlayFabPlayerData] Loading player data...");
+        if (!ServerConfig.Instance.IsServer2Active) return;
+        StartCoroutine(LoadCoroutine());
     }
 
-    private void OnLoadSuccess(GetUserDataResult result)
+    public void LoadPlayerData() => StartCoroutine(LoadCoroutine());
+
+    private IEnumerator LoadCoroutine()
     {
-        if (result.Data == null || result.Data.Count == 0)
+        using var req = MakeGet($"{BaseUrl}/api/player/data", Token);
+        Debug.Log("[Server2PlayerData] Loading player data...");
+        yield return req.SendWebRequest();
+
+        if (req.result != UnityWebRequest.Result.Success)
         {
-            Debug.Log("[PlayFabPlayerData] No saved data — new player.");
-            return;
+            Debug.LogError($"[Server2PlayerData] Load failed: {req.downloadHandler.text}");
+            yield break;
         }
 
-        int questId = GetInt(result.Data, "QuestId", 1);
-        int stepId  = GetInt(result.Data, "StepId",  1);
-        Debug.Log($"[PlayFabPlayerData] Loaded — Quest: {questId}, Step: {stepId}");
+        var data = JsonUtility.FromJson<PlayerDataPayload>(req.downloadHandler.text);
+        if (data == null) yield break;
 
-        // Cache inventory/coins/skills — các system chưa sẵn sàng ở giai đoạn UIAuth.
-        // Sẽ apply trong OnPlayerSpawned sau khi scene load xong.
-        if (result.Data.TryGetValue("Inventory", out var invRecord))
+        Debug.Log($"[Server2PlayerData] Loaded — Quest: {data.questId}, Step: {data.stepId}");
+
+        if (!string.IsNullOrEmpty(data.inventoryJson) && data.inventoryJson != "{}")
         {
-            _pendingInventoryJson = invRecord.Value;
+            _pendingInventoryJson = data.inventoryJson;
             _hasInventoryData     = true;
         }
 
-        if (result.Data.TryGetValue("Coins", out var coinsRecord)
-            && int.TryParse(coinsRecord.Value, out int coins))
-        {
-            _pendingCoins = coins;
-        }
+        if (data.coins > 0)                     _pendingCoins    = data.coins;
+        if (!string.IsNullOrEmpty(data.skillsCsv)) _pendingSkillsRaw = data.skillsCsv;
 
-        if (result.Data.TryGetValue("Skills", out var skillsRecord))
-            _pendingSkillsRaw = skillsRecord.Value;
+        if (data.questId == 1 && data.stepId == 1) yield break;
 
-        if (questId == 1 && stepId == 1) return;
+        _pendingQuestId = data.questId;
+        _pendingStepId  = data.stepId;
 
-        _pendingQuestId = questId;
-        _pendingStepId  = stepId;
-
-        if (_playerSpawned)
-            ApplyCloudProgress();
+        if (_playerSpawned) ApplyCloudProgress();
     }
 
     private void OnPlayerSpawned(GameObject player)
@@ -116,7 +120,7 @@ public class PlayFabPlayerDataManager : BaseSingleton<PlayFabPlayerDataManager>
         if (_pendingCoins >= 0)
         {
             UIMoney.RestoreCoins(_pendingCoins);
-            Debug.Log($"[PlayFabPlayerData] Coins restored: {_pendingCoins}");
+            Debug.Log($"[Server2PlayerData] Coins restored: {_pendingCoins}");
             _pendingCoins = -1;
         }
 
@@ -126,8 +130,7 @@ public class PlayFabPlayerDataManager : BaseSingleton<PlayFabPlayerDataManager>
             _pendingSkillsRaw = null;
         }
 
-        if (_pendingQuestId > 0)
-            ApplyCloudProgress();
+        if (_pendingQuestId > 0) ApplyCloudProgress();
     }
 
     private void ApplyCloudProgress()
@@ -140,12 +143,11 @@ public class PlayFabPlayerDataManager : BaseSingleton<PlayFabPlayerDataManager>
         var panel = UIDebugPanel.Instance;
         if (panel == null)
         {
-            Debug.LogError("[PlayFabPlayerData] UIDebugPanel.Instance null — cannot apply cloud progress.");
+            Debug.LogError("[Server2PlayerData] UIDebugPanel.Instance null — cannot apply cloud progress.");
             return;
         }
 
-        Debug.Log($"[PlayFabPlayerData] Applying cloud progress → Quest {questId} Step {stepId}");
-        // Nếu đã có inventory từ cloud → không grant lại reward (tránh duplicate item/coin)
+        Debug.Log($"[Server2PlayerData] Applying cloud progress → Quest {questId} Step {stepId}");
         panel.JumpToQuestStep(questId, stepId, grantRewards: !_hasInventoryData);
     }
 
@@ -154,12 +156,12 @@ public class PlayFabPlayerDataManager : BaseSingleton<PlayFabPlayerDataManager>
     private void OnStepChanged(int questId, int stepId) => SaveAll(questId, stepId);
     private void OnQuestChanged(int questId)            => SaveAll(questId, 1);
 
-    /// <summary>Save toàn bộ: quest + inventory + coins.</summary>
     public void SaveAll(int questId = -1, int stepId = -1)
     {
-        if (!PlayFabManager.Instance.IsLoggedIn)
+        if (!ServerConfig.Instance.IsServer2Active) return;
+        if (!GameServer2Manager.Instance.IsLoggedIn)
         {
-            Debug.LogWarning("[PlayFabPlayerData] Not logged in — skip save.");
+            Debug.LogWarning("[Server2PlayerData] Not logged in — skip save.");
             return;
         }
 
@@ -169,21 +171,31 @@ public class PlayFabPlayerDataManager : BaseSingleton<PlayFabPlayerDataManager>
             stepId  = QuestProgressManager.Instance.GetActiveStepForQuest(questId);
         }
 
-        var data = new Dictionary<string, string>
-        {
-            { "QuestId",   questId.ToString() },
-            { "StepId",    stepId.ToString()  },
-            { "Inventory", SerializeInventory() },
-            { "Coins",     UIMoney.TotalCoins.ToString() },
-            { "Skills",    SerializeSkills() }
-        };
-
-        PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest { Data = data },
-            _ => Debug.Log($"[PlayFabPlayerData] Saved — Quest:{questId} Step:{stepId} Coins:{UIMoney.TotalCoins}"),
-            OnError);
+        StartCoroutine(SaveCoroutine(questId, stepId));
     }
 
-    // ── Inventory serialize ───────────────────────────────────────────────────
+    private IEnumerator SaveCoroutine(int questId, int stepId)
+    {
+        var payload = new PlayerDataPayload
+        {
+            questId      = questId,
+            stepId       = stepId,
+            coins        = UIMoney.TotalCoins,
+            inventoryJson = SerializeInventory(),
+            skillsCsv    = SerializeSkills()
+        };
+
+        string json = JsonUtility.ToJson(payload);
+        using var req = MakePut($"{BaseUrl}/api/player/data", json, Token);
+        yield return req.SendWebRequest();
+
+        if (req.result == UnityWebRequest.Result.Success)
+            Debug.Log($"[Server2PlayerData] Saved — Quest:{questId} Step:{stepId} Coins:{UIMoney.TotalCoins}");
+        else
+            Debug.LogError($"[Server2PlayerData] Save failed: {req.downloadHandler.text}");
+    }
+
+    // ── Inventory serialize (giống PlayFabPlayerDataManager) ─────────────────
 
     private static string SerializeInventory()
     {
@@ -205,23 +217,20 @@ public class PlayFabPlayerDataManager : BaseSingleton<PlayFabPlayerDataManager>
     private static void RestoreInventory(string json)
     {
         if (string.IsNullOrEmpty(json) || InventorySystem.Instance == null) return;
-
         var save = JsonUtility.FromJson<InventorySave>(json);
         if (save == null) return;
 
         InventorySystem.Instance.ClearInventory();
-
         for (int i = 0; i < save.itemTypes.Count; i++)
         {
             int qty = save.quantities[i];
-            if (qty > 0)
-                InventorySystem.Instance.AddItem(save.itemTypes[i], qty);
+            if (qty > 0) InventorySystem.Instance.AddItem(save.itemTypes[i], qty);
         }
 
-        Debug.Log($"[PlayFabPlayerData] Inventory restored: {save.itemTypes.Count} item type(s)");
+        Debug.Log($"[Server2PlayerData] Inventory restored: {save.itemTypes.Count} item type(s)");
     }
 
-    // ── Skill serialize ───────────────────────────────────────────────────────
+    // ── Skill serialize (giống PlayFabPlayerDataManager) ─────────────────────
 
     private string SerializeSkills()
     {
@@ -246,20 +255,25 @@ public class PlayFabPlayerDataManager : BaseSingleton<PlayFabPlayerDataManager>
             if (int.TryParse(token.Trim(), out int val))
                 GameEvent.Player.OnSkillUnlocked?.Invoke((ElementType)val);
         }
-        Debug.Log($"[PlayFabPlayerData] Skills restored: {raw}");
+        Debug.Log($"[Server2PlayerData] Skills restored: {raw}");
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
+    // ── HTTP helpers ──────────────────────────────────────────────────────────
 
-    private int GetInt(Dictionary<string, UserDataRecord> data, string key, int defaultValue)
+    private static UnityWebRequest MakeGet(string url, string token)
     {
-        if (data.TryGetValue(key, out var record) && int.TryParse(record.Value, out int value))
-            return value;
-        return defaultValue;
+        var req = UnityWebRequest.Get(url);
+        req.SetRequestHeader("Authorization", $"Bearer {token}");
+        return req;
     }
 
-    private void OnError(PlayFabError error)
+    private static UnityWebRequest MakePut(string url, string json, string token)
     {
-        Debug.LogError($"[PlayFabPlayerData] Error: {error.GenerateErrorReport()}");
+        var req = new UnityWebRequest(url, "PUT");
+        req.uploadHandler   = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(json));
+        req.downloadHandler = new DownloadHandlerBuffer();
+        req.SetRequestHeader("Content-Type", "application/json");
+        req.SetRequestHeader("Authorization", $"Bearer {token}");
+        return req;
     }
 }

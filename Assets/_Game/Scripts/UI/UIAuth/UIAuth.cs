@@ -86,10 +86,7 @@ public class UIAuth : MonoBehaviour
         if (password.Length < 6)                 { ShowError("Mật khẩu tối thiểu 6 ký tự."); return; }
 
         SetLoading(true);
-        if (IsValidEmail(input))
-            PlayFabManager.Instance.LoginWithEmail(input, password);
-        else
-            PlayFabManager.Instance.LoginWithUsername(input, password);
+        AuthRouter.Login(input, password);
     }
 
     private void OnRegisterClicked()
@@ -102,7 +99,7 @@ public class UIAuth : MonoBehaviour
         if (!ValidateInputs(registerEmail.text, registerPassword.text)) return;
 
         SetLoading(true);
-        PlayFabManager.Instance.RegisterWithEmail(
+        AuthRouter.Register(
             registerEmail.text.Trim(),
             registerPassword.text,
             registerUsername.text.Trim());
@@ -111,7 +108,7 @@ public class UIAuth : MonoBehaviour
     private void OnGuestClicked()
     {
         SetLoading(true);
-        PlayFabManager.Instance.LoginAsGuest();
+        AuthRouter.LoginAsGuest();
     }
 
     // ── PlayFab callbacks ─────────────────────────────────────────────────────
@@ -170,12 +167,19 @@ public class UIAuth : MonoBehaviour
 
     private string ParseError(string rawError)
     {
+        // PlayFab errors
         if (rawError.Contains("InvalidEmailOrPassword") || rawError.Contains("Invalid email address or password") || rawError.Contains("Invalid username or password"))
             return "Email/username hoặc mật khẩu không đúng.";
         if (rawError.Contains("EmailAddressNotAvailable")) return "Email này đã được sử dụng.";
         if (rawError.Contains("UsernameNotAvailable"))     return "Tên người dùng đã tồn tại.";
         if (rawError.Contains("InvalidPassword"))          return "Mật khẩu không hợp lệ (tối thiểu 6 ký tự).";
         if (rawError.Contains("Invalid input parameters")) return "Thông tin không hợp lệ. Kiểm tra lại email và mật khẩu.";
+
+        // Server2 errors
+        if (rawError.Contains("Invalid credentials"))  return "Email/username hoặc mật khẩu không đúng.";
+        if (rawError.Contains("Email already in use")) return "Email này đã được sử dụng.";
+        if (rawError.Contains("Username already taken")) return "Tên người dùng đã tồn tại.";
+
         Debug.LogWarning($"[UIAuth] Unhandled error: {rawError}");
         return "Đã có lỗi xảy ra. Vui lòng thử lại.";
     }

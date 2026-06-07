@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 /// Orchestrate toàn bộ startup sequence:
 ///
 ///   UILoading (phase 1) — giả lập khởi tạo SDK ~1.5s
+///   → UIChannel         — chọn server (PlayFab / Mac Mini), ping Server2
 ///   → UIAuth            — chờ player login/register/guest
 ///   → UILoading (phase 2) — load quest.tsv + dialog.tsv
 ///   → LoadScene         — chuyển sang game scene (y như cũ)
@@ -14,6 +15,7 @@ public class ResourceLoader : MonoBehaviour
 {
     [SerializeField] private LoadResource loadResource;
     [SerializeField] private UILoading uiLoading;
+    [SerializeField] private GameObject uiChannel;
     [SerializeField] private GameObject uiAuth;
     [SerializeField] private string nextSceneName = "Map1";
     [SerializeField] private float phase1Duration = 1.5f;
@@ -43,16 +45,21 @@ public class ResourceLoader : MonoBehaviour
         }
         uiLoading.UpdateProgress(0.3f);
 
-        // ── UIAuth: chờ login ─────────────────────────────────────────────────
+        // ── UIChannel: chọn server → UIAuth: chờ login ───────────────────────
         uiLoading.gameObject.SetActive(false);
 
         _loggedIn = false;
         GameEvent.Auth.OnLoginSuccess += OnLoggedIn;
 
-        uiAuth.SetActive(true);
+        // UIChannel tự bật UIAuth khi server được chọn
+        uiAuth.SetActive(false);
+        uiChannel.SetActive(true);
+
         yield return new WaitUntil(() => _loggedIn);
 
         GameEvent.Auth.OnLoginSuccess -= OnLoggedIn;
+        // UIChannel và UIAuth tự ẩn sau khi login — đảm bảo tắt
+        uiChannel.SetActive(false);
         uiAuth.SetActive(false);
 
         // ── PHASE 2: Load resources ───────────────────────────────────────────

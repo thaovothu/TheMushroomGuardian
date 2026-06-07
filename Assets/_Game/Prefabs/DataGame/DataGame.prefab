@@ -167,6 +167,8 @@ GameObject:
   - component: {fileID: 218511497503453346}
   - component: {fileID: 5076146717887885372}
   - component: {fileID: 400519573871994282}
+  - component: {fileID: 2393184782753380533}
+  - component: {fileID: 6909265864307707044}
   m_Layer: 0
   m_Name: DataGame
   m_TagString: Untagged
@@ -252,6 +254,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8b94532382874932a8353bffc832e63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2393184782753380533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630003249813757471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b09941f676ff4ddc807c6da3e9e6e8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6909265864307707044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630003249813757471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b069cf39bd39a46639830ed588b48d78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2016083461116601548
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,9 +325,11 @@ MonoBehaviour:
   loadResource: {fileID: 7490324723616151547}
   uiLoading: {fileID: 7280722417554258510, guid: 2d0d43fbd753248d7b590b3205558f75,
     type: 3}
+  uiChannel: {fileID: 0}
+  uiAuth: {fileID: 0}
   nextSceneName: Map1
-  autoLoadNextScene: 1
-  minLoadingTime: 2
+  phase1Duration: 1.5
+  minPhase2Time: 1.5
 --- !u!1 &2148871840960109629
 GameObject:
   m_ObjectHideFlags: 0

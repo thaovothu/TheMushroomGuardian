@@ -116,7 +116,7 @@ public class BossBlackboard : MonoBehaviour, IPoolSpawned
         if (behaviorTree != null && behaviorTree.Root != null)
             Task.Restart(behaviorTree.Root);
 
-        BossEventBus.OnBossSpawned?.Invoke(gameObject);
+        GameEvent.BossEventBus.OnBossSpawned?.Invoke(gameObject);
 
 #if UNITY_EDITOR
         Debug.Log($"[BossBlackboard] OnSpawn complete: {gameObject.name} ");

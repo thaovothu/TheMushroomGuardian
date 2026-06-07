@@ -63,6 +63,7 @@ public class ItemDetailUI : MonoBehaviour
 
     public void ClearDetail()
     {
+        Debug.Log("xoaduoc");
         currentItemType = ItemType.None;
         gameObject.SetActive(false);
     }
@@ -94,6 +95,7 @@ public class ItemDetailUI : MonoBehaviour
     // "Dùng" — equip weapon or consume potion/buff
     private void OnUseClicked()
     {
+        Debug.Log("Vaodayne");
         if (currentItemType == ItemType.None) return;
 
         if (currentItemType == ItemType.Sword)
