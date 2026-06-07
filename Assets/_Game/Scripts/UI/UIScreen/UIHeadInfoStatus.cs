@@ -33,7 +33,7 @@ public class UIHeadInfoStatus : MonoBehaviour
     {
         if (entityType == EntityType.Boss)
         {
-            BossEventBus.OnBossSpawned += OnBossSpawned;
+            GameEvent.BossEventBus.OnBossSpawned += OnBossSpawned;
             gameObject.SetActive(false);
             return;
         }
@@ -64,7 +64,7 @@ public class UIHeadInfoStatus : MonoBehaviour
     {
         UnsubscribeFromHealthSystem();
         if (entityType == EntityType.Boss)
-            BossEventBus.OnBossSpawned -= OnBossSpawned;
+            GameEvent.BossEventBus.OnBossSpawned -= OnBossSpawned;
         else
         {
             GameEvent.Player.OnRespawn -= HandleRespawn;

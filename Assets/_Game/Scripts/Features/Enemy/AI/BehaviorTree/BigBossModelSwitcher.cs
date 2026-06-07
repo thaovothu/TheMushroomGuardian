@@ -114,8 +114,8 @@ public class BigBossModelSwitcher : MonoBehaviour
         ActivateOnly(0);
         SetActiveAnimator(phases[0]);
         ApplyPhaseStats(phases[0]);
-        BossEventBus.OnElementChanged?.Invoke(phases[0].element);
-        BossEventBus.OnPhaseChanged?.Invoke(0);
+        GameEvent.BossEventBus.OnElementChanged?.Invoke(phases[0].element);
+        GameEvent.BossEventBus.OnPhaseChanged?.Invoke(0);
     }
 
     private void OnEnable() => GameEvent.Combat.OnHealthChanged += OnHealthChanged;
@@ -183,8 +183,8 @@ public class BigBossModelSwitcher : MonoBehaviour
         currentIndex = targetIndex;
 
         // ── Thông báo ra ngoài ──
-        BossEventBus.OnElementChanged?.Invoke(target.element);
-        BossEventBus.OnPhaseChanged?.Invoke(currentIndex);
+        GameEvent.BossEventBus.OnElementChanged?.Invoke(target.element);
+        GameEvent.BossEventBus.OnPhaseChanged?.Invoke(currentIndex);
 
         // ── AOE (tuỳ chọn) ──
         if (transitionAOEDamage > 0f && transitionAOERadius > 0f)

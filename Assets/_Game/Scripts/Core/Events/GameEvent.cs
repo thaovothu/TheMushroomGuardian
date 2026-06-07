@@ -98,6 +98,14 @@ public static class GameEvent
         public static System.Action OnLogout;
     }
 
+    public static class BossEventBus
+    {
+        public static Action<GameObject> OnBossSpawned; // ← thêm dòng này
+        public static Action<ElementType> OnElementChanged;
+        public static Action<float> OnPhaseChanged;
+        public static Action OnBossDeath;
+    }
+
     // ── BOSS ───────────────────────────────────────────────────────────────────
     // Boss events remain in BossEventBus.cs (Core/Events/Boss/).
 }
