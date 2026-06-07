@@ -836,6 +836,16 @@ PrefabInstance:
       propertyPath: uiChannel
       value: 
       objectReference: {fileID: 442040176}
+    - target: {fileID: 7473546215898592259, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: minPhase2Time
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7473546215898592259, guid: 8ed2475fb74494ed4b433f5f683fe074,
+        type: 3}
+      propertyPath: phase1Duration
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

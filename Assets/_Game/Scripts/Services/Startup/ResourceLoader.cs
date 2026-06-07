@@ -18,7 +18,7 @@ public class ResourceLoader : MonoBehaviour
     [SerializeField] private GameObject uiChannel;
     [SerializeField] private GameObject uiAuth;
     [SerializeField] private string nextSceneName = "Map1";
-    [SerializeField] private float phase1Duration = 1.5f;
+    [SerializeField] private float phase1Duration = 3f;
     [SerializeField] private float minPhase2Time = 1.5f;
 
     private bool _resourceLoadComplete = false;
