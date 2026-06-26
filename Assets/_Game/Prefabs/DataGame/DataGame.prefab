@@ -1672,7 +1672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toggleKey: 291
-  iterations: 10
+  iterations: 30
 --- !u!1 &9042482667155124146
 GameObject:
   m_ObjectHideFlags: 0
