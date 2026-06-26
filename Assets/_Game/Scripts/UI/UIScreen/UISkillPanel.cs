@@ -17,18 +17,18 @@ public class UISkillPanel : MonoBehaviour
 
     [Header("Skill Buttons")]
     [SerializeField] private Button shieldButton;
+    [SerializeField] private Image shieldIcon;
     [SerializeField] private TextMeshProUGUI shieldNameText;
     [SerializeField] private TextMeshProUGUI shieldStatsText;
 
     [SerializeField] private Button attackButton;
+    [SerializeField] private Image attackIcon;
     [SerializeField] private TextMeshProUGUI attackNameText;
     [SerializeField] private TextMeshProUGUI attackStatsText;
 
-    [Header("Element Colors")]
-    [SerializeField] private Color earthColor = new Color(0.6f, 0.4f, 0.2f);
-    [SerializeField] private Color windColor = new Color(0.2f, 0.8f, 0.9f);
-    [SerializeField] private Color waterColor = new Color(0.2f, 0.4f, 0.9f);
-    [SerializeField] private Color fireColor = new Color(0.9f, 0.4f, 0.2f);
+    [Header("Skill Icons")]
+    [SerializeField] private SkillIconSO skillIconSO;
+
 
     // ── Unity ─────────────────────────────────────────────────────────────────
 
@@ -124,7 +124,6 @@ public class UISkillPanel : MonoBehaviour
 
         var element = skillController.GetCurrentElement();
         elementText.text = element.ToString().ToUpper();
-        elementIcon.color = GetElementColor(element);
     }
 
     private void UpdateSkillDisplay()
@@ -140,6 +139,8 @@ public class UISkillPanel : MonoBehaviour
             shieldNameText.text = shieldSkill.skillName;
             shieldStatsText.text = $"Def: {shieldSkill.defense} | Mana: {shieldSkill.manaCost}";
             shieldButton.interactable = skillController.GetCurrentMana() >= shieldSkill.manaCost;
+            if (shieldIcon != null && skillIconSO != null)
+                shieldIcon.sprite = skillIconSO.GetIcon(shieldSkill.skillId);
         }
         else if (shieldNameText != null && shieldStatsText != null)
         {
@@ -153,6 +154,8 @@ public class UISkillPanel : MonoBehaviour
             attackNameText.text = attackSkill.skillName;
             attackStatsText.text = $"Dmg: {attackSkill.damage} | Mana: {attackSkill.manaCost}";
             attackButton.interactable = skillController.GetCurrentMana() >= attackSkill.manaCost;
+            if (attackIcon != null && skillIconSO != null)
+                attackIcon.sprite = skillIconSO.GetIcon(attackSkill.skillId);
         }
         else if (attackNameText != null && attackStatsText != null)
         {
@@ -162,15 +165,4 @@ public class UISkillPanel : MonoBehaviour
         }
     }
 
-    private Color GetElementColor(ElementType element)
-    {
-        return element switch
-        {
-            ElementType.Earth => earthColor,
-            ElementType.Wind => windColor,
-            ElementType.Water => waterColor,
-            ElementType.Fire => fireColor,
-            _ => Color.white
-        };
-    }
 }
