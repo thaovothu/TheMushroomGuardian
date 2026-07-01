@@ -44,9 +44,13 @@ public class PlayerController : MonoBehaviour
     [Header("Skill Settings")]
     [SerializeField] float skillAttackDuration = 1f;
     [SerializeField] float skillDefendDuration = 1f;
+    [Header("Die")]
+    [SerializeField] float dieDuration = 2f;
 
     public bool IsInWindZone { get; set; } = false;
     const float ZeroF = 0f;
+
+    public float DieDuration => dieDuration;
 
     // Trạng thái né đòn — dùng cho BossFireSweep (quét lửa): đang bay (nhảy) hoặc đang dash thì né được.
     public bool IsGrounded => groundChecker != null && groundChecker.IsGrounded;
@@ -69,26 +73,13 @@ public class PlayerController : MonoBehaviour
     CountdownTimer attackCooldownTimer;
     CountdownTimer skillAttackTimer;
     CountdownTimer skillDefendTimer;
+    CountdownTimer dieTimer;
 
     StateMachine stateMachine;
     PlayerSkillController skillController;
 
     // Animator parameters
     static readonly int Speed = Animator.StringToHash("Speed");
-
-    // void Awake()
-    // {
-    //     mainCam = Camera.main.transform;
-    //     freeLookVCam.Follow = transform;
-    //     freeLookVCam.LookAt = transform;
-    //     // Invoke event when observed transform is teleported, adjusting freeLookVCam's position accordingly
-    //     freeLookVCam.OnTargetObjectWarped(transform, transform.position - freeLookVCam.transform.position - Vector3.forward);
-
-    //     rb.freezeRotation = true;    
-
-    //     SetupTimers();
-    //     SetupStateMachine();
-    // }
 
     void Awake()
     {
@@ -150,6 +141,7 @@ public class PlayerController : MonoBehaviour
         var dashState = new DashState(this, animator);
         var attackState = new AttackState(this, animator);
         var combatState = new CombatState(this, animator);
+        var dieState = new DieState(this, animator);
         var skillAttackState = new CastAttackState(this, animator);
         var skillDefendState = new CastShieldState(this, animator);
         // var dieState = new DieState(this, animator);
@@ -163,6 +155,7 @@ public class PlayerController : MonoBehaviour
         At(locomotionState, combatState, new FuncPredicate(() => attackCooldownTimer.IsRunning && !EquipmentSystem.Instance.IsAttackNormal()));
         At(locomotionState, skillAttackState, new FuncPredicate(() => skillAttackTimer.IsRunning));
         At(locomotionState, skillDefendState, new FuncPredicate(() => skillDefendTimer.IsRunning));
+        At(locomotionState, dieState, new FuncPredicate(() => dieTimer.IsRunning));
         Any(locomotionState, new FuncPredicate(ReturnToLocomotion));
         //Debug.Log($"[PlayerController] JumpTimer is running {jumpTimer.IsRunning}, Grounded {groundChecker.IsGrounded}");
 
@@ -177,7 +170,8 @@ public class PlayerController : MonoBehaviour
         && !dashTimer.IsRunning
         && !attackCooldownTimer.IsRunning
         && !skillAttackTimer.IsRunning
-        && !skillDefendTimer.IsRunning;
+        && !skillDefendTimer.IsRunning
+        && !dieTimer.IsRunning;
     }
 
     void SetupTimers()
@@ -201,8 +195,9 @@ public class PlayerController : MonoBehaviour
         attackCooldownTimer = new CountdownTimer(attackCooldown);
         skillAttackTimer = new CountdownTimer(skillAttackDuration);
         skillDefendTimer = new CountdownTimer(skillDefendDuration);
+        dieTimer = new CountdownTimer(dieDuration);
 
-        timers = new List<Timer> { jumpTimer, jumpCooldownTimer, dashTimer, dashCooldownTimer, attackCooldownTimer, skillAttackTimer, skillDefendTimer };
+        timers = new List<Timer> { jumpTimer, jumpCooldownTimer, dashTimer, dashCooldownTimer, attackCooldownTimer, skillAttackTimer, skillDefendTimer, dieTimer };
     }
 
 
@@ -211,6 +206,7 @@ public class PlayerController : MonoBehaviour
 
     void OnEnable()
     {
+        GameEvent.Combat.OnDeath += OnHealthSystemDeath;
         input.Jump += OnJump;
         input.Dash += OnDash;
         input.Attack += OnAttack;
@@ -220,11 +216,18 @@ public class PlayerController : MonoBehaviour
 
     void OnDisable()
     {
+        GameEvent.Combat.OnDeath -= OnHealthSystemDeath;
         input.Jump -= OnJump;
         input.Dash -= OnDash;
         input.Attack -= OnAttack;
         input.SkillAttack -= OnSkillAttack;
         input.SkillDefend -= OnSkillDefend;
+    }
+
+    void OnHealthSystemDeath(HealthSystem deadEntity)
+    {
+        if (deadEntity != healthSystem) return;
+        OnDie();
     }
 
     void OnSkillAttack(bool performed)
@@ -241,6 +244,13 @@ public class PlayerController : MonoBehaviour
         if (performed && !skillDefendTimer.IsRunning && skillController != null && skillController.HasUnlockedSkills())
         {
             skillDefendTimer.Start();
+        }
+    }
+    void OnDie()
+    {
+        if (!dieTimer.IsRunning)
+        {
+            dieTimer.Start();
         }
     }
 

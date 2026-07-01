@@ -660,11 +660,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIShop
       objectReference: {fileID: 0}
-    - target: {fileID: 6851274483580090153, guid: a2213486da4b3492ca74f05df048c306,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1715,6 +1710,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: UIDialog
       objectReference: {fileID: 0}
+    - target: {fileID: 3156292615358748040, guid: 7fb3a3d99e60647f181f5b6168c0cee4,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3613175044895946858, guid: 7fb3a3d99e60647f181f5b6168c0cee4,
         type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -2625,6 +2625,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1947918770993678169, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
         type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1947918770993678169, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
+        type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
@@ -2646,6 +2651,11 @@ PrefabInstance:
     - target: {fileID: 2824356420504215123, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
         type: 3}
       propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2824356420504215123, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
+        type: 3}
+      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2824356420504215123, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
@@ -2771,6 +2781,11 @@ PrefabInstance:
     - target: {fileID: 7292125681391006553, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
         type: 3}
       propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7292125681391006553, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,
+        type: 3}
+      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7292125681391006553, guid: bfbd9a1d6b80541efa7e250dad3d9cbf,

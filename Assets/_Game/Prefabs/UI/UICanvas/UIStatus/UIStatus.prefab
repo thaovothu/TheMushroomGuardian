@@ -1476,7 +1476,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &525827813405239702
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2711,6 +2711,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: 'NormalTxt '
+      objectReference: {fileID: 0}
+    - target: {fileID: 3280863076467733239, guid: 51224df56d1fd4d43819e798c97f3178,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5076926699643519149, guid: 51224df56d1fd4d43819e798c97f3178,
         type: 3}
