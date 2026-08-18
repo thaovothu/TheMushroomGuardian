@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class DeathZone : MonoBehaviour
 {
     [Header("Target")]
