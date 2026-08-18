@@ -104,9 +104,17 @@ public class HealthSystem : MonoBehaviour
 
         if (_currentHealth <= 0f)
         {
-            _isDead = true;
-            GameEvent.Combat.OnDeath?.Invoke(this);
+            Die();
         }
+    }
+
+    public void Kill()
+    {
+        if (_isDead) return;
+
+        _currentHealth = 0f;
+        GameEvent.Combat.OnHealthChanged?.Invoke(this, _currentHealth, maxHealth);
+        Die();
     }
 
     public void ClearHit() => _isHit = false;
@@ -122,6 +130,14 @@ public class HealthSystem : MonoBehaviour
     }
 
     public virtual ElementType GetElement() => ElementType.None;
+
+    private void Die()
+    {
+        if (_isDead) return;
+
+        _isDead = true;
+        GameEvent.Combat.OnDeath?.Invoke(this);
+    }
 
     public void AddDefenseBuff(float defenseAmount, float duration)
     {
