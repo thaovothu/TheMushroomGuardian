@@ -55,11 +55,16 @@ public class CheckpointManager : BaseSingleton<CheckpointManager>
 
     private IEnumerator RespawnCoroutine(HealthSystem hs)
     {
-        yield return new WaitForSeconds(respawnDelay);
+        var playerController = hs != null ? hs.GetComponent<PlayerController>() : null;
+        float delay = playerController != null ? playerController.DieDuration : respawnDelay;
+        yield return new WaitForSeconds(delay);
 
         if (hs == null) yield break;
 
         var player = hs.gameObject;
+
+        if (player.activeSelf)
+            player.SetActive(false);
 
         // Dừng mọi velocity trước khi teleport để tránh drift
         var rb = player.GetComponent<Rigidbody>();
@@ -87,6 +92,9 @@ public class CheckpointManager : BaseSingleton<CheckpointManager>
             int stepId = QuestProgressManager.Instance.GetActiveStepForQuest(questId);
             QuestSpawnManager.Instance?.ResetStepForRespawn(questId, stepId);
         }
+
+        if (!player.activeSelf)
+            player.SetActive(true);
 
         GameEvent.Player.OnRespawn?.Invoke();
         Debug.Log($"[CheckpointManager] Player respawned at {player.transform.position}");

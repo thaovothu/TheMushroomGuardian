@@ -143,7 +143,11 @@ public class UIQuestPanel : MonoBehaviour
         }
     }
 
-    public void Show() => gameObject.SetActive(true);
+    public void Show()
+    {
+        gameObject.SetActive(true);
+        Debug.Log("[UIQuestPanel] Show");
+    }
 
     private void SelectQuest(int questId)
     {
