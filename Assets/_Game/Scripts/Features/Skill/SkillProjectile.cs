@@ -154,7 +154,7 @@ public class SkillProjectile : MonoBehaviour
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)
         {
-            rb.velocity = Vector3.zero; // Kinematic
+            rb.linearVelocity = Vector3.zero; // Kinematic
             rb.isKinematic = true;
         }
 

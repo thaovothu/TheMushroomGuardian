@@ -63,7 +63,7 @@ public class CheckpointManager : BaseSingleton<CheckpointManager>
 
         // Dừng mọi velocity trước khi teleport để tránh drift
         var rb = player.GetComponent<Rigidbody>();
-        if (rb != null) rb.velocity = Vector3.zero;
+        if (rb != null) rb.linearVelocity = Vector3.zero;
 
         if (_hasCheckpoint)
         {

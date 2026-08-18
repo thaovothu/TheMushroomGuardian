@@ -63,7 +63,7 @@ public class ItemDropManager : BaseSingleton<ItemDropManager>
             {
                 Vector3 randomDir = Random.insideUnitSphere;
                 randomDir.y = Mathf.Abs(randomDir.y); // Hướng lên trên
-                rb.velocity = randomDir.normalized * dropConfig.dropForce;
+                rb.linearVelocity = randomDir.normalized * dropConfig.dropForce;
             }
         }
         else

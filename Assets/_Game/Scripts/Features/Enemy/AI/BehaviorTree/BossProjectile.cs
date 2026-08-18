@@ -27,7 +27,7 @@ public class BossProjectile : MonoBehaviour
         if (rb != null)
         {
             rb.useGravity = false;
-            rb.velocity = direction.normalized * speed;
+            rb.linearVelocity = direction.normalized * speed;
         }
         Destroy(gameObject, lifetime);
         Debug.Log($"[BossProjectile] Init — dir={direction} dmg={damage} speed={speed}");

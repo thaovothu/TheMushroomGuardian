@@ -21,7 +21,7 @@ public class WindZone : MonoBehaviour
         var controller = other.GetComponent<PlayerController>();
         if (rb == null || controller == null) return;
 
-        Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        Vector3 horizontalVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         float speed = horizontalVelocity.magnitude;
 
         if (speed >= dashSpeedThreshold)
@@ -31,10 +31,10 @@ public class WindZone : MonoBehaviour
         }
 
         controller.IsInWindZone = true;
-        rb.velocity = new Vector3(
-            rb.velocity.x * slowDownRate,
-            rb.velocity.y,
-            rb.velocity.z * slowDownRate
+        rb.linearVelocity = new Vector3(
+            rb.linearVelocity.x * slowDownRate,
+            rb.linearVelocity.y,
+            rb.linearVelocity.z * slowDownRate
         );
     }
 
@@ -51,7 +51,7 @@ public class WindZone : MonoBehaviour
         var rb = other.GetComponent<Rigidbody>();
         if (rb == null) return;
 
-        Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        Vector3 horizontalVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         float speed = horizontalVelocity.magnitude;
 
         if (speed >= dashSpeedThreshold)

@@ -34,7 +34,7 @@ public class EnemyBullet : MonoBehaviour
             // Giai đoạn dí theo player
             trackingTimer -= Time.fixedDeltaTime;
             Vector3 direction = (target.position + Vector3.up - transform.position).normalized;
-            rb.velocity = direction * speed;
+            rb.linearVelocity = direction * speed;
         }
         // Hết trackingDuration → velocity giữ nguyên → bay thẳng
     }

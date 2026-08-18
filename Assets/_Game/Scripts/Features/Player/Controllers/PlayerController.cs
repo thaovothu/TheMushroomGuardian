@@ -196,7 +196,7 @@ public class PlayerController : MonoBehaviour
             dashVelocity = 1f;
             dashCooldownTimer.Start();
             // Giảm velocity sau dash để không trượt quá xa
-            rb.velocity = new Vector3(rb.velocity.x * 0.3f, rb.velocity.y, rb.velocity.z * 0.3f);
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x * 0.3f, rb.linearVelocity.y, rb.linearVelocity.z * 0.3f);
         };
         attackCooldownTimer = new CountdownTimer(attackCooldown);
         skillAttackTimer = new CountdownTimer(skillAttackDuration);
@@ -340,7 +340,7 @@ public class PlayerController : MonoBehaviour
             jumpVelocity += Physics.gravity.y * gravityMultiplier * Time.fixedDeltaTime;
         }
 
-        rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpVelocity, rb.linearVelocity.z);
         //Debug.Log($"[PlayerController] JumpVelocity {jumpVelocity}, Grounded {groundChecker.IsGrounded}");
     }
 
@@ -357,7 +357,7 @@ public class PlayerController : MonoBehaviour
 
         // Apply gravity khi không grounded và không jump (trên slope)
         jumpVelocity += Physics.gravity.y * gravityMultiplier * Time.fixedDeltaTime;
-        rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpVelocity, rb.linearVelocity.z);
     }
 
     // public void HandleMovement()
@@ -396,14 +396,14 @@ public class PlayerController : MonoBehaviour
         else
         {
             SmoothSpeed(ZeroF);
-            rb.velocity = new Vector3(ZeroF, rb.velocity.y, ZeroF);
+            rb.linearVelocity = new Vector3(ZeroF, rb.linearVelocity.y, ZeroF);
         }
     }
 
     void HandleHorizontalMovement(Vector3 adjustedDirection)
     {
         Vector3 velocity = adjustedDirection * (moveSpeed * Time.fixedDeltaTime);
-        rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
+        rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
     }
 
     void HandleRotation(Vector3 adjustedDirection)
@@ -432,7 +432,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // Thoát dash ngay khi đã dừng lại
-        Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        Vector3 horizontalVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         if (horizontalVelocity.magnitude < 0.5f)
             dashTimer.Stop();
     }

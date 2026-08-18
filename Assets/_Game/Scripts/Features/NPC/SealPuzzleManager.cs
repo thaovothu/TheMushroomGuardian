@@ -61,7 +61,7 @@ public class SealPuzzleManager : BaseSingleton<SealPuzzleManager>
 
         var rb = playerGO.GetComponent<Rigidbody>();
         Vector3 dashDir = rb != null
-            ? new Vector3(rb.velocity.x, 0f, rb.velocity.z).normalized
+            ? new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z).normalized
             : playerGO.transform.forward;
 
         if (dashDir.magnitude < 0.1f)
@@ -94,7 +94,7 @@ public class SealPuzzleManager : BaseSingleton<SealPuzzleManager>
 
         var rb = playerGO.GetComponent<Rigidbody>();
         Vector3 dashDir = rb != null
-            ? new Vector3(rb.velocity.x, 0f, rb.velocity.z).normalized
+            ? new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z).normalized
             : playerGO.transform.forward;
 
         if (dashDir.magnitude < 0.1f)

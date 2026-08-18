@@ -41,7 +41,7 @@ public class Arrow : MonoBehaviour
         {
             rb.useGravity = false;
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-            rb.velocity = transform.forward * arrowSpeed;
+            rb.linearVelocity = transform.forward * arrowSpeed;
         }
 
         prevPosition = transform.position;
